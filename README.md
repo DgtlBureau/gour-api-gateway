@@ -16,8 +16,6 @@ Current branch - main\
 1. Create the docker file docker-compose.yml
 ===========
 
-# Local Kafka development environment setup
-# ref: https://github.com/simplesteph/kafka-stack-docker-compose/blob/master/full-stack.yml
 version: '3'
 
 services:
