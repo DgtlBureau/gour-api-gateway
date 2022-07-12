@@ -5,7 +5,7 @@
 3.  Set variables to .env
 4.  npm run start:dev
 
-No base connection required
+No database connection required
 
 # git
 
