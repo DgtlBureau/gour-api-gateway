@@ -14,6 +14,7 @@ Current branch - main\
 # docker and kafka setup
 
 1. Create the docker file docker-compose.yml
+
 ===========
 
     version: '3'
@@ -54,6 +55,7 @@ Current branch - main\
 ==========
 
 2. Create the kafka file kafka_server_jaas.conf
+
 ==========
 
     KafkaServer {
