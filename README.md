@@ -16,19 +16,19 @@ Current branch - main\
 1. Create the docker file docker-compose.yml
 ===========
 
-  version: '3'
+    version: '3'
 
-  services:
-    zoo1:
-      image: zookeeper
-      restart: always
-      hostname: zoo1
-      ports:
-        - 2181:2181
-      environment:
-        ZOO_MY_ID: 1
-        ZOOKEEPER_SASL_ENABLED: 'false'
-        ZOO_SERVERS: server.1=zoo1:2888:3888;2181
+    services:
+      zoo1:
+        image: zookeeper
+        restart: always
+        hostname: zoo1
+        ports:
+          - 2181:2181
+        environment:
+          ZOO_MY_ID: 1
+          ZOOKEEPER_SASL_ENABLED: 'false'
+          ZOO_SERVERS: server.1=zoo1:2888:3888;2181
 
     kafka1:
       image: confluentinc/cp-kafka:5.2.1
