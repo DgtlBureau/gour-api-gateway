@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TranslatableStringDto } from '../../common/dto/TranslatableStringDto';
-import { TranslatableTextDto } from '../../common/dto/TranslatableTextDto';
+import { TranslatableStringDto } from '../../common/dto/translatable-string.dto';
+import { TranslatableTextDto } from '../../common/dto/translatable-text.dto';
 
 export class CategoryResponseDto {
   @ApiProperty()
