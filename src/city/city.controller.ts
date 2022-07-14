@@ -13,7 +13,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { CityCreateDto } from './dto/city-create.dto';
-import { BaseGetListDto } from '../common/dto/BaseGetListDto';
+import { BaseGetListDto } from '../common/dto/base-get-list.dto';
 import { CityUpdateDto } from './dto/city-update.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
