@@ -52,7 +52,7 @@ export class ClientController {
       this.mainClient.send('get-clients', params).pipe(timeout(5000)),
     );
 
-    res.set(TOTAL_COUNT_HEADER, count.toString());
+    res.set(TOTAL_COUNT_HEADER, count);
 
     return res.send(clients);
   }
