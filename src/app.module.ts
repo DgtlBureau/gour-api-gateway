@@ -11,6 +11,7 @@ import { OrderController } from './order/order.controller';
 import { PageController } from './page/page.controller';
 import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
+import { OrderProfileController } from './order-profile/order-profile.controller';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { WalletController } from './wallet/wallet.controller';
     PageController,
     PromotionController,
     WalletController,
+    OrderProfileController,
   ],
   providers: [AppService],
 })
