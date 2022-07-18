@@ -11,6 +11,9 @@ import { OrderController } from './order/order.controller';
 import { PageController } from './page/page.controller';
 import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
+import { AuthController } from './auth/auth.controller';
+import { CookieService } from './common/services/cookie.service';
+import { CurrentUserController } from './auth/current-user.controller';
 
 @Module({
   imports: [
@@ -88,7 +91,9 @@ import { WalletController } from './wallet/wallet.controller';
     PageController,
     PromotionController,
     WalletController,
+    AuthController,
+    CurrentUserController,
   ],
-  providers: [AppService],
+  providers: [AppService, CookieService],
 })
 export class AppModule {}
