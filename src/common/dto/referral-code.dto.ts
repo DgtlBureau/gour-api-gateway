@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
 
-export class PriceDto extends BaseDto {
+export class ReferralCodeDto extends BaseDto {
   @ApiProperty()
-  cheeseCoin: number;
+  code: string;
+
+  @ApiProperty()
+  discount: number;
 }
