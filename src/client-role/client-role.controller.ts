@@ -18,7 +18,7 @@ import { Response } from 'express';
 import { firstValueFrom, timeout } from 'rxjs';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
-import { ClientRoleResponseDto } from './dto/client-role.response.dto';
+import { ClientRoleDto } from '../common/dto/client-role.dto';
 import { ClientRoleCreateDto } from './dto/client-role-create.dto';
 import { ClientRoleUpdateDto } from './dto/client-role-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
@@ -39,7 +39,7 @@ export class ClientRoleController {
   }
 
   @ApiOkResponse({
-    type: [ClientRoleResponseDto],
+    type: [ClientRoleDto],
   })
   @HttpCode(HttpStatus.OK)
   @Get('/clientRoles')
@@ -54,7 +54,7 @@ export class ClientRoleController {
   }
 
   @ApiOkResponse({
-    type: ClientRoleResponseDto,
+    type: ClientRoleDto,
   })
   @HttpCode(HttpStatus.OK)
   @Get('/clientRoles/:id')
@@ -63,7 +63,7 @@ export class ClientRoleController {
   }
 
   @ApiOkResponse({
-    type: ClientRoleResponseDto,
+    type: ClientRoleDto,
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/clientRoles')
@@ -72,7 +72,7 @@ export class ClientRoleController {
   }
 
   @ApiOkResponse({
-    type: ClientRoleResponseDto,
+    type: ClientRoleDto,
   })
   @HttpCode(HttpStatus.OK)
   @Put('/clientRoles/:id')

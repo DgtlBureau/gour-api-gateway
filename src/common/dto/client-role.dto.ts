@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
 
-export class PriceDto extends BaseDto {
+export class ClientRoleDto extends BaseDto {
   @ApiProperty()
-  cheeseCoin: number;
+  title: string;
+
+  @ApiProperty()
+  key: string;
 }
