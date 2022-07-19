@@ -1,12 +1,11 @@
-import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class TranslatableTextDto {
-  @IsString()
+import { BaseDto } from './base.dto';
+
+export class TranslatableTextDto extends BaseDto {
   @ApiProperty()
   en: string;
 
-  @IsString()
   @ApiProperty()
   ru: string;
 }

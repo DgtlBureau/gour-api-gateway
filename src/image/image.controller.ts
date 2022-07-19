@@ -12,7 +12,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
 
-import { ImageResponseDto } from './dto/image.dto';
+import { ImageDto } from '../common/dto/image.dto';
 
 @ApiTags('images')
 @Controller()
@@ -26,7 +26,7 @@ export class ImageController {
   }
 
   @ApiOkResponse({
-    type: ImageResponseDto,
+    type: ImageDto,
   })
   @ApiBody({
     schema: {

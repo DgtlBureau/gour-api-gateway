@@ -1,12 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ImageResponseDto {
+export class BaseDto {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  small: string;
+  createdAt: Date;
 
   @ApiProperty()
-  full: string;
+  updatedAt: Date;
+
+  @ApiProperty()
+  deletedAt?: Date;
 }
