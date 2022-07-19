@@ -20,7 +20,7 @@ import { firstValueFrom, timeout } from 'rxjs';
 import { ClientGetListDto } from './dto/сlient-get-list.dto';
 import { ClientCreateDto } from './dto/сlient-create.dto';
 import { ClientUpdateDto } from './dto/client-update.dto';
-import { ClientResponseDto } from './dto/client-response.dto';
+import { ClientDto } from '../common/dto/client.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
 @ApiTags('clients')
@@ -43,7 +43,7 @@ export class ClientController {
     name: TOTAL_COUNT_HEADER,
   })
   @ApiOkResponse({
-    type: [ClientResponseDto],
+    type: [ClientDto],
   })
   @HttpCode(HttpStatus.OK)
   @Get('/clients')
@@ -58,7 +58,7 @@ export class ClientController {
   }
 
   @ApiOkResponse({
-    type: ClientResponseDto,
+    type: ClientDto,
   })
   @HttpCode(HttpStatus.OK)
   @Get('/clients/:id')
@@ -67,7 +67,7 @@ export class ClientController {
   }
 
   @ApiOkResponse({
-    type: ClientResponseDto,
+    type: ClientDto,
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/clients')
@@ -76,7 +76,7 @@ export class ClientController {
   }
 
   @ApiOkResponse({
-    type: ClientResponseDto,
+    type: ClientDto,
   })
   @HttpCode(HttpStatus.OK)
   @Put('/clients/:id')
@@ -93,7 +93,7 @@ export class ClientController {
   }
 
   // @ApiOkResponse({
-  //   type: ClientResponseDto,
+  //   type: ClientDto,
   // })
   @HttpCode(HttpStatus.MOVED_PERMANENTLY)
   @Get('/clients/:id/login')
