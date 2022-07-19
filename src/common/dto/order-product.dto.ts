@@ -1,16 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
-import { ClientRoleDto } from './client-role.dto';
 import { ProductDto } from './product.dto';
 
-export class RoleDiscountDto extends BaseDto {
+export class OrderProductDto extends BaseDto {
   @ApiProperty()
   product: ProductDto;
 
   @ApiProperty()
-  role: ClientRoleDto;
+  weight: number;
 
   @ApiProperty()
-  value: number;
+  amount: number;
 }
