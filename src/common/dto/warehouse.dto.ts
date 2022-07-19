@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
+import { CityDto } from './city.dto';
 
-export class ImageDto extends BaseDto {
+export class WarehouseDto extends BaseDto {
   @ApiProperty()
-  small: string;
+  title: string;
 
   @ApiProperty()
-  full: string;
+  city: CityDto;
 }
