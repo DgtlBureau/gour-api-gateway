@@ -2,8 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
 import { CityDto } from './city.dto';
-import { ClientDto } from './client.dto';
+// import { ClientDto } from './client.dto';
 
+// TODO client circular dependency
 export class OrderProfileDto extends BaseDto {
   @ApiProperty()
   title: string;
@@ -26,8 +27,8 @@ export class OrderProfileDto extends BaseDto {
   @ApiProperty()
   floor: string;
 
-  @ApiProperty()
-  client: ClientDto;
+  // @ApiProperty()
+  // client: ClientDto;
 
   @ApiProperty()
   comment: string;

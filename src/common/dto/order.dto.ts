@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
-import { ClientDto } from './client.dto';
+// import { ClientDto } from './client.dto';
 import { OrderProductDto } from './order-product.dto';
 import { OrderProfileDto } from './order-profile.dto';
 
@@ -17,6 +17,8 @@ export enum OrderStatus {
   rejected = 'rejected',
 }
 
+// TODO client circular dependency
+
 export class OrderDto extends BaseDto {
   @ApiProperty()
   status: OrderStatus;
@@ -24,8 +26,8 @@ export class OrderDto extends BaseDto {
   @ApiProperty()
   orderProducts: OrderProductDto[];
 
-  @ApiProperty()
-  client: ClientDto;
+  // @ApiProperty()
+  // client: ClientDto;
 
   @ApiProperty()
   orderProfile: OrderProfileDto;
