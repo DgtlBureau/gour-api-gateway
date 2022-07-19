@@ -16,7 +16,7 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
-import { OrderProfileResponseDto } from './dto/order-profile-response.dto';
+import { OrderProfileDto } from '../common/dto/order-profile.dto';
 import { OrderProfileCreateDto } from './dto/order-profile.create.dto';
 import { OrderProfileUpdateDto } from './dto/order-profile.update.dto';
 
@@ -37,7 +37,7 @@ export class OrderProfileController {
   }
 
   @ApiOkResponse({
-    type: [OrderProfileResponseDto],
+    type: [OrderProfileDto],
   })
   @HttpCode(HttpStatus.OK)
   @Get('/order-profiles')
@@ -46,7 +46,7 @@ export class OrderProfileController {
   }
 
   @ApiOkResponse({
-    type: OrderProfileResponseDto,
+    type: OrderProfileDto,
   })
   @HttpCode(HttpStatus.OK)
   @Get('/order-profiles/:id')
@@ -55,7 +55,7 @@ export class OrderProfileController {
   }
 
   @ApiOkResponse({
-    type: OrderProfileResponseDto,
+    type: OrderProfileDto,
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/order-profiles')
@@ -66,7 +66,7 @@ export class OrderProfileController {
   }
 
   @ApiOkResponse({
-    type: OrderProfileResponseDto,
+    type: OrderProfileDto,
   })
   @HttpCode(HttpStatus.OK)
   @Put('/order-profiles/:id')
