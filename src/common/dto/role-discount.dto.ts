@@ -1,16 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-import { BaseDto } from './base.dto';
-import { ClientRoleDto } from './client-role.dto';
-import { ProductDto } from './product.dto';
-
-export class RoleDiscountDto extends BaseDto {
+export class RoleDiscountDto {
   @ApiProperty()
-  product: ProductDto;
+  role: number;
 
-  @ApiProperty()
-  role: ClientRoleDto;
-
-  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional()
   value: number;
 }

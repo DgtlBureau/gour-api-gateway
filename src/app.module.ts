@@ -13,6 +13,7 @@ import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -90,6 +91,7 @@ import { ClientRoleController } from './client-role/client-role.controller';
     PromotionController,
     WalletController,
     ClientRoleController,
+    CityController,
   ],
   providers: [AppService],
 })
