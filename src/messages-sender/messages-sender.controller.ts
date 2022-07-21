@@ -7,10 +7,11 @@ import {
   Post,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { timeout } from 'rxjs';
 import { SendSmsDto } from './dto/send-sms.dto';
 
+@ApiTags('messages-sender')
 @Controller('messages-sender')
 export class MessagesSenderController {
   constructor(@Inject('MESSAGES_SERVICE') private client: ClientKafka) {}

@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+
+import { CookieService } from './common/services/cookie.service';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 import { MessagesSenderController } from './messages-sender/messages-sender.controller';
 import { CategoryController } from './category/category.controller';
 import { ClientController } from './client/client.controller';
@@ -14,11 +16,11 @@ import { WalletController } from './wallet/wallet.controller';
 import { ReferralCodeController } from './referral-code/referral-code.controller';
 import { ProductController } from './product/product.controller';
 import { AuthController } from './auth/auth.controller';
-import { CookieService } from './common/services/cookie.service';
 import { CurrentUserController } from './auth/current-user.controller';
 import { OrderProfileController } from './order-profile/order-profile.controller';
 import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
+import { CityController } from './city/city.controller';
 
 @Module({
   imports: [

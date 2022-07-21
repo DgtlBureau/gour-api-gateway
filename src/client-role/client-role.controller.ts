@@ -23,7 +23,7 @@ import { ClientRoleCreateDto } from './dto/client-role-create.dto';
 import { ClientRoleUpdateDto } from './dto/client-role-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
-@ApiTags('cities')
+@ApiTags('clientRoles')
 @Controller()
 export class ClientRoleController {
   constructor(@Inject('MAIN_SERVICE') private mainClient: ClientKafka) {}

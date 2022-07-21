@@ -25,7 +25,7 @@ import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
 @ApiBearerAuth()
 @ApiTags('orders')
-@Controller('orders')
+@Controller()
 export class OrderController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
