@@ -11,7 +11,8 @@ import { OrderController } from './order/order.controller';
 import { PageController } from './page/page.controller';
 import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
-import { CityController } from './city/city.controller';
+import { ClientRoleController } from './client-role/client-role.controller';
+
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { CityController } from './city/city.controller';
     PageController,
     PromotionController,
     WalletController,
+    ClientRoleController,
     CityController,
   ],
   providers: [AppService],
