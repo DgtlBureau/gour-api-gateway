@@ -12,6 +12,7 @@ import { PageController } from './page/page.controller';
 import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
 import { ImageController } from './image/image.controller';
+import { ClientRoleController } from './client-role/client-role.controller';
 
 @Module({
   imports: [
@@ -90,6 +91,8 @@ import { ImageController } from './image/image.controller';
     PromotionController,
     WalletController,
     ImageController,
+    ClientRoleController,
+    CityController,
   ],
   providers: [AppService],
 })
