@@ -11,6 +11,9 @@ import { OrderController } from './order/order.controller';
 import { PageController } from './page/page.controller';
 import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
+import { AuthController } from './auth/auth.controller';
+import { CookieService } from './common/services/cookie.service';
+import { CurrentUserController } from './auth/current-user.controller';
 import { OrderProfileController } from './order-profile/order-profile.controller';
 import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
@@ -91,11 +94,13 @@ import { ClientRoleController } from './client-role/client-role.controller';
     PageController,
     PromotionController,
     WalletController,
+    AuthController,
+    CurrentUserController,
     OrderProfileController,
     ImageController,
     ClientRoleController,
     CityController,
   ],
-  providers: [AppService],
+  providers: [AppService, CookieService],
 })
 export class AppModule {}
