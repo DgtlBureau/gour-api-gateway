@@ -1,13 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ClientDto } from './client.dto';
+// import { ClientDto } from './client.dto';
+
+// TODO client circular deps
 
 export class WalletDto {
   @ApiProperty()
   uuid: string;
 
-  @ApiProperty()
-  client: ClientDto;
+  // @ApiProperty()
+  // client: ClientDto;
 
   @ApiProperty()
   value: number;

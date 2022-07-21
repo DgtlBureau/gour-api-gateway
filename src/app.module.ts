@@ -11,6 +11,7 @@ import { OrderController } from './order/order.controller';
 import { PageController } from './page/page.controller';
 import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
+import { ProductController } from './product/product.controller';
 import { AuthController } from './auth/auth.controller';
 import { CookieService } from './common/services/cookie.service';
 import { CurrentUserController } from './auth/current-user.controller';
@@ -94,6 +95,7 @@ import { ClientRoleController } from './client-role/client-role.controller';
     PageController,
     PromotionController,
     WalletController,
+    ProductController,
     AuthController,
     CurrentUserController,
     OrderProfileController,
