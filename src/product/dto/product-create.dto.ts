@@ -12,22 +12,22 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
-import { TranslatableStringDto } from '../../common/dto/translatable-string.dto';
-import { TranslatableTextDto } from '../../common/dto/translatable-text.dto';
-import { PriceDto } from '../../common/dto/price.dto';
-import { MetaDto } from '../../common/dto/meta.dto';
+import { TranslatableStringCreateDto } from '../../common/dto/translatable-string-create.dto';
+import { TranslatableTextCreateDto } from '../../common/dto/translatable-text-create.dto';
+import { PriceCreateDto } from '../../common/dto/price-create.dto';
+import { MetaCreateDto } from '../../common/dto/meta-create.dto';
 import { RoleDiscountDto } from '../../common/dto/role-discount.dto';
 
 export class ProductCreateDto {
   @ValidateNested()
-  @Type(() => TranslatableStringDto)
+  @Type(() => TranslatableStringCreateDto)
   @ApiProperty()
-  title: TranslatableStringDto;
+  title: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextDto)
+  @Type(() => TranslatableTextCreateDto)
   @ApiProperty()
-  description: TranslatableTextDto;
+  description: TranslatableTextCreateDto;
 
   @IsNumber()
   @IsOptional()
@@ -39,16 +39,18 @@ export class ProductCreateDto {
     type: Number,
     isArray: true,
   })
-  images: number[];
+  @IsOptional()
+  @ApiPropertyOptional()
+  images?: number[];
 
   @IsNumber()
   @ApiProperty()
   category: number;
 
   @ValidateNested()
-  @Type(() => PriceDto)
+  @Type(() => PriceCreateDto)
   @ApiProperty()
-  price: PriceDto;
+  price: PriceCreateDto;
 
   @IsObject()
   @ApiProperty()
@@ -59,10 +61,10 @@ export class ProductCreateDto {
   similarProducts?: number[];
 
   @ValidateNested()
-  @Type(() => MetaDto)
+  @Type(() => MetaCreateDto)
   @IsOptional()
   @ApiPropertyOptional()
-  meta?: MetaDto;
+  meta?: MetaCreateDto;
 
   @ApiModelPropertyOptional({
     isArray: true,

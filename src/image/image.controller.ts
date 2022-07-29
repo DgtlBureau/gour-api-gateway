@@ -15,7 +15,7 @@ import { timeout } from 'rxjs';
 import { ImageDto } from '../common/dto/image.dto';
 
 @ApiTags('images')
-@Controller()
+@Controller('images')
 export class ImageController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -42,8 +42,8 @@ export class ImageController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @HttpCode(HttpStatus.CREATED)
-  @Post('/images')
+  @Post('/')
   post(@UploadedFile() image: Express.Multer.File) {
-    return this.client.send('upload-image', image).pipe(timeout(5000));
+    return this.client.send('upload-image', image);
   }
 }

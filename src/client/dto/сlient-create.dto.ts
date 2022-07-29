@@ -1,13 +1,32 @@
-import { IsNumber, IsObject, IsOptional } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsPhoneNumber, IsString } from 'class-validator';
 
 export class ClientCreateDto {
-  @IsNumber()
   @ApiProperty()
-  role: number;
+  @IsString()
+  name: string;
 
-  @IsObject()
-  @IsOptional()
-  @ApiPropertyOptional()
-  additionalInfo?: Record<string, string | number>;
+  @ApiProperty()
+  @IsPhoneNumber()
+  phone: string;
+
+  @ApiProperty()
+  @IsNumber()
+  code: number;
+
+  @ApiProperty()
+  @IsString()
+  password: string;
+
+  @ApiProperty()
+  @IsString()
+  referralCode: string;
+
+  @ApiProperty()
+  @IsNumber()
+  cityId: number;
+
+  @ApiProperty()
+  @IsNumber()
+  roleId: number;
 }

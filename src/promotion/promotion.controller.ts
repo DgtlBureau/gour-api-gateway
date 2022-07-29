@@ -15,7 +15,7 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { PromotionDto } from '../common/dto/promotion.dto';
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
@@ -24,7 +24,7 @@ import { PromotionUpdateDto } from './dto/promotion-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
 @ApiTags('promotions')
-@Controller()
+@Controller('promotions')
 export class PromotionController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -42,10 +42,10 @@ export class PromotionController {
     type: [PromotionDto],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/promotions')
+  @Get('/')
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [promotions, count] = await firstValueFrom(
-      this.client.send('get-promotions', params).pipe(timeout(5000)),
+      this.client.send('get-promotions', params),
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -57,34 +57,36 @@ export class PromotionController {
     type: PromotionDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/promotions/:id')
-  getOne(@Param('id') id: string) {
-    return this.client.send('get-promotion', +id).pipe(timeout(5000));
+  @Get('/:id')
+  async getOne(@Param('id') id: string, @Res() res: Response) {
+    const [promotion] = await firstValueFrom(
+      this.client.send('get-promotion', +id),
+    );
+
+    return res.send(promotion);
   }
 
   @ApiOkResponse({
     type: PromotionDto,
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('/promotions')
+  @Post('/')
   post(@Body() dto: PromotionCreateDto) {
-    return this.client.send('create-promotion', dto).pipe(timeout(5000));
+    return this.client.send('create-promotion', dto);
   }
 
   @ApiOkResponse({
     type: PromotionDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Put('/promotions/:id')
+  @Put('/:id')
   put(@Param('id') id: string, @Body() dto: PromotionUpdateDto) {
-    return this.client
-      .send('edit-promotion', { id: +id, dto })
-      .pipe(timeout(5000));
+    return this.client.send('edit-promotion', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete('/promotions/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-promotion', +id).pipe(timeout(5000));
+    return this.client.send('delete-promotion', +id);
   }
 }

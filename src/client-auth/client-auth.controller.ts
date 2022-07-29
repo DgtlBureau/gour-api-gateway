@@ -11,7 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { ClientKafka } from '@nestjs/microservices';
 import { Response, Request } from 'express';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { CookieService } from '../common/services/cookie.service';
 import { AppRequest } from '../common/types/AppRequest';
@@ -21,7 +21,7 @@ import { SignInDto } from './dto/sign-in.dto';
 
 @ApiTags('client-auth')
 @Controller('client-auth')
-export class AuthController {
+export class ClientAuthController {
   constructor(
     @Inject('MAIN_SERVICE') private client: ClientKafka,
     private readonly cookieService: CookieService,
@@ -38,15 +38,15 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('/sendCode')
+  @Post('/send-code')
   sendCode(@Body() dto: SendCodeDto) {
-    return this.client.send('send-code', dto).pipe(timeout(5000));
+    return this.client.send('send-code', dto);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('/signup')
   signup(@Body() dto: SignUpDto) {
-    return this.client.send('signup', dto).pipe(timeout(5000));
+    return this.client.send('signup', dto);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -58,7 +58,7 @@ export class AuthController {
   ) {
     try {
       const { token, client, refreshToken } = await firstValueFrom(
-        this.client.send('signin', dto).pipe(timeout(5000)),
+        this.client.send('signin', dto),
       );
 
       res.cookie(
@@ -100,7 +100,7 @@ export class AuthController {
       const token = req.cookies[this.cookieService.REFRESH_TOKEN_NAME];
 
       const { accessToken, refreshToken } = await firstValueFrom(
-        this.client.send('refresh', token).pipe(timeout(5000)),
+        this.client.send('refresh', token),
       );
 
       res.cookie(

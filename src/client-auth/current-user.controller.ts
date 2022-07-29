@@ -31,7 +31,7 @@ import { FavoriteResponseDto } from './dto/favorite-response.dto';
 const PHONE_CODE_KEY = 'PhoneCode';
 
 @ApiTags('current-user')
-@Controller('client-auth/currentUser')
+@Controller('client-auth/current-user')
 export class CurrentUserController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -55,8 +55,12 @@ export class CurrentUserController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @Get('/')
-  getCurrentUser(@CurrentUser('id') clientId: number) {
-    return this.client.send('get-current-user', clientId);
+  async getCurrentUser(@CurrentUser('id') id: number) {
+    const [currentUser] = await firstValueFrom(
+      this.client.send('get-current-user', id),
+    );
+
+    return currentUser;
   }
 
   @ApiOkResponse({
@@ -71,7 +75,7 @@ export class CurrentUserController {
 
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
-  @Post('/phone/sendCode')
+  @Post('/phone/send-code')
   async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
     const hashedCode = await firstValueFrom(
       this.client.send('send-phone-code', dto),

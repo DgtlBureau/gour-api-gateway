@@ -61,6 +61,9 @@ export class WalletController {
     return this.client.send('get-client-wallet', client.id);
   }
 
+  @ApiOkResponse({
+    type: Number,
+  })
   @HttpCode(HttpStatus.OK)
   @Get('/current-balance')
   getCurrentBalance(@CurrentUser() client: ClientDto) {

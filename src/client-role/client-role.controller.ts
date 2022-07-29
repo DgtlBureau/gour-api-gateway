@@ -15,7 +15,7 @@ import {
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ClientKafka } from '@nestjs/microservices';
 import { Response } from 'express';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
 import { ClientRoleDto } from '../common/dto/client-role.dto';
@@ -23,8 +23,8 @@ import { ClientRoleCreateDto } from './dto/client-role-create.dto';
 import { ClientRoleUpdateDto } from './dto/client-role-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
-@ApiTags('clientRoles')
-@Controller()
+@ApiTags('client-roles')
+@Controller('client-roles')
 export class ClientRoleController {
   constructor(@Inject('MAIN_SERVICE') private mainClient: ClientKafka) {}
 
@@ -42,10 +42,10 @@ export class ClientRoleController {
     type: [ClientRoleDto],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/clientRoles')
+  @Get('/')
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [clientRoles, count] = await firstValueFrom(
-      this.mainClient.send('get-client-roles', params).pipe(timeout(5000)),
+      this.mainClient.send('get-client-roles', params),
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -57,34 +57,36 @@ export class ClientRoleController {
     type: ClientRoleDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/clientRoles/:id')
-  getOne(@Param('id') id: string) {
-    return this.mainClient.send('get-client-role', id).pipe(timeout(5000));
+  @Get('/:id')
+  async getOne(@Param('id') id: string, @Res() res: Response) {
+    const [clientRole] = await firstValueFrom(
+      this.mainClient.send('get-client-role', +id),
+    );
+
+    return res.send(clientRole);
   }
 
   @ApiOkResponse({
     type: ClientRoleDto,
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('/clientRoles')
-  post(@Body() city: ClientRoleCreateDto) {
-    return this.mainClient.send('create-client-role', city).pipe(timeout(5000));
+  @Post('/')
+  post(@Body() dto: ClientRoleCreateDto) {
+    return this.mainClient.send('create-client-role', { dto });
   }
 
   @ApiOkResponse({
     type: ClientRoleDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Put('/clientRoles/:id')
-  put(@Param('id') id: string, @Body() city: ClientRoleUpdateDto) {
-    return this.mainClient
-      .send('edit-client-role', { id, city })
-      .pipe(timeout(5000));
+  @Put('/:id')
+  put(@Param('id') id: string, @Body() dto: ClientRoleUpdateDto) {
+    return this.mainClient.send('edit-client-role', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete('/clientRoles/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.mainClient.send('delete-client-role', id).pipe(timeout(5000));
+    return this.mainClient.send('delete-client-role', +id);
   }
 }

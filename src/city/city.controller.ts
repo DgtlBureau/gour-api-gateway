@@ -12,18 +12,19 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { CityCreateDto } from './dto/city-create.dto';
-import { BaseGetListDto } from '../common/dto/base-get-list.dto';
-import { CityUpdateDto } from './dto/city-update.dto';
+import { ClientKafka } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { firstValueFrom } from 'rxjs';
+
+import { BaseGetListDto } from '../common/dto/base-get-list.dto';
+import { CityDto } from '../common/dto/city.dto';
+import { CityCreateDto } from './dto/city-create.dto';
+import { CityUpdateDto } from './dto/city-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
-import { ClientKafka } from '@nestjs/microservices';
-import { firstValueFrom, timeout } from 'rxjs';
-import { CityResponseDto } from './dto/city-response.dto';
 
 @ApiTags('cities')
-@Controller()
+@Controller('cities')
 export class CityController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -38,13 +39,13 @@ export class CityController {
   }
 
   @ApiOkResponse({
-    type: [CityResponseDto],
+    type: [CityDto],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/cities')
+  @Get('/')
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [cities, count] = await firstValueFrom(
-      this.client.send('get-cities', params).pipe(timeout(5000)),
+      this.client.send('get-cities', params),
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -53,35 +54,37 @@ export class CityController {
   }
 
   @ApiOkResponse({
-    type: CityResponseDto,
+    type: CityDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/cities/:id')
-  getOne(@Param('id') id: string) {
-    return this.client.send('get-city', id).pipe(timeout(5000));
+  @Get('/:id')
+  async getOne(@Param('id') id: string, @Res() res: Response) {
+    const [city] = await firstValueFrom(this.client.send('get-city', +id));
+
+    return res.send(city);
   }
 
   @ApiOkResponse({
-    type: CityResponseDto,
+    type: CityDto,
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('/cities')
-  post(@Body() city: CityCreateDto) {
-    return this.client.send('create-city', city).pipe(timeout(5000));
+  @Post('/')
+  post(@Body() dto: CityCreateDto) {
+    return this.client.send('create-city', dto);
   }
 
   @ApiOkResponse({
-    type: CityResponseDto,
+    type: CityDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Put('/cities/:id')
-  put(@Param('id') id: string, @Body() city: CityUpdateDto) {
-    return this.client.send('edit-city', { id, city }).pipe(timeout(5000));
+  @Put('/:id')
+  put(@Param('id') id: string, @Body() dto: CityUpdateDto) {
+    return this.client.send('edit-city', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete('/cities/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-city', id).pipe(timeout(5000));
+    return this.client.send('delete-city', +id);
   }
 }

@@ -13,7 +13,7 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { ProductDto } from '../common/dto/product.dto';
 import { ProductGradeDto } from '../common/dto/product-grade.dto';
@@ -28,7 +28,7 @@ import { ProductWithMetricsDto } from './dto/product-with-metrics.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
 @ApiTags('products')
-@Controller()
+@Controller('products')
 export class ProductController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -50,10 +50,10 @@ export class ProductController {
   @ApiResponse({
     type: [ProductDto],
   })
-  @Get('/products')
+  @Get('/')
   async getAll(@Query() params: ProductGetListDto, @Res() res: Response) {
     const [products, count] = await firstValueFrom(
-      this.client.send('get-products', params).pipe(timeout(5000)),
+      this.client.send('get-products', params),
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -64,88 +64,83 @@ export class ProductController {
   @ApiResponse({
     type: [ProductDto],
   })
-  @Get('/products/novelties')
+  @Get('/novelties')
   getNovelties(@Query() params: ProductGetListDto) {
-    return this.client.send('get-novelties', params).pipe(timeout(5000));
+    return this.client.send('get-novelties', params);
   }
 
   @ApiResponse({
     type: ProductWithMetricsDto,
   })
-  @Get('/products/:id')
-  getOne(@Param('id') id: string, @Query() params: ProductGetOneDto = {}) {
-    return this.client
-      .send('get-product', { id: +id, params })
-      .pipe(timeout(5000));
+  @Get('/:id')
+  async getOne(
+    @Param('id') id: string,
+    @Query() params: ProductGetOneDto = {},
+    @Res() res: Response,
+  ) {
+    const [product] = await firstValueFrom(
+      this.client.send('get-product', { id: +id, params }),
+    );
+
+    return res.send(product);
   }
 
   @ApiResponse({
     type: ProductDto,
   })
-  @Post('/products')
+  @Post('/')
   post(@Body() dto: ProductCreateDto) {
-    return this.client.send('get-product', dto).pipe(timeout(5000));
+    return this.client.send('create-product', { dto });
   }
 
   @ApiResponse({
     type: ProductDto,
   })
-  @Put('/products/:id')
+  @Put('/:id')
   put(@Param('id') id: string, @Body() dto: ProductUpdateDto) {
-    return this.client
-      .send('edit-product', { id: +id, dto })
-      .pipe(timeout(5000));
+    return this.client.send('edit-product', { id: +id, dto });
   }
 
-  @Delete('/products/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string, @Query('hard') hard: boolean) {
-    return this.client
-      .send('delete-product', { id: +id, hard: !!hard })
-      .pipe(timeout(5000));
+    return this.client.send('delete-product', { id: +id, hard: !!hard });
   }
 
   @ApiResponse({
     type: [ProductGradeDto],
   })
-  @Get('/products/:productId/grades')
+  @Get('/:id/grades')
   getProductGrades(
-    @Param('productId') id: string,
+    @Param('id') id: string,
     @Query() params: ProductGradeGetListDto,
   ) {
-    return this.client
-      .send('get-product-grades', { id: +id, params })
-      .pipe(timeout(5000));
-  }
-
-  @ApiResponse({
-    type: ProductGradeDto,
-  })
-  @Post('/products/:productId/grades')
-  createProductGrades(
-    @Param('productId') id: string,
-    @Body() dto: ProductGradeCreateDto,
-  ) {
-    return this.client
-      .send('create-product-grade', { id: +id, dto })
-      .pipe(timeout(5000));
+    return this.client.send('get-product-grades', { id: +id, params });
   }
 
   @ApiResponse({
     type: [ProductGradeDto],
   })
-  @Get('/productGrades')
+  @Post('/:id/grades')
+  createProductGrades(
+    @Param('id') id: string,
+    @Body() dto: ProductGradeCreateDto,
+  ) {
+    return this.client.send('create-product-grade', { id: +id, dto });
+  }
+
+  @ApiResponse({
+    type: [ProductGradeDto],
+  })
+  @Get('/grades')
   getGrades(@Query() params: ProductGradeGetListDto) {
-    return this.client.send('get-grades', params).pipe(timeout(5000));
+    return this.client.send('get-grades', params);
   }
 
   @ApiResponse({
     type: ProductGradeDto,
   })
-  @Put('/productGrades/:gradeId')
-  updateGrade(
-    @Param('gradeId') id: string,
-    @Body() dto: ProductGradeUpdateDto,
-  ) {
-    return this.client.send('edit-grade', { id: +id, dto }).pipe(timeout(5000));
+  @Put('/grades/:id')
+  updateGrade(@Param('id') id: string, @Body() dto: ProductGradeUpdateDto) {
+    return this.client.send('edit-grade', { id: +id, dto });
   }
 }

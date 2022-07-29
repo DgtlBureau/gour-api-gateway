@@ -1,4 +1,3 @@
-import { MetaDto } from '../../common/dto/meta.dto';
 import {
   IsObject,
   IsOptional,
@@ -8,18 +7,23 @@ import {
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+import { MetaCreateDto } from '../../common/dto/meta-create.dto';
+import { TranslatableStringCreateDto } from 'src/common/dto/translatable-string-create.dto';
+
 export class PageCreateDto {
   @ApiProperty()
   @ValidateNested()
-  @Type(() => MetaDto)
-  meta: MetaDto;
+  @Type(() => MetaCreateDto)
+  meta: MetaCreateDto;
 
   @ApiProperty()
   @IsString()
   key: string;
 
   @ApiPropertyOptional()
-  @IsObject()
   @IsOptional()
-  info: Record<string, string | number>;
+  info: {
+    title: TranslatableStringCreateDto;
+    description: TranslatableStringCreateDto;
+  };
 }

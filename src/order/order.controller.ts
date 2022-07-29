@@ -13,7 +13,7 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -25,7 +25,7 @@ import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 
 @ApiBearerAuth()
 @ApiTags('orders')
-@Controller()
+@Controller('orders')
 export class OrderController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -42,14 +42,14 @@ export class OrderController {
   @ApiResponse({
     type: [OrderResponseDto],
   })
-  @Get('/orders')
+  @Get('/')
   async getAll(
     @CurrentUser() client: ClientDto,
     @Query() params: BaseGetListDto,
     @Res() res: Response,
   ) {
     const [orders, count] = await firstValueFrom(
-      this.client.send('get-orders', { client, params }).pipe(timeout(5000)),
+      this.client.send('get-orders', { client, params }),
     );
 
     // TODO: интегрировать амо, сделать расчет скидок
@@ -72,39 +72,36 @@ export class OrderController {
     }));
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
+
     return res.send(response);
   }
 
   @ApiResponse({
     type: OrderDto,
   })
-  @Get('/orders/:id')
+  @Get('/:id')
   getOne(@Param('id') id: string) {
-    return this.client.send('get-order', +id).pipe(timeout(5000));
+    return this.client.send('get-order', +id);
   }
 
   @ApiResponse({
     type: OrderDto,
   })
-  @Post('/orders')
+  @Post('/')
   post(@CurrentUser() client: ClientDto, @Body() order: OrderCreateDto) {
-    return this.client
-      .send('create-order', { order, client })
-      .pipe(timeout(5000));
+    return this.client.send('create-order', { order, client });
   }
 
   @ApiResponse({
     type: OrderDto,
   })
-  @Put('/orders/:id')
+  @Put('/:id')
   put(@Param('id') id: string, @Body() order: Partial<OrderDto>) {
-    return this.client
-      .send('edit-order', { id: +id, order })
-      .pipe(timeout(5000));
+    return this.client.send('edit-order', { id: +id, order });
   }
 
-  @Delete('/orders/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-order', +id).pipe(timeout(5000));
+    return this.client.send('delete-order', +id);
   }
 }

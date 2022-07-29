@@ -8,9 +8,12 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
+import { firstValueFrom } from 'rxjs';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
 import { PageDto } from '../common/dto/page.dto';
@@ -18,7 +21,7 @@ import { PageCreateDto } from './dto/page-create.dto';
 import { PageUpdateDto } from './dto/page-update.dto';
 
 @ApiTags('pages')
-@Controller()
+@Controller('pages')
 export class PageController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
 
@@ -35,7 +38,7 @@ export class PageController {
   @ApiResponse({
     type: [PageDto],
   })
-  @Get('/pages')
+  @Get('/')
   getAll(@Query() params: BaseGetListDto) {
     return this.client.send('get-pages', params);
   }
@@ -43,28 +46,30 @@ export class PageController {
   @ApiResponse({
     type: PageDto,
   })
-  @Get('/pages/:key')
-  getOne(@Param('key') key: string) {
-    return this.client.send('get-page', key);
+  @Get('/:key')
+  async getOne(@Param('key') key: string, @Res() res: Response) {
+    const [page] = await firstValueFrom(this.client.send('get-page', key));
+
+    return res.send(page);
   }
 
   @ApiResponse({
     type: PageDto,
   })
-  @Post('/pages')
+  @Post('/')
   post(@Body() dto: PageCreateDto) {
-    return this.client.send('create-page', dto);
+    return this.client.send('create-page', { dto });
   }
 
   @ApiResponse({
     type: PageDto,
   })
-  @Put('/pages/:id')
+  @Put('/:id')
   put(@Param('id') id: string, @Body() dto: PageUpdateDto) {
     return this.client.send('edit-page', { id: +id, dto });
   }
 
-  @Delete('/pages/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
     return this.client.send('delete-page', +id);
   }
