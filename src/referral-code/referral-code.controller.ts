@@ -11,9 +11,10 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
@@ -25,7 +26,10 @@ import { ReferralCodeCreateDto } from './dto/referral-code-create.dto';
 import { ReferralCodeExportDto } from './dto/referral-code-export.dto';
 import { ReferralCodeSetDiscountDto } from './dto/referral-code-set-discount.dto';
 import { ReferralCodeEditDto } from './dto/referral-code-edit.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('referral-codes')
 @Controller('referral-codes')
 export class ReferralCodeController {

@@ -11,6 +11,7 @@ import {
   Inject,
   HttpStatus,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -22,7 +23,10 @@ import { CategoryDto } from '../common/dto/category.dto';
 import { CategoryCreateDto } from './dto/category-create.dto';
 import { CategoryUpdateDto } from './dto/category-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('categories')
 @Controller('categories')
 export class CategoryController {

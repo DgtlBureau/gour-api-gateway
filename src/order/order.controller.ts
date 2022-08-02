@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,8 +23,10 @@ import { OrderResponseDto } from './dto/order-response.dto';
 import { ClientDto } from '../common/dto/client.dto';
 import { OrderDto } from '../common/dto/order.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 @ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('orders')
 @Controller('orders')
 export class OrderController {

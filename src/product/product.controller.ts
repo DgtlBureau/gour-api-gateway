@@ -9,9 +9,10 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
@@ -26,7 +27,10 @@ import { ProductGradeGetListDto } from './dto/product-grade-get-list.dto';
 import { ProductGradeUpdateDto } from './dto/product-grade-update.dto';
 import { ProductWithMetricsDto } from './dto/product-with-metrics.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('products')
 @Controller('products')
 export class ProductController {

@@ -8,9 +8,10 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { ClientDto } from '../common/dto/client.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -18,7 +19,10 @@ import { WalletDto } from '../common/dto/wallet.dto';
 import { WalletTransactionDto } from '../common/dto/wallet-transaction.dto';
 import { WalletChangeValueDto } from './dto/wallet-change-value.dto';
 import { WalletConfirmPaymentDto } from './dto/wallet-confirm-payment.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('wallet')
 @Controller('wallet')
 export class WalletController {

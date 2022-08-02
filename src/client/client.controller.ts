@@ -11,8 +11,14 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClientKafka } from '@nestjs/microservices';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -22,8 +28,11 @@ import { ClientCreateDto } from './dto/сlient-create.dto';
 import { ClientUpdateDto } from './dto/client-update.dto';
 import { ClientDto } from '../common/dto/client.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
-import { CookieService } from 'src/common/services/cookie.service';
+import { CookieService } from '../common/services/cookie.service';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('clients')
 @Controller('clients')
 export class ClientController {

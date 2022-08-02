@@ -99,6 +99,11 @@ export class ClientAuthController {
     try {
       const token = req.cookies[this.cookieService.REFRESH_TOKEN_NAME];
 
+      if (!token)
+        return res.status(400).json({
+          message: 'Refresh failure',
+        });
+
       const { accessToken, refreshToken } = await firstValueFrom(
         this.client.send('refresh', token),
       );

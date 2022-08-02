@@ -11,8 +11,9 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ClientKafka } from '@nestjs/microservices';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -22,7 +23,10 @@ import { ClientRoleDto } from '../common/dto/client-role.dto';
 import { ClientRoleCreateDto } from './dto/client-role-create.dto';
 import { ClientRoleUpdateDto } from './dto/client-role-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('client-roles')
 @Controller('client-roles')
 export class ClientRoleController {

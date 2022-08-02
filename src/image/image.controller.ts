@@ -5,15 +5,24 @@ import {
   Inject,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { timeout } from 'rxjs';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+import { AuthGuard } from '../common/guards/auth.guard';
 import { ImageDto } from '../common/dto/image.dto';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('images')
 @Controller('images')
 export class ImageController {
@@ -42,7 +51,7 @@ export class ImageController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @HttpCode(HttpStatus.CREATED)
-  @Post('/')
+  @Post('/upload')
   post(@UploadedFile() image: Express.Multer.File) {
     return this.client.send('upload-image', image);
   }

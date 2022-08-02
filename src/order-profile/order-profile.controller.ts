@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -20,8 +21,10 @@ import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { OrderProfileDto } from '../common/dto/order-profile.dto';
 import { OrderProfileCreateDto } from './dto/order-profile.create.dto';
 import { OrderProfileUpdateDto } from './dto/order-profile.update.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 @ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('order-profiles')
 @Controller('order-profiles')
 export class OrderProfileController {

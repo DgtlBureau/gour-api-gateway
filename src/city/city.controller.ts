@@ -11,9 +11,10 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
@@ -22,7 +23,10 @@ import { CityDto } from '../common/dto/city.dto';
 import { CityCreateDto } from './dto/city-create.dto';
 import { CityUpdateDto } from './dto/city-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('cities')
 @Controller('cities')
 export class CityController {

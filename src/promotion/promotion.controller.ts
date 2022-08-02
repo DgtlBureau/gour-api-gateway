@@ -11,9 +11,10 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
@@ -22,7 +23,10 @@ import { BaseGetListDto } from '../common/dto/base-get-list.dto';
 import { PromotionCreateDto } from './dto/promotion-create.dto';
 import { PromotionUpdateDto } from './dto/promotion-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('promotions')
 @Controller('promotions')
 export class PromotionController {
