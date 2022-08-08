@@ -15,8 +15,6 @@ export const CurrentUser = createParamDecorator(
 
     const token = getToken(request);
 
-    console.log(token);
-
     const decodedUser = decodeToken(token) as ClientDto;
 
     if (!decodedUser) throw new UnauthorizedException();

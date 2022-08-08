@@ -13,7 +13,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -33,16 +33,16 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('referral-codes')
 @Controller('referral-codes')
 export class ReferralCodeController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-referral-codes');
-    this.client.subscribeToResponseOf('create-referral-code');
-    this.client.subscribeToResponseOf('edit-referral-code');
-    this.client.subscribeToResponseOf('delete-referral-code');
-    this.client.subscribeToResponseOf('get-referrals');
-    this.client.subscribeToResponseOf('get-referral-discount');
-    this.client.subscribeToResponseOf('edit-referral-discount');
+    // this.client.subscribeToResponseOf('get-referral-codes');
+    // this.client.subscribeToResponseOf('create-referral-code');
+    // this.client.subscribeToResponseOf('edit-referral-code');
+    // this.client.subscribeToResponseOf('delete-referral-code');
+    // this.client.subscribeToResponseOf('get-referrals');
+    // this.client.subscribeToResponseOf('get-referral-discount');
+    // this.client.subscribeToResponseOf('edit-referral-discount');
 
     await this.client.connect();
   }

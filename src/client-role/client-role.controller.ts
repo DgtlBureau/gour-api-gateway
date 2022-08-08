@@ -14,7 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
@@ -30,14 +30,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('client-roles')
 @Controller('client-roles')
 export class ClientRoleController {
-  constructor(@Inject('MAIN_SERVICE') private mainClient: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private mainClient: ClientProxy) {}
 
   async onModuleInit() {
-    this.mainClient.subscribeToResponseOf('get-client-roles');
-    this.mainClient.subscribeToResponseOf('get-client-role');
-    this.mainClient.subscribeToResponseOf('create-client-role');
-    this.mainClient.subscribeToResponseOf('edit-client-role');
-    this.mainClient.subscribeToResponseOf('delete-client-role');
+    // this.mainClient.subscribeToResponseOf('get-client-roles');
+    // this.mainClient.subscribeToResponseOf('get-client-role');
+    // this.mainClient.subscribeToResponseOf('create-client-role');
+    // this.mainClient.subscribeToResponseOf('edit-client-role');
+    // this.mainClient.subscribeToResponseOf('delete-client-role');
 
     await this.mainClient.connect();
   }

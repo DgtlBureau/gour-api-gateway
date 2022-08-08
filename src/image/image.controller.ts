@@ -8,7 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
@@ -26,10 +26,10 @@ import { ImageDto } from '../common/dto/image.dto';
 @ApiTags('images')
 @Controller('images')
 export class ImageController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('upload-image');
+    // this.client.subscribeToResponseOf('upload-image');
 
     await this.client.connect();
   }

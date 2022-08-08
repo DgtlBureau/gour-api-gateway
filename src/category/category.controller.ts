@@ -13,7 +13,7 @@ import {
   HttpCode,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -30,14 +30,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('categories')
 @Controller('categories')
 export class CategoryController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-categories');
-    this.client.subscribeToResponseOf('get-category');
-    this.client.subscribeToResponseOf('create-category');
-    this.client.subscribeToResponseOf('edit-category');
-    this.client.subscribeToResponseOf('delete-category');
+    // this.client.subscribeToResponseOf('get-categories');
+    // this.client.subscribeToResponseOf('get-category');
+    // this.client.subscribeToResponseOf('create-category');
+    // this.client.subscribeToResponseOf('edit-category');
+    // this.client.subscribeToResponseOf('delete-category');
 
     await this.client.connect();
   }
@@ -63,7 +63,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
-    const [category] = await firstValueFrom(
+    const category = await firstValueFrom(
       this.client.send('get-category', +id),
     );
 

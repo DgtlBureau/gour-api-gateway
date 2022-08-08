@@ -11,7 +11,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -30,14 +30,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('orders')
 @Controller('orders')
 export class OrderController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-orders');
-    this.client.subscribeToResponseOf('get-order');
-    this.client.subscribeToResponseOf('create-order');
-    this.client.subscribeToResponseOf('edit-order');
-    this.client.subscribeToResponseOf('delete-order');
+    // this.client.subscribeToResponseOf('get-orders');
+    // this.client.subscribeToResponseOf('get-order');
+    // this.client.subscribeToResponseOf('create-order');
+    // this.client.subscribeToResponseOf('edit-order');
+    // this.client.subscribeToResponseOf('delete-order');
 
     await this.client.connect();
   }

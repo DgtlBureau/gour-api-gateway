@@ -19,7 +19,7 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
@@ -37,17 +37,17 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @Controller('clients')
 export class ClientController {
   constructor(
-    @Inject('MAIN_SERVICE') private mainClient: ClientKafka,
+    @Inject('MAIN_SERVICE') private mainClient: ClientProxy,
     private cookieService: CookieService,
   ) {}
 
   async onModuleInit() {
-    this.mainClient.subscribeToResponseOf('get-clients');
-    this.mainClient.subscribeToResponseOf('get-client');
-    this.mainClient.subscribeToResponseOf('create-client');
-    this.mainClient.subscribeToResponseOf('edit-client');
-    this.mainClient.subscribeToResponseOf('delete-client');
-    this.mainClient.subscribeToResponseOf('login-client');
+    // this.mainClient.subscribeToResponseOf('get-clients');
+    // this.mainClient.subscribeToResponseOf('get-client');
+    // this.mainClient.subscribeToResponseOf('create-client');
+    // this.mainClient.subscribeToResponseOf('edit-client');
+    // this.mainClient.subscribeToResponseOf('delete-client');
+    // this.mainClient.subscribeToResponseOf('login-client');
 
     await this.mainClient.connect();
   }
@@ -76,7 +76,7 @@ export class ClientController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
-    const [client] = await firstValueFrom(
+    const client = await firstValueFrom(
       this.mainClient.send('get-client', +id),
     );
 

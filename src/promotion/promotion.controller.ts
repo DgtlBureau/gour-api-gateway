@@ -13,7 +13,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -30,14 +30,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('promotions')
 @Controller('promotions')
 export class PromotionController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-promotions');
-    this.client.subscribeToResponseOf('get-promotion');
-    this.client.subscribeToResponseOf('create-promotion');
-    this.client.subscribeToResponseOf('edit-promotion');
-    this.client.subscribeToResponseOf('delete-promotion');
+    // this.client.subscribeToResponseOf('get-promotions');
+    // this.client.subscribeToResponseOf('get-promotion');
+    // this.client.subscribeToResponseOf('create-promotion');
+    // this.client.subscribeToResponseOf('edit-promotion');
+    // this.client.subscribeToResponseOf('delete-promotion');
 
     await this.client.connect();
   }
@@ -63,7 +63,7 @@ export class PromotionController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
-    const [promotion] = await firstValueFrom(
+    const promotion = await firstValueFrom(
       this.client.send('get-promotion', +id),
     );
 

@@ -11,7 +11,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -36,19 +36,19 @@ import { ClientDto } from '../common/dto/client.dto';
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-products');
-    this.client.subscribeToResponseOf('get-novelties');
-    this.client.subscribeToResponseOf('get-product');
-    this.client.subscribeToResponseOf('create-product');
-    this.client.subscribeToResponseOf('edit-product');
-    this.client.subscribeToResponseOf('delete-product');
-    this.client.subscribeToResponseOf('get-product-grades');
-    this.client.subscribeToResponseOf('create-product-grade');
-    this.client.subscribeToResponseOf('get-grades');
-    this.client.subscribeToResponseOf('edit-grade');
+    // this.client.subscribeToResponseOf('get-products');
+    // this.client.subscribeToResponseOf('get-novelties');
+    // this.client.subscribeToResponseOf('get-product');
+    // this.client.subscribeToResponseOf('create-product');
+    // this.client.subscribeToResponseOf('edit-product');
+    // this.client.subscribeToResponseOf('delete-product');
+    // this.client.subscribeToResponseOf('get-product-grades');
+    // this.client.subscribeToResponseOf('create-product-grade');
+    // this.client.subscribeToResponseOf('get-grades');
+    // this.client.subscribeToResponseOf('edit-grade');
 
     await this.client.connect();
   }
@@ -92,10 +92,13 @@ export class ProductController {
     @Res() res: Response,
     @CurrentUser() client: ClientDto,
   ) {
-    const [product] = await firstValueFrom(
-      this.client.send('get-product', { id: +id, params, client }),
+    const product = await firstValueFrom(
+      this.client.send('get-product', {
+        id: +id,
+        params,
+        client,
+      }),
     );
-
     return res.send(product);
   }
 

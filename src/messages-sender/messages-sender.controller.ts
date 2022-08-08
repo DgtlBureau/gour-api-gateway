@@ -6,7 +6,7 @@ import {
   Inject,
   Post,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { SendSmsDto } from './dto/send-sms.dto';
@@ -14,10 +14,10 @@ import { SendSmsDto } from './dto/send-sms.dto';
 @ApiTags('messages')
 @Controller('messages')
 export class MessagesSenderController {
-  constructor(@Inject('MESSAGES_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MESSAGES_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('send-sms');
+    // this.client.subscribeToResponseOf('send-sms');
 
     await this.client.connect();
   }

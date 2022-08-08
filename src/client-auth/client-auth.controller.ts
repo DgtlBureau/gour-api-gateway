@@ -9,7 +9,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { Response, Request } from 'express';
 import { firstValueFrom } from 'rxjs';
 
@@ -23,16 +23,16 @@ import { SignInDto } from './dto/sign-in.dto';
 @Controller('client-auth')
 export class ClientAuthController {
   constructor(
-    @Inject('MAIN_SERVICE') private client: ClientKafka,
+    @Inject('MAIN_SERVICE') private client: ClientProxy,
     private readonly cookieService: CookieService,
   ) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('send-code');
-    this.client.subscribeToResponseOf('signup');
-    this.client.subscribeToResponseOf('signin');
-    this.client.subscribeToResponseOf('signout');
-    this.client.subscribeToResponseOf('refresh');
+    // this.client.subscribeToResponseOf('send-code');
+    // this.client.subscribeToResponseOf('signup');
+    // this.client.subscribeToResponseOf('signin');
+    // this.client.subscribeToResponseOf('signout');
+    // this.client.subscribeToResponseOf('refresh');
 
     await this.client.connect();
   }

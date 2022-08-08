@@ -13,7 +13,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -30,14 +30,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('cities')
 @Controller('cities')
 export class CityController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-cities');
-    this.client.subscribeToResponseOf('get-city');
-    this.client.subscribeToResponseOf('create-city');
-    this.client.subscribeToResponseOf('edit-city');
-    this.client.subscribeToResponseOf('delete-city');
+    // this.client.subscribeToResponseOf('get-cities');
+    // this.client.subscribeToResponseOf('get-city');
+    // this.client.subscribeToResponseOf('create-city');
+    // this.client.subscribeToResponseOf('edit-city');
+    // this.client.subscribeToResponseOf('delete-city');
 
     await this.client.connect();
   }

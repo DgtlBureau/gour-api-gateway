@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { ClientDto } from '../common/dto/client.dto';
@@ -26,14 +26,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('wallet')
 @Controller('wallet')
 export class WalletController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('wallet-confirm-payment');
-    this.client.subscribeToResponseOf('wallet-change-value');
-    this.client.subscribeToResponseOf('get-client-wallet');
-    this.client.subscribeToResponseOf('get-client-wallet-balance');
-    this.client.subscribeToResponseOf('get-wallet');
+    // this.client.subscribeToResponseOf('wallet-confirm-payment');
+    // this.client.subscribeToResponseOf('wallet-change-value');
+    // this.client.subscribeToResponseOf('get-client-wallet');
+    // this.client.subscribeToResponseOf('get-client-wallet-balance');
+    // this.client.subscribeToResponseOf('get-wallet');
 
     await this.client.connect();
   }

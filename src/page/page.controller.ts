@@ -11,7 +11,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -27,14 +27,14 @@ import { PageUpdateDto } from './dto/page-update.dto';
 @ApiTags('pages')
 @Controller('pages')
 export class PageController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-pages');
-    this.client.subscribeToResponseOf('get-page');
-    this.client.subscribeToResponseOf('create-page');
-    this.client.subscribeToResponseOf('edit-page');
-    this.client.subscribeToResponseOf('delete-page');
+    // this.client.subscribeToResponseOf('get-pages');
+    // this.client.subscribeToResponseOf('get-page');
+    // this.client.subscribeToResponseOf('create-page');
+    // this.client.subscribeToResponseOf('edit-page');
+    // this.client.subscribeToResponseOf('delete-page');
 
     await this.client.connect();
   }
@@ -52,7 +52,7 @@ export class PageController {
   })
   @Get('/:key')
   async getOne(@Param('key') key: string, @Res() res: Response) {
-    const [page] = await firstValueFrom(this.client.send('get-page', key));
+    const page = await firstValueFrom(this.client.send('get-page', key));
 
     return res.send(page);
   }

@@ -12,7 +12,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
@@ -28,14 +28,14 @@ import { AuthGuard } from '../common/guards/auth.guard';
 @ApiTags('order-profiles')
 @Controller('order-profiles')
 export class OrderProfileController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-order-profiles');
-    this.client.subscribeToResponseOf('get-order-profile');
-    this.client.subscribeToResponseOf('create-order-profile');
-    this.client.subscribeToResponseOf('edit-order-profile');
-    this.client.subscribeToResponseOf('delete-order-profile');
+    // this.client.subscribeToResponseOf('get-order-profiles');
+    // this.client.subscribeToResponseOf('get-order-profile');
+    // this.client.subscribeToResponseOf('create-order-profile');
+    // this.client.subscribeToResponseOf('edit-order-profile');
+    // this.client.subscribeToResponseOf('delete-order-profile');
 
     await this.client.connect();
   }

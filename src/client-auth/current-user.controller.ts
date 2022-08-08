@@ -13,7 +13,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -37,18 +37,18 @@ const PHONE_CODE_KEY = 'PhoneCode';
 @ApiTags('current-user')
 @Controller('client-auth/current-user')
 export class CurrentUserController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-current-user');
-    this.client.subscribeToResponseOf('edit-current-user');
-    this.client.subscribeToResponseOf('send-phone-code');
-    this.client.subscribeToResponseOf('change-phone');
-    this.client.subscribeToResponseOf('change-password');
-    this.client.subscribeToResponseOf('get-favorites');
-    this.client.subscribeToResponseOf('add-to-favorites');
-    this.client.subscribeToResponseOf('remove-from-favorites');
-    this.client.subscribeToResponseOf('change-city');
+    // this.client.subscribeToResponseOf('get-current-user');
+    // this.client.subscribeToResponseOf('edit-current-user');
+    // this.client.subscribeToResponseOf('send-phone-code');
+    // this.client.subscribeToResponseOf('change-phone');
+    // this.client.subscribeToResponseOf('change-password');
+    // this.client.subscribeToResponseOf('get-favorites');
+    // this.client.subscribeToResponseOf('add-to-favorites');
+    // this.client.subscribeToResponseOf('remove-from-favorites');
+    // this.client.subscribeToResponseOf('change-city');
 
     await this.client.connect();
   }
@@ -59,7 +59,7 @@ export class CurrentUserController {
   @HttpCode(HttpStatus.OK)
   @Get('/')
   async getCurrentUser(@CurrentUser('id') id: number) {
-    const [currentUser] = await firstValueFrom(
+    const currentUser = await firstValueFrom(
       this.client.send('get-current-user', id),
     );
 
