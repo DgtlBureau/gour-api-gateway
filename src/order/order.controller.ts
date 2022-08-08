@@ -55,28 +55,9 @@ export class OrderController {
       this.client.send('get-orders', { client, params }),
     );
 
-    // TODO: интегрировать амо, сделать расчет скидок
-    const response: OrderResponseDto[] = orders.map((order) => ({
-      order,
-      crmInfo: {
-        id: 'TX-123456789',
-        status: {
-          name: 'Создан',
-          color: '#0f0',
-        },
-      },
-      promotions: [
-        {
-          title: 'Скидка за наеденность',
-          value: 100,
-          currency: 'cheeseCoin',
-        },
-      ],
-    }));
-
     res.set(TOTAL_COUNT_HEADER, count.toString());
 
-    return res.send(response);
+    return res.send(orders);
   }
 
   @ApiResponse({
@@ -91,16 +72,16 @@ export class OrderController {
     type: OrderDto,
   })
   @Post('/')
-  post(@CurrentUser() client: ClientDto, @Body() order: OrderCreateDto) {
-    return this.client.send('create-order', { order, client });
+  post(@CurrentUser() client: ClientDto, @Body() dto: OrderCreateDto) {
+    return this.client.send('create-order', { dto, client });
   }
 
   @ApiResponse({
     type: OrderDto,
   })
   @Put('/:id')
-  put(@Param('id') id: string, @Body() order: Partial<OrderDto>) {
-    return this.client.send('edit-order', { id: +id, order });
+  put(@Param('id') id: string, @Body() dto: Partial<OrderDto>) {
+    return this.client.send('edit-order', { id: +id, dto });
   }
 
   @Delete('/:id')

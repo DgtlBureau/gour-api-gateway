@@ -28,7 +28,7 @@ import { ChangePasswordDto } from '../client-auth/dto/change-password.dto';
 import { AddToFavoritesDto } from './dto/add-to-favorites.dto';
 import { ChangeCityDto } from '../client-auth/dto/change-city.dto';
 import { ProductDto } from '../common/dto/product.dto';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 const PHONE_CODE_KEY = 'PhoneCode';
 

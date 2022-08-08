@@ -10,9 +10,14 @@ import { getToken } from '../services/cookie.service';
 import { ClientDto } from '../dto/client.dto';
 
 export const CurrentUser = createParamDecorator(
-  async (data: string, ctx: ExecutionContext) => {
+  async (data: keyof ClientDto, ctx: ExecutionContext) => {
     const request: AppRequest = ctx.switchToHttp().getRequest();
-    const decodedUser = decodeToken(getToken(request)) as ClientDto;
+
+    const token = getToken(request);
+
+    console.log(token);
+
+    const decodedUser = decodeToken(token) as ClientDto;
 
     if (!decodedUser) throw new UnauthorizedException();
 

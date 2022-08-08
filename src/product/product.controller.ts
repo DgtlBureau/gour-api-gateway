@@ -28,6 +28,8 @@ import { ProductGradeUpdateDto } from './dto/product-grade-update.dto';
 import { ProductWithMetricsDto } from './dto/product-with-metrics.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 import { AuthGuard } from '../common/guards/auth.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { ClientDto } from '../common/dto/client.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -55,9 +57,13 @@ export class ProductController {
     type: [ProductDto],
   })
   @Get('/')
-  async getAll(@Query() params: ProductGetListDto, @Res() res: Response) {
+  async getAll(
+    @Query() params: ProductGetListDto,
+    @Res() res: Response,
+    @CurrentUser() client: ClientDto,
+  ) {
     const [products, count] = await firstValueFrom(
-      this.client.send('get-products', params),
+      this.client.send('get-products', { params, client }),
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -69,8 +75,11 @@ export class ProductController {
     type: [ProductDto],
   })
   @Get('/novelties')
-  getNovelties(@Query() params: ProductGetListDto) {
-    return this.client.send('get-novelties', params);
+  getNovelties(
+    @Query() params: ProductGetListDto,
+    @CurrentUser() client: ClientDto,
+  ) {
+    return this.client.send('get-novelties', { params, client });
   }
 
   @ApiResponse({
@@ -81,9 +90,10 @@ export class ProductController {
     @Param('id') id: string,
     @Query() params: ProductGetOneDto = {},
     @Res() res: Response,
+    @CurrentUser() client: ClientDto,
   ) {
     const [product] = await firstValueFrom(
-      this.client.send('get-product', { id: +id, params }),
+      this.client.send('get-product', { id: +id, params, client }),
     );
 
     return res.send(product);
