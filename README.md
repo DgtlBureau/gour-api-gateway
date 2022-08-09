@@ -6,3 +6,7 @@
 4.  npm run start:dev
 
 No database connection required
+
+# git
+
+Current branch - master
