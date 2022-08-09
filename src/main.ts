@@ -9,6 +9,12 @@ import { config } from 'dotenv';
 config();
 
 if (!process.env.PORT) throw new Error('Added PORT to .env file !!');
+if (!process.env.MAIN_SERVICE_PORT)
+  throw new Error('Added MAIN_SERVICE_PORT to .env file !!');
+if (!process.env.MESSAGES_SERVICE_PORT)
+  throw new Error('Added MESSAGES_SERVICE_PORT to .env file !!');
+if (!process.env.AUTH_SERVICE_PORT)
+  throw new Error('Added AUTH_SERVICE_PORT to .env file !!');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

@@ -32,24 +32,28 @@ import { CityController } from './city/city.controller';
     }),
     ClientsModule.register([
       {
-        name: 'MESSAGES_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: 'localhost',
-          port: 5052,
-        },
-      },
-      {
         name: 'MAIN_SERVICE',
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 5112,
+          port: +process.env.MAIN_SERVICE_PORT,
+        },
+      },
+      {
+        name: 'MESSAGES_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: 'localhost',
+          port: +process.env.MESSAGES_SERVICE_PORT,
         },
       },
       {
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
+        // options: {
+        //   host: 'localhost',
+        //   port: +process.env.AUTH_SERVICE_PORT,
+        // },
       },
     ]),
   ],
