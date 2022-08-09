@@ -17,8 +17,6 @@ export class MessagesSenderController {
   constructor(@Inject('MESSAGES_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('send-sms');
-
     await this.client.connect();
   }
 

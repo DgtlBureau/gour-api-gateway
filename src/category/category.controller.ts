@@ -33,12 +33,6 @@ export class CategoryController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-categories');
-    // this.client.subscribeToResponseOf('get-category');
-    // this.client.subscribeToResponseOf('create-category');
-    // this.client.subscribeToResponseOf('edit-category');
-    // this.client.subscribeToResponseOf('delete-category');
-
     await this.client.connect();
   }
 

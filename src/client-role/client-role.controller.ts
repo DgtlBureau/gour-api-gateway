@@ -33,12 +33,6 @@ export class ClientRoleController {
   constructor(@Inject('MAIN_SERVICE') private mainClient: ClientProxy) {}
 
   async onModuleInit() {
-    // this.mainClient.subscribeToResponseOf('get-client-roles');
-    // this.mainClient.subscribeToResponseOf('get-client-role');
-    // this.mainClient.subscribeToResponseOf('create-client-role');
-    // this.mainClient.subscribeToResponseOf('edit-client-role');
-    // this.mainClient.subscribeToResponseOf('delete-client-role');
-
     await this.mainClient.connect();
   }
 
@@ -63,7 +57,7 @@ export class ClientRoleController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
-    const [clientRole] = await firstValueFrom(
+    const clientRole = await firstValueFrom(
       this.mainClient.send('get-client-role', +id),
     );
 

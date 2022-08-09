@@ -30,12 +30,6 @@ export class PageController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-pages');
-    // this.client.subscribeToResponseOf('get-page');
-    // this.client.subscribeToResponseOf('create-page');
-    // this.client.subscribeToResponseOf('edit-page');
-    // this.client.subscribeToResponseOf('delete-page');
-
     await this.client.connect();
   }
 

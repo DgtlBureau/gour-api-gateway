@@ -40,16 +40,6 @@ export class CurrentUserController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-current-user');
-    // this.client.subscribeToResponseOf('edit-current-user');
-    // this.client.subscribeToResponseOf('send-phone-code');
-    // this.client.subscribeToResponseOf('change-phone');
-    // this.client.subscribeToResponseOf('change-password');
-    // this.client.subscribeToResponseOf('get-favorites');
-    // this.client.subscribeToResponseOf('add-to-favorites');
-    // this.client.subscribeToResponseOf('remove-from-favorites');
-    // this.client.subscribeToResponseOf('change-city');
-
     await this.client.connect();
   }
 

@@ -28,12 +28,6 @@ export class ClientAuthController {
   ) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('send-code');
-    // this.client.subscribeToResponseOf('signup');
-    // this.client.subscribeToResponseOf('signin');
-    // this.client.subscribeToResponseOf('signout');
-    // this.client.subscribeToResponseOf('refresh');
-
     await this.client.connect();
   }
 

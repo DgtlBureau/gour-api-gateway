@@ -5,15 +5,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { Request } from 'express';
 import { config } from 'dotenv';
+
 config();
 
-if (!process.env.PORT) {
-  throw new Error('Added PORT to .env file !!');
-}
-
-if (!process.env.KAFKA_PASSWORD || !process.env.KAFKA_USERNAME) {
-  throw new Error('Added KAFKA_PASSWORD and KAFKA_USERNAME to .env file!!');
-}
+if (!process.env.PORT) throw new Error('Added PORT to .env file !!');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -55,4 +50,5 @@ async function bootstrap() {
     console.log('APP LISTEN ' + process.env.PORT);
   });
 }
+
 bootstrap();

@@ -29,12 +29,6 @@ export class WalletController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('wallet-confirm-payment');
-    // this.client.subscribeToResponseOf('wallet-change-value');
-    // this.client.subscribeToResponseOf('get-client-wallet');
-    // this.client.subscribeToResponseOf('get-client-wallet-balance');
-    // this.client.subscribeToResponseOf('get-wallet');
-
     await this.client.connect();
   }
 

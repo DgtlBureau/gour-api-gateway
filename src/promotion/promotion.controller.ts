@@ -33,12 +33,6 @@ export class PromotionController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-promotions');
-    // this.client.subscribeToResponseOf('get-promotion');
-    // this.client.subscribeToResponseOf('create-promotion');
-    // this.client.subscribeToResponseOf('edit-promotion');
-    // this.client.subscribeToResponseOf('delete-promotion');
-
     await this.client.connect();
   }
 

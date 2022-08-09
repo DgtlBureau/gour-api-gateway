@@ -38,21 +38,6 @@ import { CityController } from './city/city.controller';
           host: 'localhost',
           port: 5052,
         },
-        // options: {
-        //   client: {
-        //     clientId: 'messages',
-        //     brokers: ['localhost:9092'],
-        //     ssl: process.env.NODE_END === 'production',
-        //     sasl: {
-        //       mechanism: 'plain',
-        //       username: process.env.KAFKA_USERNAME,
-        //       password: process.env.KAFKA_PASSWORD,
-        //     },
-        //   },
-        //   consumer: {
-        //     groupId: 'messages-consumer',
-        //   },
-        // },
       },
       {
         name: 'MAIN_SERVICE',
@@ -61,40 +46,10 @@ import { CityController } from './city/city.controller';
           host: 'localhost',
           port: 5112,
         },
-        // options: {
-        //   client: {
-        //     clientId: 'main',
-        //     brokers: ['localhost:9092'],
-        //     ssl: process.env.NODE_END === 'production',
-        //     sasl: {
-        //       mechanism: 'plain',
-        //       username: process.env.KAFKA_USERNAME,
-        //       password: process.env.KAFKA_PASSWORD,
-        //     },
-        //   },
-        //   consumer: {
-        //     groupId: 'main-consumer',
-        //   },
-        // },
       },
       {
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
-        // options: {
-        //   client: {
-        //     clientId: 'auth',
-        //     brokers: ['localhost:9092'],
-        //     ssl: process.env.NODE_END === 'production',
-        //     sasl: {
-        //       mechanism: 'plain',
-        //       username: process.env.KAFKA_USERNAME,
-        //       password: process.env.KAFKA_PASSWORD,
-        //     },
-        //   },
-        //   consumer: {
-        //     groupId: 'auth-consumer',
-        //   },
-        // },
       },
     ]),
   ],

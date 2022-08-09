@@ -31,12 +31,6 @@ export class OrderProfileController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-order-profiles');
-    // this.client.subscribeToResponseOf('get-order-profile');
-    // this.client.subscribeToResponseOf('create-order-profile');
-    // this.client.subscribeToResponseOf('edit-order-profile');
-    // this.client.subscribeToResponseOf('delete-order-profile');
-
     await this.client.connect();
   }
 

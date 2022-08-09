@@ -29,8 +29,6 @@ export class ImageController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('upload-image');
-
     await this.client.connect();
   }
 

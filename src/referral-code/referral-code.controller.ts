@@ -36,14 +36,6 @@ export class ReferralCodeController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-referral-codes');
-    // this.client.subscribeToResponseOf('create-referral-code');
-    // this.client.subscribeToResponseOf('edit-referral-code');
-    // this.client.subscribeToResponseOf('delete-referral-code');
-    // this.client.subscribeToResponseOf('get-referrals');
-    // this.client.subscribeToResponseOf('get-referral-discount');
-    // this.client.subscribeToResponseOf('edit-referral-discount');
-
     await this.client.connect();
   }
 

@@ -33,12 +33,6 @@ export class CityController {
   constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    // this.client.subscribeToResponseOf('get-cities');
-    // this.client.subscribeToResponseOf('get-city');
-    // this.client.subscribeToResponseOf('create-city');
-    // this.client.subscribeToResponseOf('edit-city');
-    // this.client.subscribeToResponseOf('delete-city');
-
     await this.client.connect();
   }
 
@@ -63,7 +57,7 @@ export class CityController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
-    const [city] = await firstValueFrom(this.client.send('get-city', +id));
+    const city = await firstValueFrom(this.client.send('get-city', +id));
 
     return res.send(city);
   }

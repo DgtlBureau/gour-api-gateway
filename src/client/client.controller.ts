@@ -42,13 +42,6 @@ export class ClientController {
   ) {}
 
   async onModuleInit() {
-    // this.mainClient.subscribeToResponseOf('get-clients');
-    // this.mainClient.subscribeToResponseOf('get-client');
-    // this.mainClient.subscribeToResponseOf('create-client');
-    // this.mainClient.subscribeToResponseOf('edit-client');
-    // this.mainClient.subscribeToResponseOf('delete-client');
-    // this.mainClient.subscribeToResponseOf('login-client');
-
     await this.mainClient.connect();
   }
 
