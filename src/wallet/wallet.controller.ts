@@ -8,9 +8,10 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ClientProxy } from '@nestjs/microservices';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { ClientDto } from '../common/dto/client.dto';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -18,19 +19,16 @@ import { WalletDto } from '../common/dto/wallet.dto';
 import { WalletTransactionDto } from '../common/dto/wallet-transaction.dto';
 import { WalletChangeValueDto } from './dto/wallet-change-value.dto';
 import { WalletConfirmPaymentDto } from './dto/wallet-confirm-payment.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('wallet')
 @Controller('wallet')
 export class WalletController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('wallet-confirm-payment');
-    this.client.subscribeToResponseOf('wallet-change-value');
-    this.client.subscribeToResponseOf('get-client-wallet');
-    this.client.subscribeToResponseOf('get-client-wallet-balance');
-    this.client.subscribeToResponseOf('get-wallet');
-
     await this.client.connect();
   }
 
@@ -61,6 +59,9 @@ export class WalletController {
     return this.client.send('get-client-wallet', client.id);
   }
 
+  @ApiOkResponse({
+    type: Number,
+  })
   @HttpCode(HttpStatus.OK)
   @Get('/current-balance')
   getCurrentBalance(@CurrentUser() client: ClientDto) {

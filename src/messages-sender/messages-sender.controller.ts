@@ -6,18 +6,17 @@ import {
   Inject,
   Post,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { timeout } from 'rxjs';
+
 import { SendSmsDto } from './dto/send-sms.dto';
 
-@ApiTags('messages-sender')
-@Controller('messages-sender')
+@ApiTags('messages')
+@Controller('messages')
 export class MessagesSenderController {
-  constructor(@Inject('MESSAGES_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MESSAGES_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('send-sms');
     await this.client.connect();
   }
 
@@ -51,6 +50,6 @@ export class MessagesSenderController {
   @HttpCode(HttpStatus.OK)
   sendSms(@Body() dto: SendSmsDto) {
     console.log('dto: ', dto);
-    return this.client.send('send-sms', dto).pipe(timeout(5000));
+    return this.client.send('send-sms', dto);
   }
 }

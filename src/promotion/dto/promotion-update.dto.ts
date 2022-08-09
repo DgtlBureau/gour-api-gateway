@@ -6,24 +6,24 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TranslatableStringDto } from '../../common/dto/translatable-string.dto';
-import { TranslatableTextDto } from '../../common/dto/translatable-text.dto';
+import { TranslatableStringCreateDto } from '../../common/dto/translatable-string-create.dto';
+import { TranslatableTextCreateDto } from '../../common/dto/translatable-text-create.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ApiModelPropertyOptional } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
-import { MetaDto } from '../../common/dto/meta.dto';
+import { MetaCreateDto } from '../../common/dto/meta-create.dto';
 
 export class PromotionUpdateDto {
   @ValidateNested()
-  @Type(() => TranslatableStringDto)
+  @Type(() => TranslatableStringCreateDto)
   @IsOptional()
   @ApiPropertyOptional()
-  title?: TranslatableStringDto;
+  title?: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextDto)
+  @Type(() => TranslatableTextCreateDto)
   @IsOptional()
   @ApiPropertyOptional()
-  description?: TranslatableTextDto;
+  description?: TranslatableTextCreateDto;
 
   @IsNumber()
   @IsOptional()
@@ -53,12 +53,12 @@ export class PromotionUpdateDto {
   @IsArray()
   @IsOptional()
   @ApiPropertyOptional()
-  products: number[];
+  products?: number[];
 
   @ValidateNested()
   @IsOptional()
   @ApiModelPropertyOptional({
-    type: () => MetaDto,
+    type: () => MetaCreateDto,
   })
-  pageMeta: MetaDto;
+  pageMeta?: MetaCreateDto;
 }

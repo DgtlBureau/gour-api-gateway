@@ -6,22 +6,22 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TranslatableStringDto } from '../../common/dto/translatable-string.dto';
-import { TranslatableTextDto } from '../../common/dto/translatable-text.dto';
+import { TranslatableStringCreateDto } from '../../common/dto/translatable-string-create.dto';
+import { TranslatableTextCreateDto } from '../../common/dto/translatable-text-create.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { MetaDto } from '../../common/dto/meta.dto';
+import { MetaCreateDto } from '../../common/dto/meta-create.dto';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
 export class PromotionCreateDto {
   @ValidateNested()
-  @Type(() => TranslatableStringDto)
+  @Type(() => TranslatableStringCreateDto)
   @ApiProperty()
-  title: TranslatableStringDto;
+  title: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextDto)
+  @Type(() => TranslatableTextCreateDto)
   @ApiProperty()
-  description: TranslatableTextDto;
+  description: TranslatableTextCreateDto;
 
   @IsNumber()
   @ApiProperty()
@@ -50,7 +50,7 @@ export class PromotionCreateDto {
 
   @ValidateNested()
   @ApiModelProperty({
-    type: () => MetaDto,
+    type: () => MetaCreateDto,
   })
-  pageMeta: MetaDto;
+  pageMeta: MetaCreateDto;
 }

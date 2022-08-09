@@ -7,8 +7,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TranslatableStringDto } from '../../common/dto/translatable-string.dto';
-import { TranslatableTextDto } from '../../common/dto/translatable-text.dto';
+import { TranslatableStringCreateDto } from '../../common/dto/translatable-string-create.dto';
+import { TranslatableTextCreateDto } from '../../common/dto/translatable-text-create.dto';
 import { PriceDto } from '../../common/dto/price.dto';
 import { MetaDto } from '../../common/dto/meta.dto';
 import { RoleDiscountDto } from '../../common/dto/role-discount.dto';
@@ -18,15 +18,15 @@ import { ApiModelPropertyOptional } from '@nestjs/swagger/dist/decorators/api-mo
 export class ProductUpdateDto {
   @ValidateNested()
   @IsOptional()
-  @Type(() => TranslatableStringDto)
+  @Type(() => TranslatableStringCreateDto)
   @ApiPropertyOptional()
-  title?: TranslatableStringDto;
+  title?: TranslatableStringCreateDto;
 
   @ValidateNested()
   @IsOptional()
-  @Type(() => TranslatableTextDto)
+  @Type(() => TranslatableTextCreateDto)
   @ApiPropertyOptional()
-  description?: TranslatableTextDto;
+  description?: TranslatableTextCreateDto;
 
   @IsString()
   @IsOptional()
@@ -39,7 +39,7 @@ export class ProductUpdateDto {
     type: Number,
     isArray: true,
   })
-  images: number[];
+  images?: number[];
 
   @IsNumber()
   @IsOptional()

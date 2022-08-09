@@ -11,11 +11,12 @@ import {
   Put,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ClientProxy } from '@nestjs/microservices';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { firstValueFrom, timeout } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import * as XLSX from 'xlsx';
 
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
@@ -25,21 +26,16 @@ import { ReferralCodeCreateDto } from './dto/referral-code-create.dto';
 import { ReferralCodeExportDto } from './dto/referral-code-export.dto';
 import { ReferralCodeSetDiscountDto } from './dto/referral-code-set-discount.dto';
 import { ReferralCodeEditDto } from './dto/referral-code-edit.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
-@ApiTags('referralCodes')
-@Controller()
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
+@ApiTags('referral-codes')
+@Controller('referral-codes')
 export class ReferralCodeController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-referral-codes');
-    this.client.subscribeToResponseOf('create-referral-code');
-    this.client.subscribeToResponseOf('edit-referral-code');
-    this.client.subscribeToResponseOf('delete-referral-code');
-    this.client.subscribeToResponseOf('export-referral-codes');
-    this.client.subscribeToResponseOf('get-referral-discount');
-    this.client.subscribeToResponseOf('edit-referral-discount');
-
     await this.client.connect();
   }
 
@@ -47,45 +43,43 @@ export class ReferralCodeController {
     type: [ReferralCodeDto],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/referralCodes')
+  @Get('/')
   getAll(@Query() params: BaseGetListDto) {
-    return this.client.send('get-referral-codes', params).pipe(timeout(5000));
+    return this.client.send('get-referral-codes', params);
   }
 
   @ApiOkResponse({
     type: ReferralCodeDto,
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('/referralCodes')
+  @Post('/')
   post(@Body() dto: ReferralCodeCreateDto) {
-    return this.client.send('create-referral-code', dto).pipe(timeout(5000));
+    return this.client.send('create-referral-code', dto);
   }
 
   @ApiOkResponse({
     type: ReferralCodeDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Put('/referralCodes/:id')
+  @Put('/:id')
   put(@Param('id') id: string, @Body() dto: ReferralCodeEditDto) {
-    return this.client
-      .send('edit-referral-code', { id: +id, dto })
-      .pipe(timeout(5000));
+    return this.client.send('edit-referral-code', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete('/referralCodes/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-referral-code', +id).pipe(timeout(5000));
+    return this.client.send('delete-referral-code', +id);
   }
 
   @HttpCode(HttpStatus.OK)
-  @Get('/referralCodes/export')
+  @Get('/export')
   async export(@Query() params: ReferralCodeExportDto, @Res() res: Response) {
-    const [referralCodes] = await firstValueFrom(
-      this.client.send('export-referral-codes', params).pipe(timeout(5000)),
+    const referrals = await firstValueFrom(
+      this.client.send('get-referrals', params),
     );
 
-    const wb = this.makeBook(referralCodes);
+    const wb = this.makeBook(referrals);
 
     const fileName = `referral_codes_export_${new Date().toISOString()}`;
 
@@ -95,23 +89,25 @@ export class ReferralCodeController {
       'Content-Disposition': `attachment; filename="${fileName}.xlsx"`,
     });
 
-    return res
-      .status(200)
-      .send(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+    return res.send(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
   }
 
+  @ApiOkResponse({
+    type: Number,
+  })
   @HttpCode(HttpStatus.OK)
-  @Get('/referralCodes/discount')
+  @Get('/discount')
   getDiscount() {
-    return this.client.send('get-referral-discount', '').pipe(timeout(5000));
+    return this.client.send('get-referral-discount', '');
   }
 
+  @ApiOkResponse({
+    type: Number,
+  })
   @HttpCode(HttpStatus.OK)
-  @Post('/referralCodes/discount')
+  @Post('/discount')
   setDiscount(@Body() { discount }: ReferralCodeSetDiscountDto) {
-    return this.client
-      .send('edit-referral-discount', discount)
-      .pipe(timeout(5000));
+    return this.client.send('edit-referral-discount', discount);
   }
 
   makeBook(clients: ClientDto[]) {

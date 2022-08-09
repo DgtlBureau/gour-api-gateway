@@ -5,23 +5,30 @@ import {
   Inject,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { timeout } from 'rxjs';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+import { AuthGuard } from '../common/guards/auth.guard';
 import { ImageDto } from '../common/dto/image.dto';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('images')
-@Controller()
+@Controller('images')
 export class ImageController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('upload-image');
-
     await this.client.connect();
   }
 
@@ -42,8 +49,8 @@ export class ImageController {
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('image'))
   @HttpCode(HttpStatus.CREATED)
-  @Post('/images')
+  @Post('/upload')
   post(@UploadedFile() image: Express.Multer.File) {
-    return this.client.send('upload-image', image).pipe(timeout(5000));
+    return this.client.send('upload-image', image);
   }
 }

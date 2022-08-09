@@ -7,15 +7,18 @@ import {
 import { AppRequest } from '../types/AppRequest';
 import { decodeToken } from '../services/jwt.service';
 import { getToken } from '../services/cookie.service';
+import { ClientDto } from '../dto/client.dto';
 
 export const CurrentUser = createParamDecorator(
-  async (data: unknown, ctx: ExecutionContext) => {
+  async (data: keyof ClientDto, ctx: ExecutionContext) => {
     const request: AppRequest = ctx.switchToHttp().getRequest();
-    const decodedUser = decodeToken(getToken(request)) as { id: number };
 
-    console.log('decodedUser', decodedUser);
+    const token = getToken(request);
 
-    if (decodedUser) return decodedUser;
-    else throw new UnauthorizedException();
+    const decodedUser = decodeToken(token) as ClientDto;
+
+    if (!decodedUser) throw new UnauthorizedException();
+
+    return data ? decodedUser[data] : decodedUser;
   },
 );

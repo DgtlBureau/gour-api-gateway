@@ -11,8 +11,9 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { ClientKafka } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
@@ -21,31 +22,24 @@ import { AppRequest } from '../common/types/AppRequest';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { ClientDto } from '../common/dto/client.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ChangePhoneDto } from './dto/change-phone.dto';
+import { ChangePhoneDto } from '../client-auth/dto/change-phone.dto';
 import { SendCodeDto } from './dto/send-code.dto';
-import { ChangePasswordDto } from './dto/change-password.dto';
+import { ChangePasswordDto } from '../client-auth/dto/change-password.dto';
 import { AddToFavoritesDto } from './dto/add-to-favorites.dto';
-import { ChangeCityDto } from './dto/change-city.dto';
-import { FavoriteResponseDto } from './dto/favorite-response.dto';
+import { ChangeCityDto } from '../client-auth/dto/change-city.dto';
+import { ProductDto } from '../common/dto/product.dto';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 const PHONE_CODE_KEY = 'PhoneCode';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('current-user')
-@Controller('client-auth/currentUser')
+@Controller('client-auth/current-user')
 export class CurrentUserController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-current-user');
-    this.client.subscribeToResponseOf('edit-current-user');
-    this.client.subscribeToResponseOf('send-phone-code');
-    this.client.subscribeToResponseOf('change-phone');
-    this.client.subscribeToResponseOf('change-password');
-    this.client.subscribeToResponseOf('get-favorites');
-    this.client.subscribeToResponseOf('add-to-favorites');
-    this.client.subscribeToResponseOf('remove-from-favorites');
-    this.client.subscribeToResponseOf('change-city');
-
     await this.client.connect();
   }
 
@@ -53,25 +47,26 @@ export class CurrentUserController {
     type: ClientDto,
   })
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
   @Get('/')
-  getCurrentUser(@CurrentUser('id') clientId: number) {
-    return this.client.send('get-current-user', clientId);
+  async getCurrentUser(@CurrentUser('id') id: number) {
+    const currentUser = await firstValueFrom(
+      this.client.send('get-current-user', id),
+    );
+
+    return currentUser;
   }
 
   @ApiOkResponse({
     type: ClientDto,
   })
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
   @Put('/')
   updateCurrentUser(@CurrentUser('id') id: number, @Body() dto: UpdateUserDto) {
     return this.client.send('edit-current-user', { id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
-  @Post('/phone/sendCode')
+  @Post('/send-sms')
   async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
     const hashedCode = await firstValueFrom(
       this.client.send('send-phone-code', dto),
@@ -85,8 +80,7 @@ export class CurrentUserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
-  @Post('/phone/change')
+  @Post('/change-phone')
   async changePhone(
     @Body() dto: ChangePhoneDto,
     @CurrentUser('id') id: number,
@@ -109,7 +103,6 @@ export class CurrentUserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth()
   @Post('/change-password')
   changePassword(
     @CurrentUser('id') id: number,
@@ -119,7 +112,7 @@ export class CurrentUserController {
   }
 
   @ApiOkResponse({
-    type: [FavoriteResponseDto],
+    type: [ProductDto],
   })
   @HttpCode(HttpStatus.OK)
   @Get('/favorites')
@@ -131,11 +124,11 @@ export class CurrentUserController {
   @Post('/favorites')
   addProductToFavorites(
     @CurrentUser('id') clientId: number,
-    @Body() addToFavoritesDto: AddToFavoritesDto,
+    @Body() dto: AddToFavoritesDto,
   ) {
     return this.client.send('add-to-favorites', {
       clientId,
-      productId: addToFavoritesDto.productId,
+      productId: dto.productId,
     });
   }
 
@@ -153,13 +146,10 @@ export class CurrentUserController {
 
   @HttpCode(HttpStatus.OK)
   @Put('/change-city')
-  changeCity(
-    @CurrentUser('id') clientId: number,
-    @Body() changeCityDto: ChangeCityDto,
-  ) {
+  changeCity(@CurrentUser('id') clientId: number, @Body() dto: ChangeCityDto) {
     return this.client.send('change-city', {
       clientId,
-      cityId: changeCityDto.cityId,
+      cityId: dto.cityId,
     });
   }
 }

@@ -11,40 +11,39 @@ import {
   Inject,
   HttpStatus,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
+import { firstValueFrom } from 'rxjs';
+
 import { BaseGetListDto } from '../common/dto/base-get-list.dto';
+import { CategoryDto } from '../common/dto/category.dto';
 import { CategoryCreateDto } from './dto/category-create.dto';
 import { CategoryUpdateDto } from './dto/category-update.dto';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
-import { ClientKafka } from '@nestjs/microservices';
-import { firstValueFrom, timeout } from 'rxjs';
-import { TOTAL_COUNT_HEADER } from 'src/constants/httpConstants';
-import { CategoryResponseDto } from './dto/category-response.dto';
+import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
+import { AuthGuard } from '../common/guards/auth.guard';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @ApiTags('categories')
-@Controller()
+@Controller('categories')
 export class CategoryController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientKafka) {}
+  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
 
   async onModuleInit() {
-    this.client.subscribeToResponseOf('get-categories');
-    this.client.subscribeToResponseOf('get-category');
-    this.client.subscribeToResponseOf('create-category');
-    this.client.subscribeToResponseOf('edit-category');
-    this.client.subscribeToResponseOf('delete-category');
-
     await this.client.connect();
   }
 
   @ApiOkResponse({
-    type: [CategoryResponseDto],
+    type: [CategoryDto],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/categories')
+  @Get('/')
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [categories, count] = await firstValueFrom(
-      this.client.send('get-categories', params).pipe(timeout(5000)),
+      this.client.send('get-categories', params),
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -53,43 +52,39 @@ export class CategoryController {
   }
 
   @ApiOkResponse({
-    type: CategoryResponseDto,
+    type: CategoryDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/categories/:id')
-  async getOne(@Param('id') id: string) {
+  @Get('/:id')
+  async getOne(@Param('id') id: string, @Res() res: Response) {
     const category = await firstValueFrom(
-      this.client.send('get-category', id).pipe(timeout(5000)),
+      this.client.send('get-category', +id),
     );
 
-    console.log(category);
-
-    return category;
+    return res.send(category);
   }
 
   @ApiOkResponse({
-    type: CategoryResponseDto,
+    type: CategoryDto,
   })
   @HttpCode(HttpStatus.CREATED)
-  @Post('/categories')
-  post(@Body() category: CategoryCreateDto) {
-    return this.client.send('create-category', category).pipe(timeout(5000));
+  @Post('/')
+  post(@Body() dto: CategoryCreateDto) {
+    return this.client.send('create-category', dto);
   }
 
   @ApiOkResponse({
-    type: CategoryResponseDto,
+    type: CategoryDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Put('/categories/:id')
-  put(@Param('id') id: string, @Body() category: CategoryUpdateDto) {
-    return this.client
-      .send('edit-category', { id, category })
-      .pipe(timeout(5000));
+  @Put('/:id')
+  put(@Param('id') id: string, @Body() dto: CategoryUpdateDto) {
+    return this.client.send('edit-category', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Delete('/categories/:id')
+  @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-category', id).pipe(timeout(5000));
+    return this.client.send('delete-category', +id);
   }
 }

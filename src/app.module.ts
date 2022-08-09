@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CookieService } from './common/services/cookie.service';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -15,8 +17,8 @@ import { PromotionController } from './promotion/promotion.controller';
 import { WalletController } from './wallet/wallet.controller';
 import { ReferralCodeController } from './referral-code/referral-code.controller';
 import { ProductController } from './product/product.controller';
-import { AuthController } from './auth/auth.controller';
-import { CurrentUserController } from './auth/current-user.controller';
+import { ClientAuthController } from './client-auth/client-auth.controller';
+import { CurrentUserController } from './client-auth/current-user.controller';
 import { OrderProfileController } from './order-profile/order-profile.controller';
 import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
@@ -30,83 +32,57 @@ import { CityController } from './city/city.controller';
     }),
     ClientsModule.register([
       {
-        name: 'MESSAGES_SERVICE',
-        transport: Transport.KAFKA,
+        name: 'MAIN_SERVICE',
+        transport: Transport.TCP,
         options: {
-          client: {
-            clientId: 'messages',
-            brokers: ['localhost:9092'],
-            ssl: process.env.NODE_END === 'production',
-            sasl: {
-              mechanism: 'plain',
-              username: process.env.KAFKA_USERNAME,
-              password: process.env.KAFKA_PASSWORD,
-            },
-          },
-          consumer: {
-            groupId: 'messages-consumer',
-          },
+          host: 'localhost',
+          port: +process.env.MAIN_SERVICE_PORT,
         },
       },
       {
-        name: 'MAIN_SERVICE',
-        transport: Transport.KAFKA,
+        name: 'MESSAGES_SERVICE',
+        transport: Transport.TCP,
         options: {
-          client: {
-            clientId: 'main',
-            brokers: ['localhost:9092'],
-            ssl: process.env.NODE_END === 'production',
-            sasl: {
-              mechanism: 'plain',
-              username: process.env.KAFKA_USERNAME,
-              password: process.env.KAFKA_PASSWORD,
-            },
-          },
-          consumer: {
-            groupId: 'main-consumer',
-          },
+          host: 'localhost',
+          port: +process.env.MESSAGES_SERVICE_PORT,
         },
       },
       {
         name: 'AUTH_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            clientId: 'auth',
-            brokers: ['localhost:9092'],
-            ssl: process.env.NODE_END === 'production',
-            sasl: {
-              mechanism: 'plain',
-              username: process.env.KAFKA_USERNAME,
-              password: process.env.KAFKA_PASSWORD,
-            },
-          },
-          consumer: {
-            groupId: 'auth-consumer',
-          },
-        },
+        transport: Transport.TCP,
+        // options: {
+        //   host: 'localhost',
+        //   port: +process.env.AUTH_SERVICE_PORT,
+        // },
       },
     ]),
   ],
   controllers: [
     AppController,
-    MessagesSenderController,
-    CategoryController,
-    ClientController,
-    FileController,
-    OrderController,
-    PageController,
-    PromotionController,
-    WalletController,
-    ReferralCodeController,
-    ProductController,
-    AuthController,
+    ClientAuthController,
     CurrentUserController,
-    OrderProfileController,
-    ImageController,
-    ClientRoleController,
+    CategoryController,
     CityController,
+    ClientController,
+    ClientRoleController,
+    FileController,
+    ImageController,
+    MessagesSenderController,
+    OrderController,
+    OrderProfileController,
+    PageController,
+    ProductController,
+    PromotionController,
+    ReferralCodeController,
+    WalletController,
   ],
-  providers: [AppService, CookieService],
+  providers: [
+    AppService,
+    CookieService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor,
+    },
+  ],
 })
 export class AppModule {}
