@@ -35,7 +35,7 @@ import { CityController } from './city/city.controller';
         name: 'MAIN_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.MAIN_SERVICE_HOST,
           port: +process.env.MAIN_SERVICE_PORT,
         },
       },
@@ -43,7 +43,7 @@ import { CityController } from './city/city.controller';
         name: 'MESSAGES_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.MESSAGES_SERVICE_HOST,
           port: +process.env.MESSAGES_SERVICE_PORT,
         },
       },
@@ -51,7 +51,7 @@ import { CityController } from './city/city.controller';
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
         // options: {
-        //   host: 'localhost',
+        //   host: process.env.AUTH_SERVICE_HOST,
         //   port: +process.env.AUTH_SERVICE_PORT,
         // },
       },
