@@ -9,6 +9,7 @@ export class CookieService {
   MAX_AGE_15_MIN = new Date(
     this.NEW_DATE.setMinutes(this.NEW_DATE.getMinutes() + 15),
   );
+  MAX_AGE_1_DAY = new Date(this.NEW_DATE.setDate(this.NEW_DATE.getDate() + 1));
   MAX_AGE_30_DAYS = new Date(
     this.NEW_DATE.setMinutes(this.NEW_DATE.getDay() + 30),
   );
@@ -19,7 +20,7 @@ export class CookieService {
     return {
       httpOnly: true,
       secure: true,
-      expires: this.MAX_AGE_15_MIN,
+      expires: this.MAX_AGE_1_DAY,
       sameSite: this.sameSite,
     };
   }
