@@ -33,8 +33,9 @@ import * as path from 'path';
       envFilePath: '.env',
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, '../../', 'static'),
+      rootPath: path.resolve(__dirname, '../../../', 'static'),
       serveRoot: '/static',
+      renderPath: '',
       exclude: ['/api*'],
     }),
     ClientsModule.register([
