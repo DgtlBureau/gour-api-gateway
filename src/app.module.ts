@@ -26,8 +26,6 @@ import { CityController } from './city/city.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
 
-console.log(path.resolve(process.cwd(), '..', 'static'));
-
 @Module({
   imports: [
     ConfigModule.forRoot({
