@@ -53,6 +53,7 @@ export class ProductController {
   ) {
     const [products, count] = await firstValueFrom(
       this.client.send('get-products', { params, client }),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -87,6 +88,7 @@ export class ProductController {
         params,
         client,
       }),
+      { defaultValue: null },
     );
     return res.send(product);
   }

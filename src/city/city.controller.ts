@@ -44,6 +44,7 @@ export class CityController {
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [cities, count] = await firstValueFrom(
       this.client.send('get-cities', params),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -57,7 +58,9 @@ export class CityController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
-    const city = await firstValueFrom(this.client.send('get-city', +id));
+    const city = await firstValueFrom(this.client.send('get-city', +id), {
+      defaultValue: null,
+    });
 
     return res.send(city);
   }

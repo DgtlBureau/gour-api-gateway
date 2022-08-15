@@ -53,6 +53,7 @@ export class ClientAuthController {
     try {
       const { token, client, refreshToken } = await firstValueFrom(
         this.client.send('signin', dto),
+        { defaultValue: { token: null, client: null, refreshToken: null } },
       );
 
       res.cookie(
@@ -100,6 +101,12 @@ export class ClientAuthController {
 
       const { accessToken, refreshToken } = await firstValueFrom(
         this.client.send('refresh', token),
+        {
+          defaultValue: {
+            accessToken: null,
+            refreshToken: null,
+          },
+        },
       );
 
       res.cookie(

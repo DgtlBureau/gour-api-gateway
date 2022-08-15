@@ -77,6 +77,7 @@ export class ReferralCodeController {
   async export(@Query() params: ReferralCodeExportDto, @Res() res: Response) {
     const referrals = await firstValueFrom(
       this.client.send('get-referrals', params),
+      { defaultValue: null },
     );
 
     const wb = this.makeBook(referrals);
