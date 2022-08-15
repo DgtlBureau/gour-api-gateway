@@ -37,7 +37,6 @@ console.log(path.resolve(process.cwd(), '..', 'static'));
     ServeStaticModule.forRoot({
       rootPath: path.resolve(process.cwd(), '..', 'static'),
       serveRoot: '/static',
-      renderPath: '',
       exclude: ['/api*'],
     }),
     ClientsModule.register([
