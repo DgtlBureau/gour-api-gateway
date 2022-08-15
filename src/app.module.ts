@@ -23,12 +23,18 @@ import { OrderProfileController } from './order-profile/order-profile.controller
 import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import path from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(process.cwd(), '..', 'static'),
+      serveRoot: '/static',
     }),
     ClientsModule.register([
       {
