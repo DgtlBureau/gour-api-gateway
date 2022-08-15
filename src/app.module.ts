@@ -34,7 +34,8 @@ import * as path from 'path';
     }),
     ServeStaticModule.forRoot({
       rootPath: path.resolve(process.cwd(), '..', 'static'),
-      serveRoot: '/static',
+      serveRoot: '/',
+      exclude: ['/api*'],
     }),
     ClientsModule.register([
       {
