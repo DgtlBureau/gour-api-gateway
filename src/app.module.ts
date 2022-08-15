@@ -26,7 +26,7 @@ import { CityController } from './city/city.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
 
-console.log(path.join(__dirname, '../../../', 'static'));
+console.log(path.resolve(process.cwd(), '..', 'static'));
 
 @Module({
   imports: [
@@ -35,7 +35,7 @@ console.log(path.join(__dirname, '../../../', 'static'));
       envFilePath: '.env',
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.join(__dirname, '../../../', 'static'),
+      rootPath: path.resolve(process.cwd(), '..', 'static'),
       serveRoot: '/static',
       renderPath: '',
       exclude: ['/api*'],
