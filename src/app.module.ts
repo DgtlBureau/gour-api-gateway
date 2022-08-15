@@ -24,7 +24,7 @@ import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import path from 'path';
+import * as path from 'path';
 
 @Module({
   imports: [
