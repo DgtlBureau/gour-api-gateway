@@ -9,4 +9,4 @@ No database connection required
 
 # git
 
-Current branch - master
+Current branch - main

@@ -5,7 +5,6 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CookieService } from './common/services/cookie.service';
-import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { MessagesSenderController } from './messages-sender/messages-sender.controller';
 import { CategoryController } from './category/category.controller';
@@ -23,6 +22,8 @@ import { OrderProfileController } from './order-profile/order-profile.controller
 import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 @Module({
   imports: [
@@ -30,12 +31,17 @@ import { CityController } from './city/city.controller';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(process.cwd(), '..', 'static'),
+      serveRoot: '/static',
+      exclude: ['/api*'],
+    }),
     ClientsModule.register([
       {
         name: 'MAIN_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.MAIN_SERVICE_HOST,
           port: +process.env.MAIN_SERVICE_PORT,
         },
       },
@@ -43,7 +49,7 @@ import { CityController } from './city/city.controller';
         name: 'MESSAGES_SERVICE',
         transport: Transport.TCP,
         options: {
-          host: 'localhost',
+          host: process.env.MESSAGES_SERVICE_HOST,
           port: +process.env.MESSAGES_SERVICE_PORT,
         },
       },
@@ -51,7 +57,7 @@ import { CityController } from './city/city.controller';
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
         // options: {
-        //   host: 'localhost',
+        //   host: process.env.AUTH_SERVICE_HOST,
         //   port: +process.env.AUTH_SERVICE_PORT,
         // },
       },
@@ -77,7 +83,6 @@ import { CityController } from './city/city.controller';
     WalletController,
   ],
   providers: [
-    AppService,
     CookieService,
     {
       provide: APP_INTERCEPTOR,

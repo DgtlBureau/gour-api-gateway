@@ -44,6 +44,7 @@ export class ClientRoleController {
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [clientRoles, count] = await firstValueFrom(
       this.mainClient.send('get-client-roles', params),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -59,6 +60,7 @@ export class ClientRoleController {
   async getOne(@Param('id') id: string, @Res() res: Response) {
     const clientRole = await firstValueFrom(
       this.mainClient.send('get-client-role', +id),
+      { defaultValue: null },
     );
 
     return res.send(clientRole);

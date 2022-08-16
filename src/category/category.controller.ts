@@ -44,6 +44,7 @@ export class CategoryController {
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [categories, count] = await firstValueFrom(
       this.client.send('get-categories', params),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -59,6 +60,7 @@ export class CategoryController {
   async getOne(@Param('id') id: string, @Res() res: Response) {
     const category = await firstValueFrom(
       this.client.send('get-category', +id),
+      { defaultValue: null },
     );
 
     return res.send(category);

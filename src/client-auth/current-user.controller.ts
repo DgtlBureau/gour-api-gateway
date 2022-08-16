@@ -51,6 +51,7 @@ export class CurrentUserController {
   async getCurrentUser(@CurrentUser('id') id: number) {
     const currentUser = await firstValueFrom(
       this.client.send('get-current-user', id),
+      { defaultValue: null },
     );
 
     return currentUser;
@@ -70,6 +71,7 @@ export class CurrentUserController {
   async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
     const hashedCode = await firstValueFrom(
       this.client.send('send-phone-code', dto),
+      { defaultValue: null },
     );
 
     res.cookie(PHONE_CODE_KEY, hashedCode);

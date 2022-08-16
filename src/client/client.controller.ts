@@ -56,6 +56,7 @@ export class ClientController {
   async getAll(@Query() params: ClientGetListDto, @Res() res: Response) {
     const [clients, count] = await firstValueFrom(
       this.mainClient.send('get-clients', params),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count);
@@ -71,6 +72,7 @@ export class ClientController {
   async getOne(@Param('id') id: string, @Res() res: Response) {
     const client = await firstValueFrom(
       this.mainClient.send('get-client', +id),
+      { defaultValue: null },
     );
 
     return res.send(client);
@@ -105,6 +107,7 @@ export class ClientController {
   async login(@Param('id') id: string, @Res() res: Response) {
     const { token } = await firstValueFrom(
       this.mainClient.send('login-client', +id),
+      { defaultValue: { token: null } },
     );
 
     res.cookie(

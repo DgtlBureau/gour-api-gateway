@@ -44,6 +44,7 @@ export class PromotionController {
   async getAll(@Query() params: BaseGetListDto, @Res() res: Response) {
     const [promotions, count] = await firstValueFrom(
       this.client.send('get-promotions', params),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
@@ -59,6 +60,7 @@ export class PromotionController {
   async getOne(@Param('id') id: string, @Res() res: Response) {
     const promotion = await firstValueFrom(
       this.client.send('get-promotion', +id),
+      { defaultValue: null },
     );
 
     return res.send(promotion);

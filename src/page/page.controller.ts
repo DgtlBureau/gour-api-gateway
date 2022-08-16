@@ -46,7 +46,9 @@ export class PageController {
   })
   @Get('/:key')
   async getOne(@Param('key') key: string, @Res() res: Response) {
-    const page = await firstValueFrom(this.client.send('get-page', key));
+    const page = await firstValueFrom(this.client.send('get-page', key), {
+      defaultValue: null,
+    });
 
     return res.send(page);
   }

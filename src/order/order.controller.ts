@@ -47,6 +47,7 @@ export class OrderController {
   ) {
     const [orders, count] = await firstValueFrom(
       this.client.send('get-orders', { client, params }),
+      { defaultValue: [[], 0] },
     );
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
