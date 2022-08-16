@@ -26,6 +26,7 @@ import { ProductUpdateDto } from './dto/product-update.dto';
 import { ProductGradeGetListDto } from './dto/product-grade-get-list.dto';
 import { ProductGradeUpdateDto } from './dto/product-grade-update.dto';
 import { ProductWithMetricsDto } from './dto/product-with-metrics.dto';
+import { ProductGetSimilarDto } from './dto/product-get-similar.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -70,6 +71,17 @@ export class ProductController {
     @CurrentUser() client: ClientDto,
   ) {
     return this.client.send('get-novelties', { params, client });
+  }
+
+  @ApiResponse({
+    type: [ProductDto],
+  })
+  @Get('/similar')
+  getSimilarProducts(
+    @Query() params: ProductGetSimilarDto,
+    @CurrentUser() client: ClientDto,
+  ) {
+    return this.client.send('get-product-similar', { params, client });
   }
 
   @ApiResponse({
