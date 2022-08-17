@@ -25,8 +25,6 @@ import { CityUpdateDto } from './dto/city-update.dto';
 import { TOTAL_COUNT_HEADER } from '../constants/httpConstants';
 import { AuthGuard } from '../common/guards/auth.guard';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('cities')
 @Controller('cities')
 export class CityController {
@@ -65,6 +63,8 @@ export class CityController {
     return res.send(city);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiOkResponse({
     type: CityDto,
   })
@@ -74,6 +74,8 @@ export class CityController {
     return this.client.send('create-city', dto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @ApiOkResponse({
     type: CityDto,
   })
@@ -83,6 +85,8 @@ export class CityController {
     return this.client.send('edit-city', { id: +id, dto });
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
   remove(@Param('id') id: string) {
