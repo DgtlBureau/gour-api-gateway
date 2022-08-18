@@ -47,8 +47,8 @@ export class ImageController {
     },
   })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('image'))
   @HttpCode(HttpStatus.CREATED)
+  @UseInterceptors(FileInterceptor('image'))
   @Post('/upload')
   post(@UploadedFile() image: Express.Multer.File) {
     return this.client.send('upload-image', image);
