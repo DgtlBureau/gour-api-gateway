@@ -53,7 +53,7 @@ export class ImageController {
   post(@UploadedFile() image: Express.Multer.File) {
     return this.client.send('upload-image', {
       ...image,
-      buffer: image.buffer.toString(),
+      buffer: image.buffer,
     });
   }
 }
