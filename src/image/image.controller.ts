@@ -51,6 +51,7 @@ export class ImageController {
   @UseInterceptors(FileInterceptor('image'))
   @Post('/upload')
   post(@UploadedFile() image: Express.Multer.File) {
+    console.log('image', image);
     return this.client.send('upload-image', {
       ...image,
       buffer: image.buffer,
