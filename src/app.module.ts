@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
 
 import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor';
 import { CookieService } from './common/services/cookie.service';
@@ -22,8 +24,7 @@ import { OrderProfileController } from './order-profile/order-profile.controller
 import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import * as path from 'path';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [
@@ -56,15 +57,16 @@ import * as path from 'path';
       {
         name: 'AUTH_SERVICE',
         transport: Transport.TCP,
-        // options: {
-        //   host: process.env.AUTH_SERVICE_HOST,
-        //   port: +process.env.AUTH_SERVICE_PORT,
-        // },
+        options: {
+          host: process.env.AUTH_SERVICE_HOST,
+          port: +process.env.AUTH_SERVICE_PORT,
+        },
       },
     ]),
   ],
   controllers: [
     AppController,
+    AuthController,
     ClientAuthController,
     CurrentUserController,
     CategoryController,
