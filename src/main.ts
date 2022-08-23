@@ -15,12 +15,16 @@ if (!process.env.MESSAGES_SERVICE_PORT)
   throw new Error('Added MESSAGES_SERVICE_PORT to .env file !!');
 if (!process.env.AUTH_SERVICE_PORT)
   throw new Error('Added AUTH_SERVICE_PORT to .env file !!');
+if (!process.env.PAYMENT_SERVICE_PORT)
+  throw new Error('Added PAYMENT_SERVICE_PORT to .env file !!');
 if (!process.env.AUTH_SERVICE_HOST)
   throw new Error('Added AUTH_SERVICE_HOST to .env file !!');
 if (!process.env.MESSAGES_SERVICE_HOST)
   throw new Error('Added MESSAGES_SERVICE_HOST to .env file !!');
 if (!process.env.MAIN_SERVICE_HOST)
   throw new Error('Added MAIN_SERVICE_HOST to .env file !!');
+if (!process.env.PAYMENT_SERVICE_HOST)
+  throw new Error('Added PAYMENT_SERVICE_HOST to .env file !!');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

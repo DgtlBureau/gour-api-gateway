@@ -43,7 +43,7 @@ import { AuthController } from './auth/auth.controller';
         transport: Transport.TCP,
         options: {
           host: process.env.MAIN_SERVICE_HOST,
-          port: +process.env.MAIN_SERVICE_PORT,
+          port: +process.env.AUTH_SERVICE_PORT,
         },
       },
       {
@@ -51,7 +51,7 @@ import { AuthController } from './auth/auth.controller';
         transport: Transport.TCP,
         options: {
           host: process.env.MESSAGES_SERVICE_HOST,
-          port: +process.env.MESSAGES_SERVICE_PORT,
+          port: +process.env.AUTH_SERVICE_PORT,
         },
       },
       {
