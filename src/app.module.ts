@@ -54,14 +54,14 @@ import { AuthController } from './auth/auth.controller';
           port: +process.env.MESSAGES_SERVICE_PORT,
         },
       },
-      {
-        name: 'AUTH_SERVICE',
-        transport: Transport.TCP,
-        options: {
-          host: process.env.AUTH_SERVICE_HOST,
-          port: +process.env.AUTH_SERVICE_PORT,
-        },
-      },
+      // {
+      //   name: 'AUTH_SERVICE',
+      //   transport: Transport.TCP,
+      //   options: {
+      //     host: process.env.AUTH_SERVICE_HOST,
+      //     port: +process.env.AUTH_SERVICE_PORT,
+      //   },
+      // },
     ]),
   ],
   controllers: [

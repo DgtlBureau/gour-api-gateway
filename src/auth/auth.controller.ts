@@ -40,7 +40,6 @@ export class AuthController {
 
   @Post('/signin')
   async signin(@Body() dto: SignInDto) {
-    console.log(dto);
     const response = await authApi.post('/signin', dto);
 
     return response.data;
