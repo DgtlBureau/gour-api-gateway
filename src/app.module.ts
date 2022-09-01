@@ -26,6 +26,7 @@ import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
 import { AuthController } from './auth/auth.controller';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
+import { UserController } from './user/user.controller';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
     ProductController,
     PromotionController,
     ReferralCodeController,
+    UserController,
     WalletController,
   ],
   providers: [
