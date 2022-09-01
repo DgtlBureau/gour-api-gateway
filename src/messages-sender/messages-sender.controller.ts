@@ -10,6 +10,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { SendSmsDto } from './dto/send-sms.dto';
+import { SendEmailDto } from './dto/send-email.dto';
 
 @ApiTags('messages')
 @Controller('messages')
@@ -49,7 +50,12 @@ export class MessagesSenderController {
   @Post('send-sms')
   @HttpCode(HttpStatus.OK)
   sendSms(@Body() dto: SendSmsDto) {
-    console.log('dto: ', dto);
     return this.client.send('send-sms', dto);
+  }
+
+  @Post('send-email')
+  @HttpCode(HttpStatus.OK)
+  sendEmail(@Body() dto: SendEmailDto) {
+    return this.client.send('send-email', dto);
   }
 }
