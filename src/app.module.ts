@@ -47,6 +47,14 @@ import { AuthController } from './auth/auth.controller';
         },
       },
       {
+        name: 'PAYMENT_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.PAYMENT_SERVICE_HOST,
+          port: +process.env.PAYMENT_SERVICE_PORT,
+        },
+      },
+      {
         name: 'MESSAGES_SERVICE',
         transport: Transport.TCP,
         options: {
@@ -54,14 +62,14 @@ import { AuthController } from './auth/auth.controller';
           port: +process.env.MESSAGES_SERVICE_PORT,
         },
       },
-      // {
-      //   name: 'AUTH_SERVICE',
-      //   transport: Transport.TCP,
-      //   options: {
-      //     host: process.env.AUTH_SERVICE_HOST,
-      //     port: +process.env.AUTH_SERVICE_PORT,
-      //   },
-      // },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.AUTH_SERVICE_HOST,
+          port: +process.env.AUTH_SERVICE_PORT,
+        },
+      },
     ]),
   ],
   controllers: [
