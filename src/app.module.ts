@@ -25,6 +25,7 @@ import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
 import { AuthController } from './auth/auth.controller';
+import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 
 @Module({
   imports: [
@@ -97,6 +98,10 @@ import { AuthController } from './auth/auth.controller';
     {
       provide: APP_INTERCEPTOR,
       useClass: TimeoutInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ErrorsInterceptor,
     },
   ],
 })

@@ -5,6 +5,7 @@ import { CookieOptions, Response, Request } from 'express';
 export class CookieService {
   ACCESS_TOKEN_NAME = 'AccessToken';
   REFRESH_TOKEN_NAME = 'RefreshToken';
+  PHONE_CODE_NAME = 'PhoneCodeHash';
   NEW_DATE = new Date();
   MAX_AGE_15_MIN = new Date(
     this.NEW_DATE.setMinutes(this.NEW_DATE.getMinutes() + 15),
@@ -21,6 +22,15 @@ export class CookieService {
       httpOnly: true,
       secure: true,
       expires: this.MAX_AGE_1_DAY,
+      sameSite: this.sameSite,
+    };
+  }
+
+  get phoneCodeOptions() {
+    return {
+      httpOnly: true,
+      secure: true,
+      expires: this.MAX_AGE_15_MIN,
       sameSite: this.sameSite,
     };
   }
