@@ -46,8 +46,6 @@ async function bootstrap() {
     builder.addServer(`http://127.0.0.1:${process.env.PORT}`);
   }
 
-  builder.addServer(`localhost:${process.env.PORT}`);
-
   const config = builder.build();
 
   console.log('NODE_ENV', process.env.NODE_ENV);
@@ -58,6 +56,7 @@ async function bootstrap() {
   if (process.env.LOG_REQUESTS) {
     app.use('*', (req: Request, res, next: () => void) => {
       console.log(req.method.toUpperCase() + ': ' + req.baseUrl);
+      console.log('body: ', req.body);
       return next();
     });
   }
