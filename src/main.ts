@@ -46,7 +46,7 @@ async function bootstrap() {
     builder.addServer(`http://127.0.0.1:${process.env.PORT}`);
   }
 
-  builder.addServer(`localhost:${process.env.PORT}`);
+  // builder.addServer(`localhost:${process.env.PORT}`);
 
   const config = builder.build();
 
