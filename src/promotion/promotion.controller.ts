@@ -71,7 +71,7 @@ export class PromotionController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/')
-  post(@Body() dto: PromotionCreateDto) {
+  post(@Body() dto: any | PromotionCreateDto) {
     return this.client.send('create-promotion', dto);
   }
 
