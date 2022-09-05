@@ -142,7 +142,6 @@ export class ProductController {
     @Param('id') id: string,
     @Query() params: ProductGradeGetListDto,
   ) {
-    return [];
     return this.client.send('get-product-grades', { id: +id, params });
   }
 
