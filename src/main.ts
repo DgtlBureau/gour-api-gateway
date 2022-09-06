@@ -4,11 +4,14 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { Request } from 'express';
+import * as Sentry from '@sentry/node';
 import { config } from 'dotenv';
+import { getRequiredEnvsByNodeEnv } from './common/utils/getRequiredEnvsByNodeEnv';
+import { NodeEnv } from './common/types/App';
 
 config();
 
-const requiredEnvs = [
+const envs = [
   'PORT',
   'MAIN_SERVICE_PORT',
   'MESSAGES_SERVICE_PORT',
@@ -19,6 +22,11 @@ const requiredEnvs = [
   'PAYMENT_SERVICE_HOST',
   'PAYMENT_SERVICE_PORT',
 ];
+
+const requiredEnvs = getRequiredEnvsByNodeEnv(
+  { common: envs, development: ['SENTRY_DSN'], production: ['SENTRY_DSN'] },
+  process.env.NODE_ENV as NodeEnv,
+);
 
 requiredEnvs.forEach((envKey) => {
   if (!process.env[envKey]) {
@@ -42,7 +50,7 @@ async function bootstrap() {
     .addBearerAuth()
     .setBasePath('v1');
 
-  if (process.env.NODE_ENV === 'develop') {
+  if (process.env.NODE_ENV === 'development') {
     builder.addServer(`http://127.0.0.1:${process.env.PORT}`);
   }
 
@@ -56,13 +64,20 @@ async function bootstrap() {
   if (process.env.LOG_REQUESTS) {
     app.use('*', (req: Request, res, next: () => void) => {
       console.log(req.method.toUpperCase() + ': ' + req.baseUrl);
-      console.log('body: ', req.body);
       return next();
     });
   }
 
+  if (['production', 'development'].includes(process.env.NODE_ENV)) {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+      environment: process.env.NODE_ENV,
+      tracesSampleRate: 1.0,
+    });
+  }
+
   await app.listen(process.env.PORT).then(() => {
-    console.log('APP LISTEN ' + process.env.PORT);
+    console.log('APP LISTEN: ' + process.env.PORT);
   });
 }
 

@@ -26,6 +26,7 @@ import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
 import { AuthController } from './auth/auth.controller';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
+import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
 
 @Module({
   imports: [
@@ -102,6 +103,10 @@ import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: ErrorsInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SentryInterceptor,
     },
   ],
 })
