@@ -44,6 +44,14 @@ export class ProductController {
   }
 
   @ApiResponse({
+    type: [ProductGradeDto],
+  })
+  @Get('/grades')
+  getGrades(@Query() params: ProductGradeGetListDto) {
+    return this.client.send('get-grades', params);
+  }
+
+  @ApiResponse({
     type: [ProductDto],
   })
   @Get('/')
@@ -146,14 +154,6 @@ export class ProductController {
     @Body() dto: ProductGradeCreateDto,
   ) {
     return this.client.send('create-product-grade', { id: +id, dto });
-  }
-
-  @ApiResponse({
-    type: [ProductGradeDto],
-  })
-  @Get('/grades')
-  getGrades(@Query() params: ProductGradeGetListDto) {
-    return this.client.send('get-grades', params);
   }
 
   @ApiResponse({

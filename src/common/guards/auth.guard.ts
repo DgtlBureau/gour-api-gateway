@@ -18,12 +18,11 @@ export class AuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request: AppRequest = ctx.switchToHttp().getRequest();
 
-    return true;
-    // const token = getToken(request);
+    const token = getToken(request);
 
-    // const decodedUser = decodeToken(token) as ClientDto;
+    const decodedUser = decodeToken(token) as ClientDto;
 
-    // if (decodedUser) return true;
-    // else throw new UnauthorizedException();
+    if (decodedUser) return true;
+    else throw new UnauthorizedException();
   }
 }

@@ -20,6 +20,7 @@ import { WalletTransactionDto } from '../common/dto/wallet-transaction.dto';
 import { WalletChangeValueDto } from './dto/wallet-change-value.dto';
 import { WalletConfirmPaymentDto } from './dto/wallet-confirm-payment.dto';
 import { AuthGuard } from '../common/guards/auth.guard';
+import { GetAmountByCurrencyDto } from './dto/get-amount-by-currency.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -30,6 +31,15 @@ export class WalletController {
 
   async onModuleInit() {
     await this.client.connect();
+  }
+
+  @ApiOkResponse({
+    type: Number,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/get-amount-by-currency')
+  getAmountByCurrency(@Body() dto: GetAmountByCurrencyDto) {
+    return this.client.send('get-amount-by-currency', dto);
   }
 
   @ApiOkResponse({

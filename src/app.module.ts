@@ -25,6 +25,8 @@ import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
 import { AuthController } from './auth/auth.controller';
+import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
+import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
 
 @Module({
   imports: [
@@ -43,7 +45,15 @@ import { AuthController } from './auth/auth.controller';
         transport: Transport.TCP,
         options: {
           host: process.env.MAIN_SERVICE_HOST,
-          port: +process.env.AUTH_SERVICE_PORT,
+          port: +process.env.MAIN_SERVICE_PORT,
+        },
+      },
+      {
+        name: 'PAYMENT_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.PAYMENT_SERVICE_HOST,
+          port: +process.env.PAYMENT_SERVICE_PORT,
         },
       },
       {
@@ -51,17 +61,17 @@ import { AuthController } from './auth/auth.controller';
         transport: Transport.TCP,
         options: {
           host: process.env.MESSAGES_SERVICE_HOST,
+          port: +process.env.MESSAGES_SERVICE_PORT,
+        },
+      },
+      {
+        name: 'AUTH_SERVICE',
+        transport: Transport.TCP,
+        options: {
+          host: process.env.AUTH_SERVICE_HOST,
           port: +process.env.AUTH_SERVICE_PORT,
         },
       },
-      // {
-      //   name: 'AUTH_SERVICE',
-      //   transport: Transport.TCP,
-      //   options: {
-      //     host: process.env.AUTH_SERVICE_HOST,
-      //     port: +process.env.AUTH_SERVICE_PORT,
-      //   },
-      // },
     ]),
   ],
   controllers: [
@@ -89,6 +99,14 @@ import { AuthController } from './auth/auth.controller';
     {
       provide: APP_INTERCEPTOR,
       useClass: TimeoutInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ErrorsInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SentryInterceptor,
     },
   ],
 })

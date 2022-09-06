@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpException,
   HttpStatus,
   Inject,
   Post,
@@ -18,6 +19,7 @@ import { AppRequest } from '../common/types/AppRequest';
 import { SendCodeDto } from './dto/send-code.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
+import { CheckCodeDto } from './dto/check-code.dto';
 
 @ApiTags('client-auth')
 @Controller('client-auth')
@@ -33,14 +35,40 @@ export class ClientAuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/send-code')
-  sendCode(@Body() dto: SendCodeDto) {
-    return this.client.send('send-code', dto);
+  async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
+    const hash = await firstValueFrom(
+      this.client.send<string, SendCodeDto>('send-code', dto),
+    );
+
+    res.cookie(
+      this.cookieService.PHONE_CODE_NAME,
+      hash,
+      this.cookieService.phoneCodeOptions,
+    );
+
+    return res.json({
+      hash,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/check-code')
+  async checkCode(@Body() dto: CheckCodeDto, @Req() req: Request) {
+    const codeHash = req.cookies[this.cookieService.PHONE_CODE_NAME] || '';
+    return this.client.send<string, { codeHash: string } & CheckCodeDto>(
+      'check-code',
+      {
+        ...dto,
+        codeHash,
+      },
+    );
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('/signup')
-  signup(@Body() dto: SignUpDto) {
-    return this.client.send('signup', dto);
+  signup(@Body() dto: SignUpDto, @Req() req: Request) {
+    const codeHash = req.cookies[this.cookieService.PHONE_CODE_NAME] || '';
+    return this.client.send('signup', { ...dto, codeHash });
   }
 
   @HttpCode(HttpStatus.OK)
