@@ -1,11 +1,12 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
-import { Request } from 'express';
 import * as Sentry from '@sentry/node';
+import { Request } from 'express';
 import { config } from 'dotenv';
+
+import { AppModule } from './app.module';
 import { getRequiredEnvsByNodeEnv } from './common/utils/getRequiredEnvsByNodeEnv';
 import { NodeEnv } from './common/types/App';
 
@@ -77,7 +78,7 @@ async function bootstrap() {
   }
 
   await app.listen(process.env.PORT).then(() => {
-    console.log('APP LISTEN: ' + process.env.PORT);
+    console.log('GATEWAY LISTEN: ' + process.env.PORT);
   });
 }
 
