@@ -15,7 +15,13 @@ export class ErrorsInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         catchError((err) =>
-          throwError(() => new HttpException(err.message, err.status)),
+          throwError(
+            () =>
+              new HttpException(
+                err.message || 'Server error',
+                Number.isInteger(err.status) ? err.status : 500,
+              ),
+          ),
         ),
       );
   }

@@ -1,22 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
-  Patch,
   Post,
   Put,
 } from '@nestjs/common';
-import { ClientProxy, MessagePattern, Payload } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 import { ApiTags } from '@nestjs/swagger';
 
-// import { SignInDto } from './dto/sign-in.dto';
-// import { SignUpDto } from './dto/sign-up.dto';
-
-// const authApi: AxiosInstance = axios.create({
-//   baseURL: `http://localhost:${process.env.AUTH_SERVICE_PORT}/auth`,
-// });
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('user')
 @Controller('user')
@@ -38,27 +34,17 @@ export class UserController {
   }
 
   @Post('/')
-  createUser(@Body() dto: any) {
+  createUser(@Body() dto: CreateUserDto) {
     return this.client.send('create-user', dto);
   }
 
   @Put('/:uuid')
-  updateUser(@Param('uuid') uuid: string, @Body() dto: any) {
-    return this.client.send('update-user', { id: uuid, dto });
+  updateUser(@Param('uuid') uuid: string, @Body() dto: UpdateUserDto) {
+    return this.client.send('update-user', { uuid, dto });
   }
 
-  // @Post('/signup')
-  // signUp(@Body() userDto: SignUpDto) {
-  //   return this.client.send('signup', userDto);
-  // }
-
-  // @Post('/signup-without-password')
-  // async signUpWithoutPassword(@Body() userDto: SignUpDto) {
-  //   return this.client.send('sign-up-without-password', userDto);
-  // }
-
-  // @Post('/refresh')
-  // async refresh() {
-  //   return this.client.send('refresh', null);
-  // }
+  @Delete('/:uuid')
+  deleteUser(@Param('uuid') uuid: string) {
+    return this.client.send('delete-user', { uuid });
+  }
 }
