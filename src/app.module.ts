@@ -25,8 +25,10 @@ import { ImageController } from './image/image.controller';
 import { ClientRoleController } from './client-role/client-role.controller';
 import { CityController } from './city/city.controller';
 import { AuthController } from './auth/auth.controller';
-import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 import { UserController } from './user/user.controller';
+import { AccessController } from './access/access.controller';
+import { RoleController } from './role/role.controller';
+import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 
 @Module({
   imports: [
@@ -75,6 +77,7 @@ import { UserController } from './user/user.controller';
     ]),
   ],
   controllers: [
+    AccessController,
     AppController,
     AuthController,
     ClientAuthController,
@@ -91,6 +94,7 @@ import { UserController } from './user/user.controller';
     PageController,
     ProductController,
     PromotionController,
+    RoleController,
     ReferralCodeController,
     UserController,
     WalletController,
