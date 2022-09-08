@@ -18,7 +18,7 @@ export class ErrorsInterceptor implements NestInterceptor {
             () => new HttpException(err.message, err.getStatus()),
           );
         }
-        return throwError(() => new HttpException(err?.message, err?.status));
+        return throwError(() => new HttpException(err?.message, +err?.status));
       }),
     );
   }
