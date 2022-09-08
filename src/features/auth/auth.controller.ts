@@ -59,14 +59,14 @@ export class AuthController {
     @Res() res: Response,
     @Req() req: AppRequest,
   ) {
-    const { token, user, refreshToken } = await firstValueFrom(
+    const { accessToken, user, refreshToken } = await firstValueFrom(
       this.client.send('signin', dto),
-      { defaultValue: { token: null, user: null, refreshToken: null } },
+      { defaultValue: { accessToken: null, user: null, refreshToken: null } },
     );
 
     res.cookie(
       this.cookieService.ACCESS_TOKEN_NAME,
-      token,
+      accessToken,
       this.cookieService.accessTokenOptions,
     );
     res.cookie(
@@ -76,10 +76,10 @@ export class AuthController {
     );
 
     req.user = user;
-    req.token = token;
+    req.token = accessToken;
 
     return res.json({
-      token,
+      accessToken,
     });
   }
 
