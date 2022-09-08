@@ -13,8 +13,12 @@ export class ErrorsInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       catchError((err) => {
+        console.log('err: ', err);
+        console.log(err instanceof HttpException);
         if (err instanceof HttpException) {
-          return throwError(() => err);
+          return throwError(
+            () => new HttpException(err.message, err.getStatus()),
+          );
         }
         return throwError(() => new HttpException(err.message, err.status));
       }),
