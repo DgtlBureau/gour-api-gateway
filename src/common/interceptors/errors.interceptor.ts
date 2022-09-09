@@ -10,13 +10,24 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    return next
-      .handle()
-      .pipe(
-        catchError((err) =>
-          throwError(() => new HttpException(err.message, err.status)),
-        ),
-      );
+  intercept(_: ExecutionContext, next: CallHandler): Observable<unknown> {
+    return next.handle().pipe(
+      catchError((err) => {
+        if (err instanceof HttpException) {
+          const arrMsg = (err.getResponse() as { message: [] })?.message;
+          const isArrMessage = Array.isArray(arrMsg);
+          const msg = isArrMessage ? arrMsg.join(', ') : err.message;
+          return throwError(() => new HttpException(msg, err.getStatus()));
+        }
+
+        return throwError(
+          () =>
+            new HttpException(
+              err?.message || 'Произошла ошибка',
+              +err?.status || 500,
+            ),
+        );
+      }),
+    );
   }
 }
