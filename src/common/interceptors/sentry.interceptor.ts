@@ -1,6 +1,7 @@
 import {
   CallHandler,
   ExecutionContext,
+  HttpException,
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
@@ -8,9 +9,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import * as Sentry from '@sentry/node';
 
-const enableSentry = (err: { message: string }) => {
+const enableSentry = (err: unknown) => {
   Sentry.captureException(err);
-  return throwError(() => new Error(err?.message));
+  return throwError(() => err);
 };
 @Injectable()
 export class SentryInterceptor implements NestInterceptor {

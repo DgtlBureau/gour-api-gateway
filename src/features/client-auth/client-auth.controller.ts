@@ -118,7 +118,10 @@ export class ClientAuthController {
   async refresh(@Req() req: Request, @Res() res: Response) {
     const token = req.cookies[this.cookieService.REFRESH_TOKEN_NAME];
 
-    if (!token) throw new NotFoundException('Токен не найден');
+    if (!token) {
+      this.cookieService.clearAllTokens(res);
+      throw new NotFoundException('Токен не найден');
+    }
 
     const { accessToken, refreshToken } = await firstValueFrom(
       this.client.send('refresh', token),
