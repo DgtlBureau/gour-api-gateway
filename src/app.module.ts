@@ -27,6 +27,9 @@ import { CityController } from './features/city/city.controller';
 import { AuthController } from './features/auth/auth.controller';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
 import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
+import { AccessController } from './features/access/access.controller';
+import { RoleController } from './features/role/role.controller';
+import { UserController } from './features/user/user.controller';
 
 @Module({
   imports: [
@@ -76,6 +79,7 @@ import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
   ],
   controllers: [
     AppController,
+    AccessController,
     AuthController,
     ClientAuthController,
     CurrentUserController,
@@ -92,6 +96,8 @@ import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
     ProductController,
     PromotionController,
     ReferralCodeController,
+    RoleController,
+    UserController,
     WalletController,
   ],
   providers: [
