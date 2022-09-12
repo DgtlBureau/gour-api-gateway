@@ -21,6 +21,7 @@ import { AppRequest } from 'src/common/types/AppRequest';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { CheckAccessDto } from './dto/check-access.dto';
 import { CheckTokenDto } from './dto/check-token.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignupWithoutPasswordDto } from './dto/sign-up-without-password.dto';
 import { SignupDto } from './dto/sign-up.dto';
@@ -126,6 +127,11 @@ export class AuthController {
     @Body() dto: ChangePasswordDto,
   ) {
     return this.client.send('change-password', { user, dto });
+  }
+
+  @Post('/forgot-password')
+  async remindPassword(@Body() dto: ForgotPasswordDto) {
+    return this.client.send('forgot-password', dto);
   }
 
   @Post('/signout')
