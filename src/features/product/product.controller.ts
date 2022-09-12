@@ -32,8 +32,8 @@ import { AuthGuard } from '../../common/guards/auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ClientDto } from '../../common/dto/client.dto';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard)
 @ApiTags('products')
 @Controller('products')
 export class ProductController {

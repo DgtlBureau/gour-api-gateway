@@ -25,8 +25,8 @@ import { CategoryUpdateDto } from './dto/category-update.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard)
 @ApiTags('categories')
 @Controller('categories')
 export class CategoryController {
@@ -46,6 +46,7 @@ export class CategoryController {
       this.client.send('get-categories', params),
       { defaultValue: [[], 0] },
     );
+    console.log('categories, count', categories, count);
 
     res.set(TOTAL_COUNT_HEADER, count.toString());
 
@@ -72,6 +73,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.CREATED)
   @Post('/')
   post(@Body() dto: CategoryCreateDto) {
+    console.log('here');
     return this.client.send('create-category', dto);
   }
 
