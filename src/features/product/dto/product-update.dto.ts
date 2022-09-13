@@ -52,11 +52,6 @@ export class ProductUpdateDto {
   @ApiPropertyOptional()
   price?: PriceDto;
 
-  @IsObject()
-  @IsOptional()
-  @ApiPropertyOptional()
-  characteristics?: Record<string, string | number>;
-
   @IsArray()
   @IsOptional()
   @ApiPropertyOptional()
