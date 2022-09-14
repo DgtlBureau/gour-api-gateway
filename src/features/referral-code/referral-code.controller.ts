@@ -73,10 +73,10 @@ export class ReferralCodeController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Get('/export')
-  async export(@Query() params: ReferralCodeExportDto, @Res() res: Response) {
+  @Post('/export')
+  async export(@Body() dto: ReferralCodeExportDto, @Res() res: Response) {
     const referrals = await firstValueFrom(
-      this.client.send('get-referrals', params),
+      this.client.send('get-referrals', dto),
       { defaultValue: null },
     );
 
@@ -90,7 +90,12 @@ export class ReferralCodeController {
       'Content-Disposition': `attachment; filename="${fileName}.xlsx"`,
     });
 
-    return res.send(XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' }));
+    const referralsReport = XLSX.write(wb, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+
+    return res.send(referralsReport);
   }
 
   @ApiOkResponse({
@@ -112,14 +117,21 @@ export class ReferralCodeController {
   }
 
   makeBook(clients: ClientDto[]) {
-    const ws = XLSX.utils.aoa_to_sheet([
-      ['Code', 'Client Name', 'Date'],
-      ...clients.map((client) => [
-        client.referralCode.code,
-        `${client.firstName || ''} ${client.lastName || ''}`,
-        client.createdAt,
-      ]),
-    ]);
+    const titles = ['Клиент', 'Реферальный код', 'Дата регистрации'];
+
+    const rows = clients.map((client) => {
+      if (!client.referralCode) return;
+
+      const name = `${client.firstName || ''} ${client.lastName || ''}`;
+      const referral = client.referralCode.code;
+      const date = client.createdAt;
+
+      const row = [name, referral, date];
+
+      return row;
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet([titles, ...rows]);
 
     const wb = XLSX.utils.book_new();
 
