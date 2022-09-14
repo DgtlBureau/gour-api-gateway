@@ -18,7 +18,7 @@ import { CookieService } from '../../common/services/cookie.service';
 import { AppRequest } from '../../common/types/AppRequest';
 import { SendCodeDto } from './dto/send-code.dto';
 import { SignUpDto } from './dto/sign-up.dto';
-import { SignInDto } from './dto/sign-in.dto';
+import { ClientSignInDto } from './dto/sign-in.dto';
 import { CheckCodeDto } from './dto/check-code.dto';
 
 @ApiTags('client-auth')
@@ -75,7 +75,7 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/signin')
   async signin(
-    @Body() dto: SignInDto,
+    @Body() dto: ClientSignInDto,
     @Res() res: Response,
     @Req() req: AppRequest,
   ) {
