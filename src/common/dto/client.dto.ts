@@ -8,6 +8,7 @@ import { ReferralCodeDto } from './referral-code.dto';
 import { ImageDto } from './image.dto';
 import { OrderProfileDto } from './order-profile.dto';
 import { WalletDto } from './wallet.dto';
+import { DiscountDto } from './discount.dto';
 
 export class ClientDto extends BaseDto {
   @ApiProperty()
@@ -21,6 +22,9 @@ export class ClientDto extends BaseDto {
 
   @ApiProperty()
   favorites: ProductDto[];
+
+  @ApiProperty()
+  discounts: DiscountDto[];
 
   @ApiProperty()
   firstName: string;
