@@ -1,4 +1,11 @@
-import { IsArray, IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmptyObject,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import {
   ApiModelProperty,
   ApiModelPropertyOptional,
@@ -14,13 +21,17 @@ import { RoleDiscountDto } from '../../../common/dto/role-discount.dto';
 
 export class ProductCreateDto {
   @ValidateNested()
-  @Type(() => TranslatableStringCreateDto)
   @ApiProperty()
+  @IsNotEmptyObject()
+  @IsObject()
+  @Type(() => TranslatableStringCreateDto)
   title: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextCreateDto)
   @ApiProperty()
+  @IsNotEmptyObject()
+  @IsObject()
+  @Type(() => TranslatableTextCreateDto)
   description: TranslatableTextCreateDto;
 
   @IsNumber()
