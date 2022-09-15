@@ -48,18 +48,24 @@ export class ProductCreateDto {
   @ApiPropertyOptional()
   images?: number[];
 
-  @IsNumber()
-  @ApiProperty()
-  category: number;
+  @IsArray()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
+  @IsOptional()
+  @ApiPropertyOptional()
+  categoryIds?: number[];
 
   @ValidateNested()
   @Type(() => PriceCreateDto)
   @ApiProperty()
   price: PriceCreateDto;
 
-  @IsObject()
-  @ApiProperty()
-  characteristics: Record<string, string | number>;
+  @IsArray()
+  @IsOptional()
+  @ApiPropertyOptional()
+  productCategories?: number[];
 
   @IsArray()
   @ApiPropertyOptional()
