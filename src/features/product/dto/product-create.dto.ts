@@ -63,11 +63,6 @@ export class ProductCreateDto {
   price: PriceCreateDto;
 
   @IsArray()
-  @IsOptional()
-  @ApiPropertyOptional()
-  productCategories?: number[];
-
-  @IsArray()
   @ApiPropertyOptional()
   similarProducts?: number[];
 

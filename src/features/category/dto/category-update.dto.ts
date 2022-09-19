@@ -1,18 +1,32 @@
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, ValidateNested } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
-import { TranslatableStringDto } from '../../../common/dto/translatable-string.dto';
+import { TranslatableStringCreateDto } from '../../../common/dto/translatable-string-create.dto';
 
 export class CategoryUpdateDto {
   @ValidateNested()
-  @Type(() => TranslatableStringDto)
+  @Type(() => TranslatableStringCreateDto)
   @ApiPropertyOptional()
-  title?: TranslatableStringDto;
+  title?: TranslatableStringCreateDto;
 
-  @ValidateNested()
   @ApiPropertyOptional()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
   @IsOptional()
   @IsArray()
   subCategoriesIds?: number[];
+
+  @ValidateNested()
+  @ApiPropertyOptional()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
+  @IsOptional()
+  @IsArray()
+  parentCategoriesIds?: number[];
 }
