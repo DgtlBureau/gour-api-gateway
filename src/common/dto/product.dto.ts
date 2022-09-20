@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
-import { CategoryDto } from './category.dto';
 import { ImageDto } from './image.dto';
 import { PriceDto } from './price.dto';
 import { RoleDiscountDto } from './role-discount.dto';
@@ -9,6 +8,7 @@ import { ProductModificationDto } from './product-modification.dto';
 import { TranslatableStringDto } from './translatable-string.dto';
 import { TranslatableTextDto } from './translatable-text.dto';
 import { MetaDto } from './meta.dto';
+import { CategoryDto } from './category.dto';
 
 export class ProductDto extends BaseDto {
   @ApiProperty()
@@ -24,7 +24,7 @@ export class ProductDto extends BaseDto {
   images: ImageDto[];
 
   @ApiProperty()
-  category: CategoryDto;
+  categories: CategoryDto[];
 
   @ApiProperty()
   grade: number;
@@ -40,9 +40,6 @@ export class ProductDto extends BaseDto {
 
   @ApiProperty()
   roleDiscounts: RoleDiscountDto[];
-
-  @ApiProperty()
-  characteristics: Record<string, string | number>;
 
   @ApiProperty()
   meta: MetaDto;

@@ -13,7 +13,10 @@ import { PriceDto } from '../../../common/dto/price.dto';
 import { MetaDto } from '../../../common/dto/meta.dto';
 import { RoleDiscountDto } from '../../../common/dto/role-discount.dto';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { ApiModelPropertyOptional } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import {
+  ApiModelProperty,
+  ApiModelPropertyOptional,
+} from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
 export class ProductUpdateDto {
   @ValidateNested()
@@ -41,6 +44,15 @@ export class ProductUpdateDto {
   })
   images?: number[];
 
+  @IsArray()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
+  @IsOptional()
+  @ApiPropertyOptional()
+  categoryIds?: number[];
+
   @IsNumber()
   @IsOptional()
   @ApiPropertyOptional()
@@ -51,11 +63,6 @@ export class ProductUpdateDto {
   @IsOptional()
   @ApiPropertyOptional()
   price?: PriceDto;
-
-  @IsObject()
-  @IsOptional()
-  @ApiPropertyOptional()
-  characteristics?: Record<string, string | number>;
 
   @IsArray()
   @IsOptional()
