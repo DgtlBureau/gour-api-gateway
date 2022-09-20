@@ -122,11 +122,11 @@ export class ReferralCodeController {
     const rows = clients.map((client) => {
       if (!client.referralCode) return;
 
-      const name = `${client.firstName || ''} ${client.lastName || ''}`;
+      const fullName = `${client.firstName || ''} ${client.lastName || ''}`;
       const referral = client.referralCode.code;
       const date = client.createdAt;
 
-      const row = [name, referral, date];
+      const row = [fullName, referral, date];
 
       return row;
     });
