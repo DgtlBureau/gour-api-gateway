@@ -29,6 +29,7 @@ import { AddToFavoritesDto } from './dto/add-to-favorites.dto';
 import { ChangeCityDto } from './dto/change-city.dto';
 import { ProductDto } from '../../common/dto/product.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
+import { ChangeMainAddressDto } from './dto/change-main-address.dto';
 
 const PHONE_CODE_KEY = 'PhoneCode';
 
@@ -151,6 +152,18 @@ export class CurrentUserController {
     return this.client.send('change-city', {
       clientId,
       cityId: dto.cityId,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put('/change-main-address')
+  changeMainProfile(
+    @CurrentUser('id') clientId: number,
+    @Body() dto: ChangeMainAddressDto,
+  ) {
+    return this.client.send('change-main-address', {
+      clientId,
+      addressId: dto.addressId,
     });
   }
 }

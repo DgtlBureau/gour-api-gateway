@@ -20,6 +20,7 @@ import { SendCodeDto } from './dto/send-code.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { CheckCodeDto } from './dto/check-code.dto';
+import { RecoverPasswordDto } from './dto/recover-password.dto';
 
 @ApiTags('client-auth')
 @Controller('client-auth')
@@ -70,6 +71,14 @@ export class ClientAuthController {
     const codeHash = req.cookies[this.cookieService.PHONE_CODE_NAME] || '';
 
     return this.client.send('signup', { ...dto, codeHash });
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post('/recover-password')
+  recoverPassword(@Body() dto: RecoverPasswordDto, @Req() req: Request) {
+    const codeHash = req.cookies[this.cookieService.PHONE_CODE_NAME] || '';
+
+    return this.client.send('recover-password', { ...dto, codeHash });
   }
 
   @HttpCode(HttpStatus.OK)
