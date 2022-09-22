@@ -27,8 +27,8 @@ export class UserController {
     type: [UserDto],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/:roles')
-  getAll(@Param('roles') roles: RoleDto[]) {
+  @Get('/')
+  getAll(@Param('roles') roles: RoleDto[] = []) {
     return this.client.send('get-users-by-roles', roles);
   }
 
