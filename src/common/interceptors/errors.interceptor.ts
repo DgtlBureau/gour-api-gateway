@@ -14,11 +14,19 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(
       catchError((err) => {
         if (err instanceof HttpException) {
-          return throwError(
-            () => new HttpException(err.message, err.getStatus()),
-          );
+          const arrMsg = (err.getResponse() as { message: [] })?.message;
+          const isArrMessage = Array.isArray(arrMsg);
+          const msg = isArrMessage ? arrMsg.join(', ') : err.message;
+          return throwError(() => new HttpException(msg, err.getStatus()));
         }
-        return throwError(() => new HttpException(err?.message, +err?.status));
+
+        return throwError(
+          () =>
+            new HttpException(
+              err?.message || 'Произошла ошибка',
+              +err?.status || 500,
+            ),
+        );
       }),
     );
   }

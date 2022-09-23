@@ -1,8 +1,9 @@
-import { TranslatableStringCreateDto } from '../../../common/dto/translatable-string-create.dto';
-import { TranslatableTextCreateDto } from '../../../common/dto/translatable-text-create.dto';
 import { Type } from 'class-transformer';
-import { IsString, ValidateNested } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsArray, IsOptional, ValidateNested } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+
+import { TranslatableStringCreateDto } from '../../../common/dto/translatable-string-create.dto';
 
 export class CategoryCreateDto {
   @ValidateNested()
@@ -10,12 +11,22 @@ export class CategoryCreateDto {
   @ApiProperty()
   title: TranslatableStringCreateDto;
 
-  @ValidateNested()
-  @Type(() => TranslatableTextCreateDto)
-  @ApiProperty()
-  description: TranslatableTextCreateDto;
+  @ApiPropertyOptional()
+  @IsOptional()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
+  @IsArray()
+  subCategoriesIds?: number[];
 
-  @IsString()
-  @ApiProperty()
-  key: string;
+  @ValidateNested()
+  @ApiPropertyOptional()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
+  @IsOptional()
+  @IsArray()
+  parentCategoriesIds?: number[];
 }

@@ -119,7 +119,7 @@ export class ProductController {
   })
   @Post('/')
   post(@Body() dto: ProductCreateDto) {
-    return this.client.send('create-product', { dto });
+    return this.client.send('create-product', dto);
   }
 
   @ApiResponse({

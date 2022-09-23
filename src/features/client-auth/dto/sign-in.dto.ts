@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsPhoneNumber } from 'class-validator';
 
-export class SignInDto {
+export class ClientSignInDto {
   @ApiProperty({
     default: '+79999999999',
   })

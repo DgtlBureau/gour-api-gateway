@@ -1,5 +1,6 @@
 import {
   IsArray,
+  IsNotEmptyObject,
   IsNumber,
   IsObject,
   IsOptional,
@@ -20,13 +21,17 @@ import { RoleDiscountDto } from '../../../common/dto/role-discount.dto';
 
 export class ProductCreateDto {
   @ValidateNested()
-  @Type(() => TranslatableStringCreateDto)
   @ApiProperty()
+  @IsNotEmptyObject()
+  @IsObject()
+  @Type(() => TranslatableStringCreateDto)
   title: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextCreateDto)
   @ApiProperty()
+  @IsNotEmptyObject()
+  @IsObject()
+  @Type(() => TranslatableTextCreateDto)
   description: TranslatableTextCreateDto;
 
   @IsNumber()
@@ -43,18 +48,19 @@ export class ProductCreateDto {
   @ApiPropertyOptional()
   images?: number[];
 
-  @IsNumber()
-  @ApiProperty()
-  category: number;
+  @IsArray()
+  @ApiModelProperty({
+    type: Number,
+    isArray: true,
+  })
+  @IsOptional()
+  @ApiPropertyOptional()
+  categoryIds?: number[];
 
   @ValidateNested()
   @Type(() => PriceCreateDto)
   @ApiProperty()
   price: PriceCreateDto;
-
-  @IsObject()
-  @ApiProperty()
-  characteristics: Record<string, string | number>;
 
   @IsArray()
   @ApiPropertyOptional()
