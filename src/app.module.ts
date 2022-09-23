@@ -39,7 +39,7 @@ import { UserController } from './features/user/user.controller';
       envFilePath: '.env',
     }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(process.cwd(), '..', 'static'),
+      rootPath: path.join(process.env.STATIC_FOLDER_PATH, 'static'),
       serveRoot: '/static',
       exclude: ['/api*'],
     }),
