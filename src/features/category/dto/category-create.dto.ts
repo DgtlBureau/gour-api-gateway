@@ -20,7 +20,6 @@ export class CategoryCreateDto {
   @IsArray()
   subCategoriesIds?: number[];
 
-  @ValidateNested()
   @ApiPropertyOptional()
   @ApiModelProperty({
     type: Number,
