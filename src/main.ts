@@ -22,7 +22,6 @@ const envs = [
   'MAIN_SERVICE_HOST',
   'PAYMENT_SERVICE_HOST',
   'PAYMENT_SERVICE_PORT',
-  'STATIC_FOLDER_PATH',
 ];
 
 const requiredEnvs = getRequiredEnvsByNodeEnv(
