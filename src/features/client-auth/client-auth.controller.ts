@@ -46,6 +46,8 @@ export class ClientAuthController {
       this.cookieService.phoneCodeOptions,
     );
 
+    res.setHeader('access-control-expose-headers', 'Set-Cookie');
+
     return res.json({
       hash,
     });
