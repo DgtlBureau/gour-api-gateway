@@ -29,7 +29,6 @@ export class CookieService {
   get phoneCodeOptions() {
     return {
       httpOnly: true,
-      secure: true,
       expires: this.MAX_AGE_15_MIN,
       sameSite: this.sameSite,
     };
