@@ -40,7 +40,7 @@ import { UserController } from './features/user/user.controller';
     }),
     ServeStaticModule.forRoot({
       rootPath: path.join(process.cwd(), 'static'),
-      serveRoot: '/static/',
+      serveRoot: '/',
       exclude: ['/api*'],
     }),
     ClientsModule.register([
