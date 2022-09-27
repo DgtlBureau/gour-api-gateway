@@ -70,7 +70,7 @@ export class CurrentUserController {
   @Post('/send-sms')
   async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
     const hashedCode = await firstValueFrom(
-      this.client.send('send-phone-code', dto),
+      this.client.send('send-email-code', dto),
     );
 
     res.cookie(PHONE_CODE_KEY, hashedCode);
