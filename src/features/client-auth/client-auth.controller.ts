@@ -78,7 +78,7 @@ export class ClientAuthController {
   @Post('/signin')
   async signin(
     @Body() dto: ClientSignInDto,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Req() req: AppRequest,
   ) {
     const { token, client, refreshToken } = await firstValueFrom(
@@ -91,6 +91,7 @@ export class ClientAuthController {
       token,
       this.cookieService.accessTokenOptions,
     );
+
     res.cookie(
       this.cookieService.REFRESH_TOKEN_NAME,
       refreshToken,
