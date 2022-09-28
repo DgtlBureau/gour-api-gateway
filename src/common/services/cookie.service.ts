@@ -27,10 +27,11 @@ export class CookieService {
   }
 
   get phoneCodeOptions() {
+    const hour = 3600000;
     return {
       httpOnly: true,
       secure: true,
-      expires: this.MAX_AGE_15_MIN,
+      maxAge: hour / 4,
       sameSite: this.sameSite,
     };
   }
