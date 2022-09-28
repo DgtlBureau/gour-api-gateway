@@ -36,7 +36,7 @@ export class CookieService {
     return {
       httpOnly: true,
       secure: true,
-      path: '/client-auth/refresh',
+      path: 'refresh',
       maxAge: this.MAX_AGE_30_DAYS,
       sameSite: this.sameSite,
     };
