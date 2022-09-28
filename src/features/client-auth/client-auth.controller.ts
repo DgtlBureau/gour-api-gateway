@@ -35,7 +35,10 @@ export class ClientAuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/send-code')
-  async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
+  async sendCode(
+    @Body() dto: SendCodeDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const hash = await firstValueFrom(
       this.client.send<string, SendCodeDto>('send-code', dto),
     );
@@ -78,7 +81,7 @@ export class ClientAuthController {
   @Post('/signin')
   async signin(
     @Body() dto: ClientSignInDto,
-    @Res({ passthrough: true }) res: Response,
+    @Res() res: Response,
     @Req() req: AppRequest,
   ) {
     const { token, client, refreshToken } = await firstValueFrom(

@@ -21,7 +21,7 @@ export class CookieService {
     return {
       httpOnly: true,
       secure: true,
-      expires: this.MAX_AGE_1_DAY,
+      expires: this.MAX_AGE_15_MIN,
       sameSite: this.sameSite,
     };
   }
