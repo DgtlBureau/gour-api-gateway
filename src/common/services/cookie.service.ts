@@ -7,13 +7,10 @@ export class CookieService {
   REFRESH_TOKEN_NAME = 'RefreshToken';
   PHONE_CODE_NAME = 'PhoneCodeHash';
   NEW_DATE = new Date();
-  MAX_AGE_15_MIN = new Date(
-    this.NEW_DATE.setMinutes(this.NEW_DATE.getMinutes() + 15),
-  );
-  MAX_AGE_1_DAY = new Date(this.NEW_DATE.setDate(this.NEW_DATE.getDate() + 1));
-  MAX_AGE_30_DAYS = new Date(
-    this.NEW_DATE.setMinutes(this.NEW_DATE.getDay() + 30),
-  );
+  HOUR = 3600000;
+  MAX_AGE_15_MIN = this.HOUR / 4;
+  MAX_AGE_1_DAY = this.HOUR * 24;
+  MAX_AGE_30_DAYS = this.HOUR * 24 * 30;
   sameSite: CookieOptions['sameSite'] =
     process.env.NODE_ENV === 'production' ? 'lax' : 'none';
 
@@ -21,17 +18,16 @@ export class CookieService {
     return {
       httpOnly: true,
       secure: true,
-      expires: this.MAX_AGE_15_MIN,
+      maxAge: this.MAX_AGE_15_MIN,
       sameSite: this.sameSite,
     };
   }
 
   get phoneCodeOptions() {
-    const hour = 3600000;
     return {
       httpOnly: true,
       secure: true,
-      maxAge: hour / 4,
+      maxAge: this.MAX_AGE_15_MIN,
       sameSite: this.sameSite,
     };
   }
@@ -41,7 +37,7 @@ export class CookieService {
       httpOnly: true,
       secure: true,
       path: '/client-auth/refresh',
-      expires: this.MAX_AGE_30_DAYS,
+      maxAge: this.MAX_AGE_30_DAYS,
       sameSite: this.sameSite,
     };
   }
