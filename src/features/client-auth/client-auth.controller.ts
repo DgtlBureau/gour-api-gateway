@@ -35,7 +35,10 @@ export class ClientAuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/send-code')
-  async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
+  async sendCode(
+    @Body() dto: SendCodeDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const hash = await firstValueFrom(
       this.client.send<string, SendCodeDto>('send-code', dto),
     );
@@ -45,6 +48,8 @@ export class ClientAuthController {
       hash,
       this.cookieService.phoneCodeOptions,
     );
+
+    res.setHeader('access-control-expose-headers', 'Set-Cookie');
 
     return res.json({
       hash,
@@ -89,6 +94,7 @@ export class ClientAuthController {
       token,
       this.cookieService.accessTokenOptions,
     );
+
     res.cookie(
       this.cookieService.REFRESH_TOKEN_NAME,
       refreshToken,
