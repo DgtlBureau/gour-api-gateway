@@ -16,10 +16,13 @@ import { firstValueFrom } from 'rxjs';
 
 import { CookieService } from '../../common/services/cookie.service';
 import { AppRequest } from '../../common/types/AppRequest';
-import { SendCodeDto } from './dto/send-code.dto';
+import { SendEmailCodeDto } from './dto/send-email-code.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { ClientSignInDto } from './dto/sign-in.dto';
 import { CheckCodeDto } from './dto/check-code.dto';
+import { RecoverPasswordDto } from './dto/recover-password.dto';
+
+const EMAIL_CODE_KEY = 'EmailCode';
 
 @ApiTags('client-auth')
 @Controller('client-auth')
@@ -34,44 +37,63 @@ export class ClientAuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('/send-code')
-  async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
-    const hash = await firstValueFrom(
-      this.client.send<string, SendCodeDto>('send-code', dto),
+  @Post('/send-email-code')
+  async sendCode(@Body() dto: SendEmailCodeDto, @Res() res: Response) {
+    const hashedCode = await firstValueFrom(
+      this.client.send('send-email-code', dto),
     );
 
-    res.cookie(
-      this.cookieService.PHONE_CODE_NAME,
-      hash,
-      this.cookieService.phoneCodeOptions,
-    );
+    res.cookie(EMAIL_CODE_KEY, hashedCode);
 
-    res.setHeader('access-control-expose-headers', 'Set-Cookie');
-
-    return res.json({
-      hash,
+    return res.send({
+      result: 'Код отправлен',
     });
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('/check-code')
-  async checkCode(@Body() dto: CheckCodeDto, @Req() req: Request) {
-    const codeHash = req.cookies[this.cookieService.PHONE_CODE_NAME] || '';
-    return this.client.send<string, { codeHash: string } & CheckCodeDto>(
-      'check-code',
-      {
-        ...dto,
-        codeHash,
-      },
-    );
+  checkCode(@Body() dto: CheckCodeDto, @Req() req: AppRequest) {
+    const hashedCode = req.cookies[EMAIL_CODE_KEY];
+
+    return this.client.send('check-code', {
+      hashedCode,
+      code: dto.code,
+    });
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('/signup')
-  signup(@Body() dto: SignUpDto, @Req() req: Request) {
-    const codeHash = req.cookies[this.cookieService.PHONE_CODE_NAME] || '';
+  async signup(
+    @Body() dto: SignUpDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const hashedCode = req.cookies[EMAIL_CODE_KEY];
 
-    return this.client.send('signup', { ...dto, codeHash });
+    const response = await firstValueFrom(
+      this.client.send('signup', { ...dto, hashedCode }),
+    );
+
+    res.cookie(EMAIL_CODE_KEY, '');
+
+    return response.send(response);
+  }
+
+  @Post('/recover-password')
+  async recoverPassword(
+    @Body() dto: RecoverPasswordDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const hashedCode = req.cookies[EMAIL_CODE_KEY];
+
+    const response = await firstValueFrom(
+      this.client.send('recover-password', { ...dto, hashedCode }),
+    );
+
+    res.cookie(EMAIL_CODE_KEY, '');
+
+    return response.send(response);
   }
 
   @HttpCode(HttpStatus.OK)
