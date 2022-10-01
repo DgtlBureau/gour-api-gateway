@@ -37,12 +37,12 @@ requiredEnvs.forEach((envKey) => {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: true,
     credentials: true,
   });
+  app.use(cookieParser());
 
   const builder = new DocumentBuilder()
     .setTitle('Gour Food')

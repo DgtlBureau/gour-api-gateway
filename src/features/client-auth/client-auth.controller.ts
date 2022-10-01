@@ -41,6 +41,7 @@ export class ClientAuthController {
   async sendCode(@Body() dto: SendEmailCodeDto, @Res() res: Response) {
     const hashedCode = await firstValueFrom(
       this.client.send('send-email-code', dto),
+
     );
 
     res.cookie(EMAIL_CODE_KEY, hashedCode);
@@ -113,6 +114,7 @@ export class ClientAuthController {
       token,
       this.cookieService.accessTokenOptions,
     );
+
     res.cookie(
       this.cookieService.REFRESH_TOKEN_NAME,
       refreshToken,
