@@ -53,15 +53,6 @@ export class CategoryController {
   }
 
   @ApiOkResponse({
-    type: [CategoryDto],
-  })
-  @HttpCode(HttpStatus.OK)
-  @Get('/common')
-  async getCommon(@Query() params: BaseGetListDto) {
-    return this.client.send('get-common-categories', params);
-  }
-
-  @ApiOkResponse({
     type: CategoryDto,
   })
   @HttpCode(HttpStatus.OK)
