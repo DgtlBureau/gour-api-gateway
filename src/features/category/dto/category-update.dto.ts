@@ -1,5 +1,10 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  ValidateNested,
+} from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
@@ -10,6 +15,11 @@ export class CategoryUpdateDto {
   @Type(() => TranslatableStringCreateDto)
   @ApiPropertyOptional()
   title?: TranslatableStringCreateDto;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsBoolean()
+  hasDiscount?: boolean;
 
   @ApiPropertyOptional()
   @ApiModelProperty({
