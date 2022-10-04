@@ -113,6 +113,7 @@ export class ClientAuthController {
       token,
       this.cookieService.accessTokenOptions,
     );
+
     res.cookie(
       this.cookieService.REFRESH_TOKEN_NAME,
       refreshToken,
