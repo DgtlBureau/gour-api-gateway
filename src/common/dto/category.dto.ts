@@ -21,3 +21,13 @@ export class CategoryDto extends BaseDto {
   @ApiProperty()
   discounts?: DiscountDto[];
 }
+
+export class CategoryWithDiscounts {
+  id: BaseDto['id'];
+  title: Pick<TranslatableStringDto, 'ru' | 'en'>;
+  subCategories: {
+    id: BaseDto['id'];
+    title: Pick<TranslatableStringDto, 'ru' | 'en'>;
+    discountPrice: number;
+  }[];
+}
