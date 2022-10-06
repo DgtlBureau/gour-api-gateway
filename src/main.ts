@@ -22,6 +22,8 @@ const envs = [
   'MAIN_SERVICE_HOST',
   'PAYMENT_SERVICE_HOST',
   'PAYMENT_SERVICE_PORT',
+  'COMMON_DOMAIN',
+  'STORE_DOMAIN',
 ];
 
 const requiredEnvs = getRequiredEnvsByNodeEnv(

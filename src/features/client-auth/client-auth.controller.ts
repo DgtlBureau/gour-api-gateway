@@ -108,17 +108,8 @@ export class ClientAuthController {
       { defaultValue: { token: null, client: null, refreshToken: null } },
     );
 
-    res.cookie(
-      this.cookieService.ACCESS_TOKEN_NAME,
-      token,
-      this.cookieService.accessTokenOptions,
-    );
-
-    res.cookie(
-      this.cookieService.REFRESH_TOKEN_NAME,
-      refreshToken,
-      this.cookieService.refreshTokenOptions,
-    );
+    this.cookieService.setAccessToken(res, token, true);
+    this.cookieService.setRefreshToken(res, refreshToken, true);
 
     req.user = client;
     req.token = token;
@@ -141,7 +132,7 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
   async refresh(@Req() req: Request, @Res() res: Response) {
-    const token = req.cookies[this.cookieService.REFRESH_TOKEN_NAME];
+    const token = this.cookieService.getRefreshToken(req);
 
     if (!token) {
       this.cookieService.clearAllTokens(res);
@@ -158,16 +149,8 @@ export class ClientAuthController {
       },
     );
 
-    res.cookie(
-      this.cookieService.ACCESS_TOKEN_NAME,
-      accessToken,
-      this.cookieService.accessTokenOptions,
-    );
-    res.cookie(
-      this.cookieService.REFRESH_TOKEN_NAME,
-      refreshToken,
-      this.cookieService.refreshTokenOptions,
-    );
+    this.cookieService.setAccessToken(res, accessToken, true);
+    this.cookieService.setRefreshToken(res, refreshToken, true);
 
     return res.json({
       message: 'Токен обновлён',
