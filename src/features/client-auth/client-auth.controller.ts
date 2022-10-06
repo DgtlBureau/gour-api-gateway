@@ -36,10 +36,7 @@ export class ClientAuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/send-email-code')
-  async sendCode(
-    @Body() dto: SendEmailCodeDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async sendCode(@Body() dto: SendEmailCodeDto, @Res() res: Response) {
     const hashedCode = await firstValueFrom(
       this.client.send('send-email-code', dto),
     );
