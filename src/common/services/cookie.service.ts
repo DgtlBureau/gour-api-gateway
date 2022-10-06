@@ -6,6 +6,7 @@ export class CookieService {
   ACCESS_TOKEN_NAME = 'AccessToken';
   REFRESH_TOKEN_NAME = 'RefreshToken';
   PHONE_CODE_NAME = 'PhoneCodeHash';
+  EMAIL_CODE_NAME = 'EmailCodeHash';
   NEW_DATE = new Date();
   HOUR = 3600000;
   MAX_AGE_15_MIN = this.HOUR / 4;
@@ -32,6 +33,15 @@ export class CookieService {
     };
   }
 
+  get emailCodeOptions() {
+    return {
+      httpOnly: true,
+      secure: true,
+      maxAge: this.MAX_AGE_15_MIN,
+      sameSite: this.sameSite,
+    };
+  }
+
   get refreshTokenOptions() {
     return {
       httpOnly: true,
@@ -50,9 +60,8 @@ export class CookieService {
 
 export function getToken(req: Request): string | undefined {
   const header = req.header('Authorization');
-  if (header) {
-    return header.replace('Bearer ', '');
-  }
+
+  if (header) return header.replace('Bearer ', '');
 
   return req.cookies['AccessToken'];
 }
