@@ -6,6 +6,7 @@ export class CookieService {
   ACCESS_TOKEN_NAME = 'AccessToken';
   REFRESH_TOKEN_NAME = 'RefreshToken';
   PHONE_CODE_NAME = 'PhoneCodeHash';
+  EMAIL_CODE_NAME = 'EmailCodeHash';
   NEW_DATE = new Date();
   HOUR = 3600000;
   MAX_AGE_15_MIN = this.HOUR / 4;
@@ -24,6 +25,15 @@ export class CookieService {
   }
 
   get phoneCodeOptions() {
+    return {
+      httpOnly: true,
+      secure: true,
+      maxAge: this.MAX_AGE_15_MIN,
+      sameSite: this.sameSite,
+    };
+  }
+
+  get emailCodeOptions() {
     return {
       httpOnly: true,
       secure: true,
