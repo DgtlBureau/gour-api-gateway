@@ -22,15 +22,15 @@ import { AppRequest } from '../../common/types/AppRequest';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ClientDto } from '../../common/dto/client.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ChangePhoneDto } from './dto/change-phone.dto';
-import { SendCodeDto } from './dto/send-code.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { AddToFavoritesDto } from './dto/add-to-favorites.dto';
 import { ChangeCityDto } from './dto/change-city.dto';
 import { ProductDto } from '../../common/dto/product.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
+import { ChangeEmailDto } from './dto/change-email.dto';
+import { ChangeAvatarDto } from './dto/change-avatar.dto';
 
-const PHONE_CODE_KEY = 'PhoneCode';
+const EMAIL_CODE_KEY = 'EmailCode';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -67,40 +67,26 @@ export class CurrentUserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('/send-sms')
-  async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
-    const hashedCode = await firstValueFrom(
-      this.client.send('send-email-code', dto),
-    );
-
-    res.cookie(PHONE_CODE_KEY, hashedCode);
-
-    return res.send({
-      result: 'Код отправлен',
-    });
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('/change-phone')
-  async changePhone(
-    @Body() dto: ChangePhoneDto,
+  @Post('/change-email')
+  async changeEmail(
+    @Body() dto: ChangeEmailDto,
     @CurrentUser('id') id: number,
     @Req() req: AppRequest,
     @Res() res: Response,
   ) {
-    const hashedCode = req.cookies[PHONE_CODE_KEY];
+    const hashedCode = req.cookies[EMAIL_CODE_KEY];
 
-    this.client.send('change-phone', {
-      id,
-      hashedCode,
-      dto,
-    });
+    const response = await firstValueFrom(
+      this.client.send('change-email', {
+        id,
+        hashedCode,
+        dto,
+      }),
+    );
 
-    res.cookie(PHONE_CODE_KEY, '');
+    res.cookie(EMAIL_CODE_KEY, '');
 
-    return res.send({
-      message: 'Номер телефона изменён',
-    });
+    return res.send(response);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -151,6 +137,18 @@ export class CurrentUserController {
     return this.client.send('change-city', {
       clientId,
       cityId: dto.cityId,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put('/change-avatar')
+  changeAvatar(
+    @CurrentUser('id') clientId: number,
+    @Body() dto: ChangeAvatarDto,
+  ) {
+    return this.client.send('change-avatar', {
+      clientId,
+      avatarId: dto.avatarId,
     });
   }
 }
