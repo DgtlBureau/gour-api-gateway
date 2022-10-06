@@ -15,7 +15,7 @@ export class CookieService {
   sameSite: CookieOptions['sameSite'] =
     process.env.NODE_ENV === 'production' ? 'lax' : 'none';
 
-  get accessTokenOptions() {
+  get accessTokenOptions(): CookieOptions {
     return {
       httpOnly: true,
       secure: true,
@@ -24,7 +24,7 @@ export class CookieService {
     };
   }
 
-  get phoneCodeOptions() {
+  get phoneCodeOptions(): CookieOptions {
     return {
       httpOnly: true,
       secure: true,
@@ -50,6 +50,26 @@ export class CookieService {
       maxAge: this.MAX_AGE_30_DAYS,
       sameSite: this.sameSite,
     };
+  }
+
+  getAccessToken(req: Request) {
+    return req.cookies[this.ACCESS_TOKEN_NAME];
+  }
+
+  getRefreshToken(req: Request) {
+    return req.cookies[this.REFRESH_TOKEN_NAME];
+  }
+
+  setAccessToken(res: Response, token: string, isCommonDomain = false) {
+    const cookieOptions = { ...this.accessTokenOptions };
+    isCommonDomain && (cookieOptions.domain = process.env.COMMON_DOMAIN);
+    res.cookie(this.ACCESS_TOKEN_NAME, token, cookieOptions);
+  }
+
+  setRefreshToken(res: Response, token: string, isCommonDomain = false) {
+    const cookieOptions = { ...this.accessTokenOptions };
+    isCommonDomain && (cookieOptions.domain = process.env.COMMON_DOMAIN);
+    res.cookie(this.REFRESH_TOKEN_NAME, token, cookieOptions);
   }
 
   clearAllTokens(res: Response) {
