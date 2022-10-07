@@ -72,9 +72,11 @@ export class CookieService {
     res.cookie(this.REFRESH_TOKEN_NAME, token, cookieOptions);
   }
 
-  clearAllTokens(res: Response) {
-    res.clearCookie(this.ACCESS_TOKEN_NAME, this.accessTokenOptions);
-    res.clearCookie(this.REFRESH_TOKEN_NAME, this.refreshTokenOptions);
+  clearAllTokens(res: Response, isCommonDomain = false) {
+    const cookieOptions = { ...this.accessTokenOptions };
+    isCommonDomain && (cookieOptions.domain = process.env.COMMON_DOMAIN);
+    res.clearCookie(this.ACCESS_TOKEN_NAME, cookieOptions);
+    res.clearCookie(this.REFRESH_TOKEN_NAME, cookieOptions);
   }
 }
 
