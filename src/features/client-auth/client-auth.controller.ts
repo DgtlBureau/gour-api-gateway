@@ -124,7 +124,7 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/signout')
   signout(@Res() res: Response) {
-    this.cookieService.clearAllTokens(res);
+    this.cookieService.clearAllTokens(res, true);
 
     return res.json({
       message: 'Пользователь вышел из системы',
@@ -137,7 +137,7 @@ export class ClientAuthController {
     const token = this.cookieService.getRefreshToken(req);
 
     if (!token) {
-      this.cookieService.clearAllTokens(res);
+      this.cookieService.clearAllTokens(res, true);
       throw new NotFoundException('Токен не найден');
     }
 
