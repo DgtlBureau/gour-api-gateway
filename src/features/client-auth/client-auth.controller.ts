@@ -134,7 +134,7 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
   async refresh(@Req() req: Request, @Res() res: Response) {
-    const token = this.cookieService.getRefreshToken(req);
+    const token = this.cookieService.getRefreshToken(req, true);
 
     if (!token) {
       this.cookieService.clearAllTokens(res, true);
