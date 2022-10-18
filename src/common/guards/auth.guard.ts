@@ -23,6 +23,6 @@ export class AuthGuard implements CanActivate {
     const decodedUser = decodeToken(token) as ClientDto;
 
     if (decodedUser) return true;
-    else throw new UnauthorizedException('Пользователь неавторизован');
+    else throw new UnauthorizedException('Пользователь не авторизован');
   }
 }

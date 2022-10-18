@@ -31,6 +31,7 @@ import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
 import { AccessController } from './features/access/access.controller';
 import { RoleController } from './features/role/role.controller';
 import { UserController } from './features/user/user.controller';
+import { WarehouseController } from './features/warehouse/warehouse.controller';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { UserController } from './features/user/user.controller';
     RoleController,
     UserController,
     WalletController,
+    WarehouseController,
   ],
   providers: [
     CookieService,

@@ -22,8 +22,6 @@ import { ClientSignInDto } from './dto/sign-in.dto';
 import { CheckCodeDto } from './dto/check-code.dto';
 import { RecoverPasswordDto } from './dto/recover-password.dto';
 
-const EMAIL_CODE_KEY = 'EmailCode';
-
 @ApiTags('client-auth')
 @Controller('client-auth')
 export class ClientAuthController {
@@ -43,7 +41,11 @@ export class ClientAuthController {
       this.client.send('send-email-code', dto),
     );
 
-    res.cookie(EMAIL_CODE_KEY, hashedCode);
+    res.cookie(
+      this.cookieService.EMAIL_CODE_NAME,
+      hashedCode,
+      this.cookieService.emailCodeOptions,
+    );
 
     return res.send({
       result: 'Код отправлен',
@@ -53,7 +55,7 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/check-code')
   checkCode(@Body() dto: CheckCodeDto, @Req() req: AppRequest) {
-    const hashedCode = req.cookies[EMAIL_CODE_KEY];
+    const hashedCode = req.cookies[this.cookieService.EMAIL_CODE_NAME];
 
     return this.client.send('check-code', {
       hashedCode,
@@ -68,13 +70,13 @@ export class ClientAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const hashedCode = req.cookies[EMAIL_CODE_KEY];
+    const hashedCode = req.cookies[this.cookieService.EMAIL_CODE_NAME];
 
     const response = await firstValueFrom(
       this.client.send('signup', { ...dto, hashedCode }),
     );
 
-    res.cookie(EMAIL_CODE_KEY, '');
+    res.cookie(this.cookieService.EMAIL_CODE_NAME, '');
 
     return res.send(response);
   }
@@ -85,13 +87,13 @@ export class ClientAuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const hashedCode = req.cookies[EMAIL_CODE_KEY];
+    const hashedCode = req.cookies[this.cookieService.EMAIL_CODE_NAME];
 
     const response = await firstValueFrom(
       this.client.send('recover-password', { ...dto, hashedCode }),
     );
 
-    res.cookie(EMAIL_CODE_KEY, '');
+    res.cookie(this.cookieService.EMAIL_CODE_NAME, '');
 
     return res.send(response);
   }
@@ -108,17 +110,8 @@ export class ClientAuthController {
       { defaultValue: { token: null, client: null, refreshToken: null } },
     );
 
-    res.cookie(
-      this.cookieService.ACCESS_TOKEN_NAME,
-      token,
-      this.cookieService.accessTokenOptions,
-    );
-
-    res.cookie(
-      this.cookieService.REFRESH_TOKEN_NAME,
-      refreshToken,
-      this.cookieService.refreshTokenOptions,
-    );
+    this.cookieService.setAccessToken(res, token, true);
+    this.cookieService.setRefreshToken(res, refreshToken, true);
 
     req.user = client;
     req.token = token;
@@ -131,7 +124,7 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/signout')
   signout(@Res() res: Response) {
-    this.cookieService.clearAllTokens(res);
+    this.cookieService.clearAllTokens(res, true);
 
     return res.json({
       message: 'Пользователь вышел из системы',
@@ -141,10 +134,10 @@ export class ClientAuthController {
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
   async refresh(@Req() req: Request, @Res() res: Response) {
-    const token = req.cookies[this.cookieService.REFRESH_TOKEN_NAME];
+    const token = this.cookieService.getRefreshToken(req, true);
 
     if (!token) {
-      this.cookieService.clearAllTokens(res);
+      this.cookieService.clearAllTokens(res, true);
       throw new NotFoundException('Токен не найден');
     }
 
@@ -158,16 +151,8 @@ export class ClientAuthController {
       },
     );
 
-    res.cookie(
-      this.cookieService.ACCESS_TOKEN_NAME,
-      accessToken,
-      this.cookieService.accessTokenOptions,
-    );
-    res.cookie(
-      this.cookieService.REFRESH_TOKEN_NAME,
-      refreshToken,
-      this.cookieService.refreshTokenOptions,
-    );
+    this.cookieService.setAccessToken(res, accessToken, true);
+    this.cookieService.setRefreshToken(res, refreshToken, true);
 
     return res.json({
       message: 'Токен обновлён',
