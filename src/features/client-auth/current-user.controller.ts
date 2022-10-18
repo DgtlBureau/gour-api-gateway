@@ -29,15 +29,18 @@ import { ProductDto } from '../../common/dto/product.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ChangeEmailDto } from './dto/change-email.dto';
 import { ChangeAvatarDto } from './dto/change-avatar.dto';
-
-const EMAIL_CODE_KEY = 'EmailCode';
+import { ChangeMainAddressDto } from './dto/change-main-address.dto';
+import { CookieService } from 'src/common/services/cookie.service';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiTags('current-user')
 @Controller('client-auth/current-user')
 export class CurrentUserController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
+  constructor(
+    @Inject('MAIN_SERVICE') private client: ClientProxy,
+    private cookieService: CookieService,
+  ) {}
 
   async onModuleInit() {
     await this.client.connect();
@@ -74,7 +77,7 @@ export class CurrentUserController {
     @Req() req: AppRequest,
     @Res() res: Response,
   ) {
-    const hashedCode = req.cookies[EMAIL_CODE_KEY];
+    const hashedCode = req.cookies[this.cookieService.EMAIL_CODE_NAME];
 
     const response = await firstValueFrom(
       this.client.send('change-email', {
@@ -84,7 +87,7 @@ export class CurrentUserController {
       }),
     );
 
-    res.cookie(EMAIL_CODE_KEY, '');
+    res.cookie(this.cookieService.EMAIL_CODE_NAME, '');
 
     return res.send(response);
   }
@@ -149,6 +152,18 @@ export class CurrentUserController {
     return this.client.send('change-avatar', {
       clientId,
       avatarId: dto.avatarId,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put('/change-main-address')
+  changeMainAddress(
+    @CurrentUser('id') clientId: number,
+    @Body() dto: ChangeMainAddressDto,
+  ) {
+    return this.client.send('change-main-address', {
+      clientId,
+      addressId: dto.addressId,
     });
   }
 }
