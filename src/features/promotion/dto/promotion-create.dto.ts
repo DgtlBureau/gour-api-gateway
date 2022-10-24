@@ -10,7 +10,10 @@ import { TranslatableStringCreateDto } from '../../../common/dto/translatable-st
 import { TranslatableTextCreateDto } from '../../../common/dto/translatable-text-create.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { MetaCreateDto } from '../../../common/dto/meta-create.dto';
-import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import {
+  ApiModelProperty,
+  ApiModelPropertyOptional,
+} from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
 export class PromotionCreateDto {
   @ValidateNested()
@@ -19,9 +22,11 @@ export class PromotionCreateDto {
   title: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextCreateDto)
-  @ApiProperty()
-  description: TranslatableTextCreateDto;
+  @IsOptional()
+  @ApiModelPropertyOptional({
+    type: () => TranslatableTextCreateDto,
+  })
+  description?: TranslatableTextCreateDto;
 
   @IsNumber()
   @ApiProperty()
