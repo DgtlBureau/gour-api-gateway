@@ -20,9 +20,10 @@ export class PromotionUpdateDto {
   title?: TranslatableStringCreateDto;
 
   @ValidateNested()
-  @Type(() => TranslatableTextCreateDto)
   @IsOptional()
-  @ApiPropertyOptional()
+  @ApiModelPropertyOptional({
+    type: () => TranslatableTextCreateDto,
+  })
   description?: TranslatableTextCreateDto;
 
   @IsNumber()
