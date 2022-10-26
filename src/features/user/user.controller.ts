@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { firstValueFrom } from 'rxjs';
 
-import { RoleDto } from 'src/common/dto/role.dto';
 import { UserDto } from 'src/common/dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -28,8 +28,8 @@ export class UserController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('/')
-  getAll(@Param('roles') roles: RoleDto[] = []) {
-    return this.client.send('get-users-by-roles', roles);
+  getAll() {
+    return this.client.send('get-users', '');
   }
 
   @ApiOkResponse({

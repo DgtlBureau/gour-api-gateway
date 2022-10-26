@@ -1,16 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 
 export class SignupWithoutPasswordDto {
   @ApiProperty()
-  @IsEmail()
-  @MinLength(3)
-  @MaxLength(30)
-  readonly login: string;
+  @IsString()
+  readonly name: string;
 
   @ApiProperty()
   @IsString()
-  @MinLength(3)
-  @MaxLength(30)
-  readonly name: string;
+  readonly lastName: string;
+
+  @ApiProperty()
+  @IsEmail()
+  readonly email: string;
+
+  @ApiProperty()
+  @IsString()
+  readonly role: string;
 }
