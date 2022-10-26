@@ -101,6 +101,12 @@ export class CurrentUserController {
     return this.client.send('change-password', { id, dto });
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('/reduce-game-live')
+  reduceGameLive(@CurrentUser('id') id: number) {
+    return this.client.send('reduce-game-live', { id });
+  }
+
   @ApiOkResponse({
     type: [ProductDto],
   })
