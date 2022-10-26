@@ -29,6 +29,7 @@ import { ProductDto } from '../../common/dto/product.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { ChangeEmailDto } from './dto/change-email.dto';
 import { ChangeAvatarDto } from './dto/change-avatar.dto';
+import { ChangeMainAddressDto } from './dto/change-main-address.dto';
 import { CookieService } from 'src/common/services/cookie.service';
 
 @ApiBearerAuth()
@@ -151,6 +152,18 @@ export class CurrentUserController {
     return this.client.send('change-avatar', {
       clientId,
       avatarId: dto.avatarId,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put('/change-main-address')
+  changeMainAddress(
+    @CurrentUser('id') clientId: number,
+    @Body() dto: ChangeMainAddressDto,
+  ) {
+    return this.client.send('change-main-address', {
+      clientId,
+      addressId: dto.addressId,
     });
   }
 }

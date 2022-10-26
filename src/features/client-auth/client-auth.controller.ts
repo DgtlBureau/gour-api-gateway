@@ -78,7 +78,7 @@ export class ClientAuthController {
 
     res.cookie(this.cookieService.EMAIL_CODE_NAME, '');
 
-    return response.send(response);
+    return res.send(response);
   }
 
   @Post('/recover-password')
