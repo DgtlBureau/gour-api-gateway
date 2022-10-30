@@ -24,7 +24,7 @@ import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 import { ClientGetListDto } from './dto/сlient-get-list.dto';
-import { ClientCreateDto } from './dto/сlient-create.dto';
+import { ClientCreateDto } from './dto/client-create.dto';
 import { ClientUpdateDto } from './dto/client-update.dto';
 import { ClientDto } from '../../common/dto/client.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
