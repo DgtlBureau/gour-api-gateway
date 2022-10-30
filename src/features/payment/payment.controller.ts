@@ -7,6 +7,7 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -30,7 +31,7 @@ export class PaymentController {
   @ApiOkResponse({
     type: InvoiceDto,
   })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @Post('/pay')
   pay(@Body() dto: PayDto) {
     return this.client.send('pay', dto);
@@ -39,7 +40,7 @@ export class PaymentController {
   @ApiOkResponse({
     type: CreateInvoiceDto,
   })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   @Post('/invoice')
   createInvoice(@Body() dto: CreateInvoiceDto) {
     return this.client.send('create-invoice', dto);
@@ -52,5 +53,13 @@ export class PaymentController {
   @Get('/invoice/:uuid')
   getInvoice(@Param('uuid') uuid: string) {
     return this.client.send('get-invoice', { uuid });
+  }
+  @ApiOkResponse({
+    type: [InvoiceDto],
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/invoice')
+  getInvoices(@Query('userId') userId: string) {
+    return this.client.send('get-invoices', { userId });
   }
 }
