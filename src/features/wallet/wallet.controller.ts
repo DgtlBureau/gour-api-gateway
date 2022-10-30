@@ -67,9 +67,9 @@ export class WalletController {
     type: WalletDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/current')
+  @Get('/current-wallet')
   getCurrentWallet(@CurrentUser() client: ClientDto) {
-    return this.client.send('get-client-wallet', client.uuid);
+    return this.client.send('get-client-wallet', client.id);
   }
 
   @ApiOkResponse({
@@ -78,7 +78,16 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @Get('/current-balance')
   getCurrentBalance(@CurrentUser() client: ClientDto) {
-    return this.client.send('get-client-wallet-balance', client.uuid);
+    return this.client.send('get-client-wallet-balance', client.id);
+  }
+
+  @ApiOkResponse({
+    type: [WalletTransactionDto],
+  })
+  @HttpCode(HttpStatus.OK)
+  @Get('/current-transactions')
+  getWalletTransactionsByClientId(@CurrentUser() client: ClientDto) {
+    return this.client.send('get-wallet-transactions', client.id);
   }
 
   @ApiOkResponse({

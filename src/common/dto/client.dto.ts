@@ -15,9 +15,6 @@ export class ClientDto extends BaseDto {
   role: ClientRoleDto;
 
   @ApiProperty()
-  uuid: string;
-
-  @ApiProperty()
   isApproved: boolean;
 
   @ApiProperty()
