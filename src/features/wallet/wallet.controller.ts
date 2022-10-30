@@ -16,11 +16,11 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ClientDto } from '../../common/dto/client.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { WalletDto } from '../../common/dto/wallet.dto';
-import { WalletTransactionDto } from '../../common/dto/wallet-transaction.dto';
 import { WalletChangeValueDto } from './dto/wallet-change-value.dto';
-import { WalletConfirmPaymentDto } from './dto/wallet-confirm-payment.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { GetAmountByCurrencyDto } from './dto/get-amount-by-currency.dto';
+import { WalletReplenishBalanceDto } from './dto/wallet-replenish-balance';
+import { WalletTransactionDto } from 'src/common/dto/wallet-transaction.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -46,9 +46,9 @@ export class WalletController {
     type: WalletTransactionDto,
   })
   @HttpCode(HttpStatus.OK)
-  @Post('/:uuid')
-  confirmPayment(@Body() dto: WalletConfirmPaymentDto) {
-    return this.client.send('wallet-confirm-payment', dto);
+  @Post('/wallet-replenish-balance')
+  replenishWalletBalance(@Body() dto: WalletReplenishBalanceDto) {
+    return this.client.send('wallet-replenish-balance', dto);
   }
 
   @ApiOkResponse({
@@ -56,8 +56,11 @@ export class WalletController {
   })
   @HttpCode(HttpStatus.OK)
   @Patch('/:uuid')
-  changeValue(@Body() dto: WalletChangeValueDto) {
-    return this.client.send('wallet-change-value', dto);
+  changeValue(@Body() dto: WalletChangeValueDto, @Param('uuid') uuid: string) {
+    return this.client.send('wallet-change-value', {
+      ...dto,
+      walletUuid: uuid,
+    });
   }
 
   @ApiOkResponse({
@@ -66,7 +69,7 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @Get('/current')
   getCurrentWallet(@CurrentUser() client: ClientDto) {
-    return this.client.send('get-client-wallet', client.id);
+    return this.client.send('get-client-wallet', client.uuid);
   }
 
   @ApiOkResponse({
@@ -75,7 +78,7 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @Get('/current-balance')
   getCurrentBalance(@CurrentUser() client: ClientDto) {
-    return this.client.send('get-client-wallet-balance', client.id);
+    return this.client.send('get-client-wallet-balance', client.uuid);
   }
 
   @ApiOkResponse({
