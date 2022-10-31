@@ -60,6 +60,6 @@ export class PaymentController {
   @HttpCode(HttpStatus.OK)
   @Get('/invoice')
   getInvoices(@Query('userId') userId: string) {
-    return this.client.send('get-invoices', { userId });
+    return this.client.send('get-invoices', userId);
   }
 }
