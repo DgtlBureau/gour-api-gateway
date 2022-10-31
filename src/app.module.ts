@@ -31,6 +31,7 @@ import { AccessController } from './features/access/access.controller';
 import { RoleController } from './features/role/role.controller';
 import { UserController } from './features/user/user.controller';
 import { WarehouseController } from './features/warehouse/warehouse.controller';
+import { PaymentController } from './features/payment/payment.controller';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { WarehouseController } from './features/warehouse/warehouse.controller';
     UserController,
     WalletController,
     WarehouseController,
+    PaymentController,
   ],
   providers: [
     CookieService,
