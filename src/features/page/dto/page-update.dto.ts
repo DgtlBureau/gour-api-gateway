@@ -1,4 +1,5 @@
 import {
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -23,4 +24,9 @@ export class PageUpdateDto {
   @IsObject()
   @IsOptional()
   info: Record<string, string | number>;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  bannerImg?: number;
 }

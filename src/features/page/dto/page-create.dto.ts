@@ -1,4 +1,9 @@
-import { IsOptional, IsString, ValidateNested } from 'class-validator';
+import {
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -21,4 +26,9 @@ export class PageCreateDto {
     title: TranslatableStringCreateDto;
     description: TranslatableStringCreateDto;
   };
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  bannerImg?: number;
 }
