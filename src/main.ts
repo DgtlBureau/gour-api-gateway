@@ -43,7 +43,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: [process.env.ORIGIN_URL, process.env.PAYMENT_REDIRECT_URL],
+    origin: false,
     credentials: true,
   });
   app.use(cookieParser());
