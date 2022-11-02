@@ -8,5 +8,6 @@ export enum InvoiceStatus {
 export class InvoiceDto {
   uuid: string;
   status: InvoiceStatus;
+  redirectUri?: string; // если используется 3d secure
   expiresAt: Date;
 }

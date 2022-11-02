@@ -1,7 +1,14 @@
-import { IsEmail, IsEnum, IsIP, IsString, IsUUID } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsIP,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { Currency } from 'src/common/types/App';
 
-export class WalletReplenishBalanceDto {
+export class WalletBuyCoinsDto {
   @IsEnum(Currency)
   currency: Currency;
 
@@ -9,6 +16,7 @@ export class WalletReplenishBalanceDto {
   payerUuid: string;
 
   @IsEmail()
+  @IsOptional()
   email: string;
 
   @IsIP()
