@@ -53,19 +53,10 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Post('/wallet-replenish-balance')
-  async replenishWalletBalance(
-    @Body() dto: WalletBuyCoinsDto,
-    @Res() res: Response,
-  ) {
+  async replenishWalletBalance(@Body() dto: WalletBuyCoinsDto) {
     const data = await firstValueFrom(
       this.client.send('wallet-buy-coins', dto),
     );
-
-    res.setHeader('Access-Control-Allow-Origin', '*');
-
-    if (data.redirect) {
-      return res.redirect(HttpStatus.MOVED_PERMANENTLY, data.redirect);
-    }
 
     return data;
   }
