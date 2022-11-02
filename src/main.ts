@@ -44,7 +44,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
     origin: [process.env.ORIGIN_URL, process.env.PAYMENT_REDIRECT_URL],
-    credentials: true,
+    credentials: false,
   });
   app.use(cookieParser());
 
