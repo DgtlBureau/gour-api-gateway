@@ -25,6 +25,7 @@ const envs = [
   'COMMON_DOMAIN',
   'STORE_DOMAIN',
   'ORIGIN_URL',
+  'PAYMENT_REDIRECT_URL',
 ];
 
 const requiredEnvs = getRequiredEnvsByNodeEnv(
@@ -42,7 +43,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: process.env.ORIGIN_URL,
+    origin: [process.env.ORIGIN_URL, process.env.PAYMENT_REDIRECT_URL],
     credentials: true,
   });
   app.use(cookieParser());
