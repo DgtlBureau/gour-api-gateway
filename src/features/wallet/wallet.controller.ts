@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -19,11 +20,10 @@ import { WalletDto } from '../../common/dto/wallet.dto';
 import { WalletChangeValueDto } from './dto/wallet-change-value.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { GetAmountByCurrencyDto } from './dto/get-amount-by-currency.dto';
-import { WalletReplenishBalanceDto } from './dto/wallet-replenish-balance';
 import { WalletTransactionDto } from 'src/common/dto/wallet-transaction.dto';
+import { WalletBuyCoinsDto } from './dto/wallet-buy-coins.dto';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('wallet')
 @Controller('wallet')
 export class WalletController {
@@ -37,6 +37,7 @@ export class WalletController {
     type: Number,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Post('/get-amount-by-currency')
   getAmountByCurrency(@Body() dto: GetAmountByCurrencyDto) {
     return this.client.send('get-amount-by-currency', dto);
@@ -46,15 +47,26 @@ export class WalletController {
     type: WalletTransactionDto,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Post('/wallet-replenish-balance')
-  replenishWalletBalance(@Body() dto: WalletReplenishBalanceDto) {
-    return this.client.send('wallet-replenish-balance', dto);
+  replenishWalletBalance(@Body() dto: WalletBuyCoinsDto) {
+    return this.client.send('wallet-buy-coins', dto);
+  }
+
+  @ApiOkResponse({
+    type: WalletTransactionDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  @Post('/wallet-replenish-balance-buy-token')
+  replenishWalletBalanceByToken(@Query('authToken') token: string) {
+    return this.client.send('wallet-replenish-balance-buy-token', token);
   }
 
   @ApiOkResponse({
     type: WalletDto,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Patch('/:uuid')
   changeValue(@Body() dto: WalletChangeValueDto, @Param('uuid') uuid: string) {
     return this.client.send('wallet-change-value', {
@@ -67,6 +79,7 @@ export class WalletController {
     type: WalletDto,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('/current-wallet')
   getCurrentWallet(@CurrentUser() client: ClientDto) {
     return this.client.send('get-client-wallet', client.id);
@@ -76,6 +89,7 @@ export class WalletController {
     type: Number,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('/current-balance')
   getCurrentBalance(@CurrentUser() client: ClientDto) {
     return this.client.send('get-client-wallet-balance', client.id);
@@ -85,6 +99,7 @@ export class WalletController {
     type: [WalletTransactionDto],
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('/current-transactions')
   getWalletTransactionsByClientId(@CurrentUser() client: ClientDto) {
     return this.client.send('get-wallet-transactions', client.id);
@@ -94,6 +109,7 @@ export class WalletController {
     type: WalletDto,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('/:uuid')
   getWalletById(@Param('uuid') uuid: string) {
     return this.client.send('get-wallet', uuid);
