@@ -61,6 +61,8 @@ export class WalletController {
       this.client.send('wallet-buy-coins', dto),
     );
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
     if (data.redirect) {
       return res.redirect(HttpStatus.MOVED_PERMANENTLY, data.redirect);
     }
