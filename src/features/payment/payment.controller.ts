@@ -8,10 +8,13 @@ import {
   Param,
   Post,
   Query,
+  Redirect,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { firstValueFrom } from 'rxjs';
 import { InvoiceDto } from 'src/common/dto/invoice.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { Check3dSecureDto } from './dto/check-3d-secure.dto';
@@ -41,17 +44,26 @@ export class PaymentController {
   @ApiOkResponse({
     type: InvoiceDto,
   })
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.PERMANENT_REDIRECT)
   @Post('/check-3d-secure-and-finish-pay')
-  check3dSecure(
+  @Redirect()
+  async check3dSecure(
     @Body() dto: Check3dSecureDto,
     @Query('successUrl') successUrl: string,
+    @Query('rejectUrl') rejectUrl: string,
   ) {
-    return this.client.send('check-3d-secure-and-finish-pay', {
-      transactionId: dto.MD,
-      code: dto.PaRes,
-      successUrl,
-    });
+    const data = await firstValueFrom(
+      this.client.send<{ redirect: string }>('check-3d-secure-and-finish-pay', {
+        transactionId: dto.MD,
+        code: dto.PaRes,
+        successUrl,
+        rejectUrl,
+      }),
+    );
+
+    return {
+      url: data.redirect,
+    };
   }
 
   @ApiOkResponse({
