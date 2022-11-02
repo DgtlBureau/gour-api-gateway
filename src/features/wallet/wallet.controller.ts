@@ -9,6 +9,8 @@ import {
   Patch,
   Post,
   Query,
+  Redirect,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -22,6 +24,8 @@ import { AuthGuard } from '../../common/guards/auth.guard';
 import { GetAmountByCurrencyDto } from './dto/get-amount-by-currency.dto';
 import { WalletTransactionDto } from 'src/common/dto/wallet-transaction.dto';
 import { WalletBuyCoinsDto } from './dto/wallet-buy-coins.dto';
+import { firstValueFrom } from 'rxjs';
+import { Response } from 'express';
 
 @ApiBearerAuth()
 @ApiTags('wallet')
@@ -49,17 +53,36 @@ export class WalletController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(AuthGuard)
   @Post('/wallet-replenish-balance')
-  replenishWalletBalance(@Body() dto: WalletBuyCoinsDto) {
-    return this.client.send('wallet-buy-coins', dto);
+  async replenishWalletBalance(
+    @Body() dto: WalletBuyCoinsDto,
+    @Res() res: Response,
+  ) {
+    const data = await firstValueFrom(
+      this.client.send('wallet-buy-coins', dto),
+    );
+
+    console.log('redirect', data.redirect);
+
+    if (data.redirect) {
+      return res.redirect(HttpStatus.TEMPORARY_REDIRECT, data.redirect);
+    }
+    return data;
   }
 
   @ApiOkResponse({
     type: WalletTransactionDto,
   })
-  @HttpCode(HttpStatus.OK)
-  @Post('/wallet-replenish-balance-buy-token')
-  replenishWalletBalanceByToken(@Query('authToken') token: string) {
-    return this.client.send('wallet-replenish-balance-buy-token', token);
+  @HttpCode(HttpStatus.PERMANENT_REDIRECT)
+  @Redirect()
+  @Get('/wallet-replenish-balance-buy-token')
+  async replenishWalletBalanceByToken(@Query('authToken') token: string) {
+    const data = await firstValueFrom(
+      this.client.send('wallet-replenish-balance-buy-token', token),
+    );
+
+    return {
+      url: data.redirect,
+    };
   }
 
   @ApiOkResponse({
