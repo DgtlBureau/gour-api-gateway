@@ -61,8 +61,6 @@ export class WalletController {
       this.client.send('wallet-buy-coins', dto),
     );
 
-    console.log('redirect', data.redirect);
-
     if (data.redirect) {
       return res.redirect(HttpStatus.TEMPORARY_REDIRECT, data.redirect);
     }
@@ -79,7 +77,6 @@ export class WalletController {
     const data = await firstValueFrom(
       this.client.send('wallet-replenish-balance-buy-token', token),
     );
-
     return {
       url: data.redirect,
     };
