@@ -62,8 +62,9 @@ export class WalletController {
     );
 
     if (data.redirect) {
-      return res.redirect(HttpStatus.TEMPORARY_REDIRECT, data.redirect);
+      return res.redirect(HttpStatus.MOVED_PERMANENTLY, data.redirect);
     }
+
     return data;
   }
 
