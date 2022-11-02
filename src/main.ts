@@ -42,10 +42,7 @@ requiredEnvs.forEach((envKey) => {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: [process.env.ORIGIN_URL, process.env.PAYMENT_REDIRECT_URL],
-    credentials: false,
-  });
+  app.enableCors();
   app.use(cookieParser());
 
   const builder = new DocumentBuilder()
