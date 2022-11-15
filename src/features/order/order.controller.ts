@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -24,6 +26,7 @@ import { ClientDto } from '../../common/dto/client.dto';
 import { OrderDto } from '../../common/dto/order.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
+import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -82,5 +85,16 @@ export class OrderController {
   @Delete('/:id')
   remove(@Param('id') id: string) {
     return this.client.send('delete-order', +id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/refresh-order-status')
+  updateOrderStatus(@Body() dto: string) {
+    const parsedDto: UpdateOrderStatusDto = JSON.parse(JSON.stringify(dto));
+    const updateEvent = parsedDto.events[0];
+    const splitedEventMeta = updateEvent.meta.href.split('/');
+    const orderUuid = splitedEventMeta[splitedEventMeta.length - 1];
+
+    return this.client.send('refresh-order-status', orderUuid);
   }
 }

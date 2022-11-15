@@ -4,7 +4,6 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
-  Param,
   Query,
   UseGuards,
 } from '@nestjs/common';
