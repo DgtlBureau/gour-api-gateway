@@ -77,16 +77,18 @@ export class OrderController {
     return { url: data.redirect };
   }
 
-  @Redirect()
   @Post('/refresh-status')
-  async refreshOrderStatus(@Body() dto: UpdateOrderStatusDto) {
+  async refreshOrderStatus(
+    @Body() dto: UpdateOrderStatusDto,
+    @Res() res: Response,
+  ) {
     const data = await firstValueFrom(
       this.client.send('refresh-order-status', dto),
     );
 
     console.log('REFRESH STATUS: ', data);
 
-    return { url: data.redirect };
+    return res.redirect(data.redirect);
   }
 
   @Post('/update-status-by-token')
