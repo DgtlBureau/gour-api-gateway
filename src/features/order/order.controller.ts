@@ -84,11 +84,14 @@ export class OrderController {
       this.client.send('refresh-order-status', dto),
     );
 
+    console.log('REFRESH STATUS: ', dto);
+
     return { url: data.redirect };
   }
 
   @Post('/update-status-by-token')
   updateOrderStatusByToken(@Query('updateToken') token: string) {
+    console.log('REFRESH STATUS token: ', token);
     return this.client.send('update-order-status-by-token', token);
   }
 
