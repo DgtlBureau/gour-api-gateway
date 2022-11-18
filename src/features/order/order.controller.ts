@@ -77,6 +77,7 @@ export class OrderController {
     return { url: data.redirect };
   }
 
+  @Redirect()
   @Post('/refresh-status')
   async refreshOrderStatus(@Body() dto: UpdateOrderStatusDto) {
     const data = await firstValueFrom(
@@ -86,8 +87,7 @@ export class OrderController {
     return { url: data.redirect };
   }
 
-  @Get('/update-status-by-token')
-  @UseGuards(AuthGuard)
+  @Post('/update-status-by-token')
   updateOrderStatusByToken(@Query('updateToken') token: string) {
     return this.client.send('update-order-status-by-token', token);
   }
