@@ -84,7 +84,7 @@ export class OrderController {
       this.client.send('refresh-order-status', dto),
     );
 
-    console.log('REFRESH STATUS: ', dto);
+    console.log('REFRESH STATUS: ', data);
 
     return { url: data.redirect };
   }
