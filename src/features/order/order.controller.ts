@@ -66,17 +66,30 @@ export class OrderController {
     return res.send(orders);
   }
 
-  @ApiOkResponse()
   @HttpCode(HttpStatus.PERMANENT_REDIRECT)
   @Redirect()
-  @Get('/change-order-status-by-token')
+  @Get('/confirm-payment-by-token')
   async changeOrderStatusByToken(@Query('authToken') token: string) {
     const data = await firstValueFrom(
-      this.client.send('change-order-status-by-token', token),
+      this.client.send('confirm-payment-by-token', token),
     );
-    return {
-      url: data.redirect,
-    };
+
+    return { url: data.redirect };
+  }
+
+  @Post('/refresh-status')
+  async refreshOrderStatus(@Body() dto: UpdateOrderStatusDto) {
+    const data = await firstValueFrom(
+      this.client.send('refresh-order-status', dto),
+    );
+
+    return { url: data.redirect };
+  }
+
+  @Get('/update-status-by-token')
+  @UseGuards(AuthGuard)
+  updateOrderStatusByToken(@Query('updateToken') token: string) {
+    return this.client.send('update-order-status-by-token', token);
   }
 
   @ApiResponse({
@@ -119,17 +132,5 @@ export class OrderController {
   @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.client.send('delete-order', +id);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
-  @Post('/refresh-order-status')
-  updateOrderStatus(@Body() dto: string) {
-    const parsedDto: UpdateOrderStatusDto = JSON.parse(JSON.stringify(dto));
-    const updateEvent = parsedDto.events[0];
-    const splitedEventMeta = updateEvent.meta.href.split('/');
-    const orderUuid = splitedEventMeta[splitedEventMeta.length - 1];
-
-    return this.client.send('refresh-order-status', orderUuid);
   }
 }
