@@ -78,22 +78,18 @@ export class OrderController {
   }
 
   @Post('/refresh-status')
-  async refreshOrderStatus(
-    @Body() dto: UpdateOrderStatusDto,
-    @Res() res: Response,
-  ) {
+  async refreshOrderStatus(@Body() dto: UpdateOrderStatusDto) {
     const data = await firstValueFrom(
       this.client.send('refresh-order-status', dto),
     );
 
     console.log('REFRESH STATUS: ', data);
 
-    return res.redirect(data.redirect);
+    return data;
   }
 
   @Get('/update-status-by-token')
   updateOrderStatusByToken(@Query('updateToken') token: string) {
-    console.log('REFRESH STATUS token: ', token);
     return this.client.send('update-order-status-by-token', token);
   }
 
