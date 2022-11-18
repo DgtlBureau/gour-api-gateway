@@ -91,7 +91,7 @@ export class OrderController {
     return res.redirect(data.redirect);
   }
 
-  @Post('/update-status-by-token')
+  @Get('/update-status-by-token')
   updateOrderStatusByToken(@Query('updateToken') token: string) {
     console.log('REFRESH STATUS token: ', token);
     return this.client.send('update-order-status-by-token', token);
