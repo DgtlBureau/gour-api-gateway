@@ -22,22 +22,25 @@ import { AppRequest } from '../../common/types/AppRequest';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ClientDto } from '../../common/dto/client.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ChangePhoneDto } from './dto/change-phone.dto';
-import { SendCodeDto } from './dto/send-code.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { AddToFavoritesDto } from './dto/add-to-favorites.dto';
 import { ChangeCityDto } from './dto/change-city.dto';
 import { ProductDto } from '../../common/dto/product.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
-
-const PHONE_CODE_KEY = 'PhoneCode';
+import { ChangeEmailDto } from './dto/change-email.dto';
+import { ChangeAvatarDto } from './dto/change-avatar.dto';
+import { ChangeMainAddressDto } from './dto/change-main-address.dto';
+import { CookieService } from 'src/common/services/cookie.service';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiTags('current-user')
 @Controller('client-auth/current-user')
 export class CurrentUserController {
-  constructor(@Inject('MAIN_SERVICE') private client: ClientProxy) {}
+  constructor(
+    @Inject('MAIN_SERVICE') private client: ClientProxy,
+    private cookieService: CookieService,
+  ) {}
 
   async onModuleInit() {
     await this.client.connect();
@@ -67,40 +70,26 @@ export class CurrentUserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('/send-sms')
-  async sendCode(@Body() dto: SendCodeDto, @Res() res: Response) {
-    const hashedCode = await firstValueFrom(
-      this.client.send('send-email-code', dto),
-    );
-
-    res.cookie(PHONE_CODE_KEY, hashedCode);
-
-    return res.send({
-      result: 'Код отправлен',
-    });
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Post('/change-phone')
-  async changePhone(
-    @Body() dto: ChangePhoneDto,
+  @Post('/change-email')
+  async changeEmail(
+    @Body() dto: ChangeEmailDto,
     @CurrentUser('id') id: number,
     @Req() req: AppRequest,
     @Res() res: Response,
   ) {
-    const hashedCode = req.cookies[PHONE_CODE_KEY];
+    const hashedCode = req.cookies[this.cookieService.EMAIL_CODE_NAME];
 
-    this.client.send('change-phone', {
-      id,
-      hashedCode,
-      dto,
-    });
+    const response = await firstValueFrom(
+      this.client.send('change-email', {
+        id,
+        hashedCode,
+        dto,
+      }),
+    );
 
-    res.cookie(PHONE_CODE_KEY, '');
+    res.cookie(this.cookieService.EMAIL_CODE_NAME, '');
 
-    return res.send({
-      message: 'Номер телефона изменён',
-    });
+    return res.send(response);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -110,6 +99,12 @@ export class CurrentUserController {
     @Body() dto: ChangePasswordDto,
   ) {
     return this.client.send('change-password', { id, dto });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('/reduce-game-live')
+  reduceGameLive(@CurrentUser('id') id: number) {
+    return this.client.send('reduce-game-live', { id });
   }
 
   @ApiOkResponse({
@@ -151,6 +146,30 @@ export class CurrentUserController {
     return this.client.send('change-city', {
       clientId,
       cityId: dto.cityId,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put('/change-avatar')
+  changeAvatar(
+    @CurrentUser('id') clientId: number,
+    @Body() dto: ChangeAvatarDto,
+  ) {
+    return this.client.send('change-avatar', {
+      clientId,
+      avatarId: dto.avatarId,
+    });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Put('/change-main-address')
+  changeMainAddress(
+    @CurrentUser('id') clientId: number,
+    @Body() dto: ChangeMainAddressDto,
+  ) {
+    return this.client.send('change-main-address', {
+      clientId,
+      addressId: dto.addressId,
     });
   }
 }

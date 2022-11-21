@@ -67,12 +67,12 @@ export class OrderProfileController {
   @HttpCode(HttpStatus.OK)
   @Put('/:id')
   put(@Param('id') id: string, @Body() dto: OrderProfileUpdateDto) {
-    return this.client.send('edit-order-profile', { id: +id, dto });
+    return this.client.send('edit-order-profile', { id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-order-profile', +id);
+    return this.client.send('delete-order-profile', id);
   }
 }

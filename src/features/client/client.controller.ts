@@ -24,7 +24,7 @@ import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 import { ClientGetListDto } from './dto/сlient-get-list.dto';
-import { ClientCreateDto } from './dto/сlient-create.dto';
+import { ClientCreateDto } from './dto/client-create.dto';
 import { ClientUpdateDto } from './dto/client-update.dto';
 import { ClientDto } from '../../common/dto/client.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
@@ -105,17 +105,14 @@ export class ClientController {
   @HttpCode(HttpStatus.MOVED_PERMANENTLY)
   @Get('/:id/login')
   async login(@Param('id') id: string, @Res() res: Response) {
-    const { token } = await firstValueFrom(
+    const { accessToken, refreshToken } = await firstValueFrom(
       this.mainClient.send('login-client', +id),
-      { defaultValue: { token: null } },
+      { defaultValue: { accessToken: null, refreshToken: null } },
     );
 
-    res.cookie(
-      this.cookieService.ACCESS_TOKEN_NAME,
-      token,
-      this.cookieService.accessTokenOptions,
-    );
+    this.cookieService.setAccessToken(res, accessToken, true);
+    this.cookieService.setRefreshToken(res, refreshToken, true);
 
-    return res.redirect(process.env.LK_PATH);
+    return res.redirect(process.env.STORE_DOMAIN);
   }
 }

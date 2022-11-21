@@ -9,21 +9,17 @@ import {
   Put,
   Query,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
-import { AuthGuard } from '../../common/guards/auth.guard';
 import { BaseGetListDto } from '../../common/dto/base-get-list.dto';
 import { PageDto } from '../../common/dto/page.dto';
 import { PageCreateDto } from './dto/page-create.dto';
 import { PageUpdateDto } from './dto/page-update.dto';
 
-@ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('pages')
 @Controller('pages')
 export class PageController {

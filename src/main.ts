@@ -22,7 +22,10 @@ const envs = [
   'MAIN_SERVICE_HOST',
   'PAYMENT_SERVICE_HOST',
   'PAYMENT_SERVICE_PORT',
-  'STATIC_FOLDER_PATH',
+  'COMMON_DOMAIN',
+  'STORE_DOMAIN',
+  'ORIGIN_URL',
+  'PAYMENT_REDIRECT_URL',
 ];
 
 const requiredEnvs = getRequiredEnvsByNodeEnv(
@@ -39,10 +42,7 @@ requiredEnvs.forEach((envKey) => {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: true,
-    credentials: true,
-  });
+  app.enableCors({ origin: true, credentials: true });
   app.use(cookieParser());
 
   const builder = new DocumentBuilder()

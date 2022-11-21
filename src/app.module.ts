@@ -23,7 +23,6 @@ import { CurrentUserController } from './features/client-auth/current-user.contr
 import { OrderProfileController } from './features/order-profile/order-profile.controller';
 import { ImageController } from './features/image/image.controller';
 import { ClientRoleController } from './features/client-role/client-role.controller';
-import { DiscountController } from './features/discount/discount.controller';
 import { CityController } from './features/city/city.controller';
 import { AuthController } from './features/auth/auth.controller';
 import { ErrorsInterceptor } from './common/interceptors/errors.interceptor';
@@ -31,6 +30,8 @@ import { SentryInterceptor } from './common/interceptors/sentry.interceptor';
 import { AccessController } from './features/access/access.controller';
 import { RoleController } from './features/role/role.controller';
 import { UserController } from './features/user/user.controller';
+import { WarehouseController } from './features/warehouse/warehouse.controller';
+import { PaymentController } from './features/payment/payment.controller';
 
 @Module({
   imports: [
@@ -88,7 +89,6 @@ import { UserController } from './features/user/user.controller';
     CityController,
     ClientController,
     ClientRoleController,
-    DiscountController,
     FileController,
     ImageController,
     MessagesSenderController,
@@ -101,6 +101,8 @@ import { UserController } from './features/user/user.controller';
     RoleController,
     UserController,
     WalletController,
+    WarehouseController,
+    PaymentController,
   ],
   providers: [
     CookieService,

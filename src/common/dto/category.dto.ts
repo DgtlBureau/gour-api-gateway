@@ -13,6 +13,9 @@ export class CategoryDto extends BaseDto {
   products: ProductDto[];
 
   @ApiProperty()
+  hasDiscount: boolean;
+
+  @ApiProperty()
   parentCategories?: CategoryDto[];
 
   @ApiProperty()
@@ -20,4 +23,15 @@ export class CategoryDto extends BaseDto {
 
   @ApiProperty()
   discounts?: DiscountDto[];
+}
+
+export class CategoryWithDiscounts {
+  id: BaseDto['id'];
+  title: Pick<TranslatableStringDto, 'ru' | 'en'>;
+  hasDiscount: boolean;
+  subCategories: {
+    id: BaseDto['id'];
+    title: Pick<TranslatableStringDto, 'ru' | 'en'>;
+    discountPrice: number;
+  }[];
 }

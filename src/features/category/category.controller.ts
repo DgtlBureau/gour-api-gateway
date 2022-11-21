@@ -19,11 +19,16 @@ import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 import { BaseGetListDto } from '../../common/dto/base-get-list.dto';
-import { CategoryDto } from '../../common/dto/category.dto';
+import {
+  CategoryDto,
+  CategoryWithDiscounts,
+} from '../../common/dto/category.dto';
 import { CategoryCreateDto } from './dto/category-create.dto';
 import { CategoryUpdateDto } from './dto/category-update.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
+import { ClientDto } from 'src/common/dto/client.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -53,12 +58,14 @@ export class CategoryController {
   }
 
   @ApiOkResponse({
-    type: [CategoryDto],
+    type: [CategoryWithDiscounts],
   })
   @HttpCode(HttpStatus.OK)
-  @Get('/common')
-  async getCommon(@Query() params: BaseGetListDto) {
-    return this.client.send('get-common-categories', params);
+  @Get('/discounts')
+  async getAllByClient(@CurrentUser() client: ClientDto) {
+    return await this.client.send('get-categories-with-discount', {
+      client,
+    });
   }
 
   @ApiOkResponse({
