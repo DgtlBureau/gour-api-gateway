@@ -26,7 +26,6 @@ import { AuthGuard } from '../../common/guards/auth.guard';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('client-roles')
 @Controller('client-roles')
 export class ClientRoleController {
@@ -66,6 +65,7 @@ export class ClientRoleController {
     return res.send(clientRole);
   }
 
+  @UseGuards(AuthGuard)
   @ApiOkResponse({
     type: ClientRoleDto,
   })
@@ -75,6 +75,7 @@ export class ClientRoleController {
     return this.mainClient.send('create-client-role', { dto });
   }
 
+  @UseGuards(AuthGuard)
   @ApiOkResponse({
     type: ClientRoleDto,
   })
@@ -84,6 +85,7 @@ export class ClientRoleController {
     return this.mainClient.send('edit-client-role', { id: +id, dto });
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
   remove(@Param('id') id: string) {

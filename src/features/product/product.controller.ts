@@ -119,7 +119,6 @@ export class ProductController {
   })
   @Post('/')
   post(@Body() dto: ProductCreateDto) {
-    console.log(dto);
     return this.client.send('create-product', dto);
   }
 
