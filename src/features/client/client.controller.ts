@@ -106,7 +106,7 @@ export class ClientController {
   @Get('/:id/login')
   async login(@Param('id') id: string, @Res() res: Response) {
     const { accessToken, refreshToken } = await firstValueFrom(
-      this.mainClient.send('login-client', +id),
+      this.mainClient.send('login-client', id),
       { defaultValue: { accessToken: null, refreshToken: null } },
     );
 
