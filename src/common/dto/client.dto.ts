@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 
 import { BaseDto } from './base.dto';
 import { ClientRoleDto } from './client-role.dto';
@@ -10,7 +10,10 @@ import { OrderProfileDto } from './order-profile.dto';
 import { WalletDto } from './wallet.dto';
 import { DiscountDto } from './discount.dto';
 
-export class ClientDto extends BaseDto {
+export class ClientDto extends OmitType(BaseDto, ['id'] as const) {
+  @ApiProperty()
+  id: string;
+
   @ApiProperty()
   role: ClientRoleDto;
 
