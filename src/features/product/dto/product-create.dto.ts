@@ -6,13 +6,18 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { ApiModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import {
+  ApiModelProperty,
+  ApiModelPropertyOptional,
+} from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 import { TranslatableStringCreateDto } from '../../../common/dto/translatable-string-create.dto';
 import { TranslatableTextCreateDto } from '../../../common/dto/translatable-text-create.dto';
 import { MetaCreateDto } from '../../../common/dto/meta-create.dto';
+import { RoleDiscountDto } from 'src/common/dto/role-discount.dto';
+import { PriceDto } from 'src/common/dto/price.dto';
 
 export class ProductCreateDto {
   @ValidateNested()
@@ -56,11 +61,23 @@ export class ProductCreateDto {
   similarProducts?: number[];
 
   @ValidateNested()
+  @ApiProperty()
+  price: PriceDto;
+
+  @ValidateNested()
   @Type(() => MetaCreateDto)
   @IsOptional()
   @ApiPropertyOptional()
   meta?: MetaCreateDto;
 
   @ApiProperty()
-  isWeightGood: boolean;
+  isWeightGood?: boolean;
+
+  @ApiModelPropertyOptional({
+    isArray: true,
+    type: RoleDiscountDto,
+  })
+  @ValidateNested()
+  @IsOptional()
+  roleDiscounts?: RoleDiscountDto[];
 }

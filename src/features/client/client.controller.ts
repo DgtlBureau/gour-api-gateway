@@ -71,7 +71,7 @@ export class ClientController {
   @Get('/:id')
   async getOne(@Param('id') id: string, @Res() res: Response) {
     const client = await firstValueFrom(
-      this.mainClient.send('get-client', +id),
+      this.mainClient.send('get-client', id),
       { defaultValue: null },
     );
 
@@ -93,20 +93,20 @@ export class ClientController {
   @HttpCode(HttpStatus.OK)
   @Put('/:id')
   put(@Param('id') id: string, @Body() dto: ClientUpdateDto) {
-    return this.mainClient.send('edit-client', { id: +id, dto });
+    return this.mainClient.send('edit-client', { id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.mainClient.send('delete-client', +id);
+    return this.mainClient.send('delete-client', id);
   }
 
   @HttpCode(HttpStatus.MOVED_PERMANENTLY)
   @Get('/:id/login')
   async login(@Param('id') id: string, @Res() res: Response) {
     const { accessToken, refreshToken } = await firstValueFrom(
-      this.mainClient.send('login-client', +id),
+      this.mainClient.send('login-client', id),
       { defaultValue: { accessToken: null, refreshToken: null } },
     );
 

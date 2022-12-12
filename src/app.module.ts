@@ -32,6 +32,7 @@ import { RoleController } from './features/role/role.controller';
 import { UserController } from './features/user/user.controller';
 import { WarehouseController } from './features/warehouse/warehouse.controller';
 import { PaymentController } from './features/payment/payment.controller';
+import { PromoCodeController } from './features/promo-code/promo-code.controller';
 
 @Module({
   imports: [
@@ -97,6 +98,7 @@ import { PaymentController } from './features/payment/payment.controller';
     PageController,
     ProductController,
     PromotionController,
+    PromoCodeController,
     ReferralCodeController,
     RoleController,
     UserController,

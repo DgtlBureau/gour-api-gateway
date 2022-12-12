@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { firstValueFrom } from 'rxjs';
 
 import { UserDto } from 'src/common/dto/user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -38,7 +37,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Get('/:id')
   getOne(@Param('id') id: string) {
-    return this.client.send('get-user', +id);
+    return this.client.send('get-user', id);
   }
 
   @ApiOkResponse({
@@ -56,12 +55,12 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Put('/:id')
   put(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.client.send('update-user', { id: +id, dto });
+    return this.client.send('update-user', { id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
   remove(@Param('id') id: string) {
-    return this.client.send('delete-user', +id);
+    return this.client.send('delete-user', id);
   }
 }

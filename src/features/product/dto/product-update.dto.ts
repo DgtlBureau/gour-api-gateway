@@ -14,6 +14,8 @@ import {
   ApiModelProperty,
   ApiModelPropertyOptional,
 } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import { RoleDiscountDto } from 'src/common/dto/role-discount.dto';
+import { PriceDto } from 'src/common/dto/price.dto';
 
 export class ProductUpdateDto {
   @ValidateNested()
@@ -59,6 +61,19 @@ export class ProductUpdateDto {
   @IsOptional()
   @ApiPropertyOptional()
   similarProducts?: number[];
+
+  @ValidateNested()
+  @IsOptional()
+  @ApiPropertyOptional()
+  price?: PriceDto;
+
+  @ApiModelPropertyOptional({
+    isArray: true,
+    type: RoleDiscountDto,
+  })
+  @ValidateNested()
+  @IsOptional()
+  roleDiscounts?: RoleDiscountDto[];
 
   @ValidateNested()
   @Type(() => MetaDto)
