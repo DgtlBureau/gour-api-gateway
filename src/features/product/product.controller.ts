@@ -98,9 +98,9 @@ export class ProductController {
   @Get('/:id')
   async getOne(
     @Param('id') id: string,
-    @Query() params: ProductGetOneDto = {},
     @Res() res: Response,
     @CurrentUser() client: ClientDto,
+    @Query() params: ProductGetOneDto = {},
   ) {
     const product = await firstValueFrom(
       this.client.send('get-product', {
@@ -153,8 +153,9 @@ export class ProductController {
   createProductGrades(
     @Param('id') id: string,
     @Body() dto: ProductGradeCreateDto,
+    @CurrentUser() client: ClientDto,
   ) {
-    return this.client.send('create-product-grade', { id: +id, dto });
+    return this.client.send('create-product-grade', { id: +id, dto, client });
   }
 
   @ApiResponse({

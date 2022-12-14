@@ -66,6 +66,26 @@ export class OrderController {
     return res.send(orders);
   }
 
+  @ApiResponse({
+    type: [OrderResponseDto],
+  })
+  @UseGuards(AuthGuard)
+  @Get('/users/:id')
+  async getAllByUser(
+    @Param('id') clientId: ClientDto['id'],
+    @Query() params: BaseGetListDto,
+    @Res() res: Response,
+  ) {
+    const [orders, count] = await firstValueFrom(
+      this.client.send('get-orders-by-user', { clientId, params }),
+      { defaultValue: [[], 0] },
+    );
+
+    res.set(TOTAL_COUNT_HEADER, count.toString());
+
+    return res.send(orders);
+  }
+
   @HttpCode(HttpStatus.PERMANENT_REDIRECT)
   @Redirect()
   @Get('/confirm-payment-by-token')
