@@ -53,6 +53,7 @@ export class PaymentController {
     @Query('rejectUrl') rejectUrl: string,
     @Res() res: Response,
   ) {
+    console.log('test 3ds', dto);
     const data = await firstValueFrom(
       this.client.send<{ redirect: string }>('check-3d-secure-and-finish-pay', {
         transactionId: dto.MD,
