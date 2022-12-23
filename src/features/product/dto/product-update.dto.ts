@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { TranslatableStringCreateDto } from '../../../common/dto/translatable-string-create.dto';
 import { TranslatableTextCreateDto } from '../../../common/dto/translatable-text-create.dto';
@@ -51,11 +45,6 @@ export class ProductUpdateDto {
   @IsOptional()
   @ApiPropertyOptional()
   categoryIds?: number[];
-
-  @IsNumber()
-  @IsOptional()
-  @ApiPropertyOptional()
-  category?: number;
 
   @IsArray()
   @IsOptional()
