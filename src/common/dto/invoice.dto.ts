@@ -11,3 +11,10 @@ export class InvoiceDto {
   redirectUri?: string; // если используется 3d secure
   expiresAt: Date;
 }
+
+export class InvoiceResponse {
+  MD: string;
+  PaReq: string;
+  TermUrl: string;
+  acsUrl: string;
+}
