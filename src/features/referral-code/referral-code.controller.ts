@@ -23,10 +23,11 @@ import { BaseGetListDto } from '../../common/dto/base-get-list.dto';
 import { ReferralCodeDto } from '../../common/dto/referral-code.dto';
 import { ClientDto } from '../../common/dto/client.dto';
 import { ReferralCodeCreateDto } from './dto/referral-code-create.dto';
-import { ReferralCodeExportDto } from './dto/referral-code-export.dto';
 import { ReferralCodeSetDiscountDto } from './dto/referral-code-set-discount.dto';
 import { ReferralCodeEditDto } from './dto/referral-code-edit.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
+import { makeBook } from 'src/common/utils/xlsxUtil';
+import { ExportDto } from 'src/common/dto/export.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -74,15 +75,21 @@ export class ReferralCodeController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/export')
-  async export(@Body() dto: ReferralCodeExportDto, @Res() res: Response) {
-    const referrals = await firstValueFrom(
-      this.client.send('get-referrals', dto),
+  async export(
+    @Query() params: BaseGetListDto,
+    @Body() dto: ExportDto,
+    @Res() res: Response,
+  ) {
+    const [referrals, _count] = await firstValueFrom(
+      this.client.send('get-referrals', { params, dto }),
       { defaultValue: null },
     );
 
-    const wb = this.makeBook(referrals);
+    const wb = this.makeReferralsBook(referrals);
 
-    const fileName = `referral_codes_export_${new Date().toISOString()}`;
+    const listDate = new Date().toLocaleDateString();
+
+    const fileName = `referrals_list_${listDate}`;
 
     res.set({
       'Content-Type':
@@ -116,26 +123,20 @@ export class ReferralCodeController {
     return this.client.send('edit-referral-discount', discount);
   }
 
-  makeBook(clients: ClientDto[]) {
+  makeReferralsBook(clients: ClientDto[]) {
     const titles = ['Клиент', 'Реферальный код', 'Дата регистрации'];
 
     const rows = clients.map((client) => {
-      if (!client.referralCode) return;
-
       const fullName = `${client.firstName || ''} ${client.lastName || ''}`;
       const referral = client.referralCode.code;
-      const date = client.createdAt;
+      const date = new Date(client.createdAt).toLocaleDateString();
 
       const row = [fullName, referral, date];
 
       return row;
     });
 
-    const ws = XLSX.utils.aoa_to_sheet([titles, ...rows]);
-
-    const wb = XLSX.utils.book_new();
-
-    XLSX.utils.book_append_sheet(wb, ws, 'SheetJS');
+    const wb = makeBook(titles, rows);
 
     return wb;
   }

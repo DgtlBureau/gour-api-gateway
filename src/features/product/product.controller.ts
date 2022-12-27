@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -15,6 +17,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
+import * as XLSX from 'xlsx';
 
 import { ProductDto } from '../../common/dto/product.dto';
 import { ProductGradeDto } from '../../common/dto/product-grade.dto';
@@ -31,6 +34,8 @@ import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { ClientDto } from '../../common/dto/client.dto';
+import { makeBook } from 'src/common/utils/xlsxUtil';
+import { ExportDto } from 'src/common/dto/export.dto';
 
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
@@ -92,15 +97,54 @@ export class ProductController {
     return this.client.send('get-product-similar', { params, client });
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('/export')
+  async export(
+    @Query() params: ProductGetListDto,
+    @Body() dto: ExportDto,
+    @CurrentUser() client: ClientDto,
+    @Res() res: Response,
+  ) {
+    const exportParams = {
+      ...params,
+      withCategories: 'true',
+      withRoleDiscounts: 'true',
+    };
+
+    const [products, _count] = await firstValueFrom(
+      this.client.send('get-products', { params: exportParams, dto, client }),
+      { defaultValue: null },
+    );
+
+    const wb = this.makeProductsBook(products);
+
+    const listDate = new Date().toLocaleDateString();
+
+    const fileName = `products_list_${listDate}`;
+
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="${fileName}.xlsx"`,
+    });
+
+    const productsReport = XLSX.write(wb, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+
+    return res.send(productsReport);
+  }
+
   @ApiResponse({
     type: ProductWithMetricsDto,
   })
   @Get('/:id')
   async getOne(
     @Param('id') id: string,
-    @Query() params: ProductGetOneDto = {},
     @Res() res: Response,
     @CurrentUser() client: ClientDto,
+    @Query() params: ProductGetOneDto = {},
   ) {
     const product = await firstValueFrom(
       this.client.send('get-product', {
@@ -153,8 +197,9 @@ export class ProductController {
   createProductGrades(
     @Param('id') id: string,
     @Body() dto: ProductGradeCreateDto,
+    @CurrentUser() client: ClientDto,
   ) {
-    return this.client.send('create-product-grade', { id: +id, dto });
+    return this.client.send('create-product-grade', { id: +id, dto, client });
   }
 
   @ApiResponse({
@@ -163,5 +208,48 @@ export class ProductController {
   @Put('/grades/:id')
   updateGrade(@Param('id') id: string, @Body() dto: ProductGradeUpdateDto) {
     return this.client.send('edit-grade', { id: +id, dto });
+  }
+
+  makeProductsBook(products: ProductDto[]) {
+    const titles = [
+      'Название',
+      'UUID в МойСклад',
+      'Категории',
+      'Средняя оценка',
+      'Цена',
+      'Скидки по ролям',
+    ];
+
+    const rows = products.map(
+      ({ title, moyskladId, categories, grade = 0, price, roleDiscounts }) => {
+        const categoriesList = categories
+          .map((category) => category.title.ru)
+          .join(', ');
+
+        const roleDiscountsList = roleDiscounts.length
+          ? roleDiscounts
+              .map(
+                (roleDiscount) =>
+                  `${roleDiscount.role.title}: ${roleDiscount.value} ₽`,
+              )
+              .join(', ')
+          : '-';
+
+        const row = [
+          title.ru,
+          moyskladId,
+          categoriesList,
+          grade?.toString(),
+          `${price.cheeseCoin} ₽`,
+          roleDiscountsList,
+        ];
+
+        return row;
+      },
+    );
+
+    const wb = makeBook(titles, rows);
+
+    return wb;
   }
 }
