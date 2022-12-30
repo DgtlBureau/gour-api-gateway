@@ -77,14 +77,12 @@ export class OrderController {
     @Query() params: BaseGetListDto,
     @Res() res: Response,
   ) {
-    const [orders, count] = await firstValueFrom(
+    const [orders, totalCount] = await firstValueFrom(
       this.client.send('get-orders-by-user', { clientId, params }),
       { defaultValue: [[], 0] },
     );
 
-    res.set(TOTAL_COUNT_HEADER, count.toString());
-
-    return res.send(orders);
+    return res.send({ orders, totalCount });
   }
 
   @HttpCode(HttpStatus.PERMANENT_REDIRECT)
