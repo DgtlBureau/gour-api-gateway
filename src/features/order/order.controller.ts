@@ -117,8 +117,8 @@ export class OrderController {
   })
   @UseGuards(AuthGuard)
   @Get('/:id')
-  getOne(@Param('id') id: string, @CurrentUser() client: ClientDto) {
-    return this.client.send('get-order', { id: +id, client });
+  getOne(@Param('id') id: string) {
+    return this.client.send('get-order', +id);
   }
 
   @ApiResponse({
