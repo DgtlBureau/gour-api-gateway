@@ -20,7 +20,9 @@ import { InvoiceDto, InvoiceResponse } from 'src/common/dto/invoice.dto';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { Check3dSecureDto } from './dto/check-3d-secure.dto';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
+import { SBPDto } from './dto/SBP.dto';
 import { PayDto } from './dto/pay.dto';
+import { SBPResponseDto } from './dto/SBP-response.dto';
 
 @ApiBearerAuth()
 @ApiTags('payment')
@@ -85,6 +87,7 @@ export class PaymentController {
   getInvoice(@Param('uuid') uuid: string) {
     return this.client.send('get-invoice', { uuid });
   }
+
   @ApiOkResponse({
     type: [InvoiceDto],
   })
@@ -93,5 +96,15 @@ export class PaymentController {
   @Get('/invoice')
   getInvoices(@Query('userId') userId: string) {
     return this.client.send('get-invoices', userId);
+  }
+
+  @ApiOkResponse({
+    type: SBPResponseDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Post('/sbp-link')
+  getSBPImage(@Body() dto: SBPDto) {
+    return this.client.send('sbp-link', dto);
   }
 }
