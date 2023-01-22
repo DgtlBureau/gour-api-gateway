@@ -19,7 +19,7 @@ export class SBPDto {
   userAgent: UserAgent;
 
   @IsIP()
-  ipaddress: string;
+  ipAddress: string;
 
   @IsEnum(Currency)
   currency: Currency;
