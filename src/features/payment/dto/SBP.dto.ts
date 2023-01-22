@@ -9,7 +9,15 @@ import {
 } from 'class-validator';
 import { Currency } from 'src/common/types/app';
 
+enum UserAgent {
+  MOBILE = 'mobile',
+  DESKTOP = 'desktop'
+}
+
 export class SBPDto {
+  @IsEnum(UserAgent)
+  userAgent: UserAgent;
+
   @IsIP()
   ipaddress: string;
 
