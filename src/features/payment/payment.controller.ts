@@ -105,6 +105,7 @@ export class PaymentController {
   @UseGuards(AuthGuard)
   @Post('/sbp-link')
   getSBPImage(@Body() dto: SBPDto) {
+    console.log('cacth controller');
     return this.client.send('sbp-link', dto);
   }
 }
