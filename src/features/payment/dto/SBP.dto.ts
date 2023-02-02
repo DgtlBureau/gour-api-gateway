@@ -7,7 +7,12 @@ import {
   IsUUID,
   IsNumber
 } from 'class-validator';
-import { Currency } from 'src/common/types/app';
+
+enum Currency {
+  RUB = 'RUB',
+  EUR = 'EUR',
+  USD = 'USD',
+}
 
 enum UserAgent {
   MOBILE = 'mobile',
