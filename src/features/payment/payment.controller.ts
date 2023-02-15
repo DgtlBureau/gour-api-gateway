@@ -114,4 +114,11 @@ export class PaymentController {
   checkSBPStatus(@Body() dto: { transactionId: number; email?: string }) {
     return this.client.send('sbp-check', dto);
   }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Post('/success-payments')
+  successPayments(@Body() dto: { start?: string; end?: string }) {
+    return this.client.send('success-payments', dto);
+  }
 }
