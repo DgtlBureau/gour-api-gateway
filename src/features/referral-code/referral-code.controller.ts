@@ -117,7 +117,9 @@ export class ReferralCodeController {
     );
 
     const titles = ['Клиент', 'Реферальный код', 'Сумма', 'id Клиента'];
-    const wb = makeBook(titles, referrals);
+
+    const arrayOfRefs = referrals.map((referral) => Object.values(referral));
+    const wb = makeBook(titles, arrayOfRefs);
 
     const listDate = new Date().toLocaleDateString();
 
