@@ -23,6 +23,7 @@ import { CreateInvoiceDto } from './dto/create-invoice.dto';
 import { SBPDto } from './dto/SBP.dto';
 import { PayDto } from './dto/pay.dto';
 import { SBPResponseDto } from './dto/SBP-response.dto';
+import { ExportDto } from './dto/export.dto';
 
 @ApiBearerAuth()
 @ApiTags('payment')
@@ -113,5 +114,12 @@ export class PaymentController {
   @Post('/sbp-check')
   checkSBPStatus(@Body() dto: { transactionId: number; email?: string }) {
     return this.client.send('sbp-check', dto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Post('/success-payments')
+  successPayments(@Body() dto: ExportDto) {
+    return this.client.send('success-payments', dto);
   }
 }

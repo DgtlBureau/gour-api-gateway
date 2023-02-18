@@ -105,6 +105,40 @@ export class ReferralCodeController {
     return res.send(referralsReport);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('/export-volume')
+  async exportVolume(
+    @Body() dto: ExportDto,
+    @Res() res: Response,
+  ) {
+    const [referrals, _count] = await firstValueFrom(
+      this.client.send('get-volume', { dto }),
+      { defaultValue: null },
+    );
+
+    const titles = ['Клиент', 'Реферальный код', 'Сумма', 'id Клиента'];
+
+    const arrayOfRefs = referrals.map((referral) => Object.values(referral));
+    const wb = makeBook(titles, arrayOfRefs);
+
+    const listDate = new Date().toLocaleDateString();
+
+    const fileName = `referral_volume_list_${listDate}`;
+
+    res.set({
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `attachment; filename="${fileName}.xlsx"`,
+    });
+
+    const referralsReport = XLSX.write(wb, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+
+    return res.send(referralsReport);
+  }
+
   @ApiOkResponse({
     type: Number,
   })
