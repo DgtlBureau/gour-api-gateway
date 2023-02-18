@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  IsNumber
+  IsNumber,
 } from 'class-validator';
 
 enum Currency {
@@ -16,7 +16,7 @@ enum Currency {
 
 enum UserAgent {
   MOBILE = 'mobile',
-  DESKTOP = 'desktop'
+  DESKTOP = 'desktop',
 }
 
 export class SBPDto {
@@ -44,4 +44,10 @@ export class SBPDto {
   @IsEmail()
   @IsOptional()
   email: string;
+
+  @IsString()
+  fullName: string;
+
+  @IsString()
+  code: string;
 }
