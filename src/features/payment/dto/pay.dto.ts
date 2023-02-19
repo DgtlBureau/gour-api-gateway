@@ -27,10 +27,4 @@ export class PayDto {
 
   @IsUUID()
   invoiceUuid: string;
-
-  @IsString()
-  fullName: string;
-
-  @IsString()
-  code: string;
 }

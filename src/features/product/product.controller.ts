@@ -199,7 +199,7 @@ export class ProductController {
     @Body() dto: ProductGradeCreateDto,
     @CurrentUser() client: ClientDto,
   ) {
-    return this.client.send('create-product-grade', { id: +id, dto, client });
+    return this.client.send('create-product-grade', { productId: id, dto, client });
   }
 
   @ApiResponse({
