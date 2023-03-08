@@ -32,13 +32,12 @@ import { ProductWithMetricsDto } from './dto/product-with-metrics.dto';
 import { ProductGetSimilarDto } from './dto/product-get-similar.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import {CurrentUser, NullableCurrentUser} from '../../common/decorators/current-user.decorator';
 import { ClientDto } from '../../common/dto/client.dto';
 import { makeBook } from 'src/common/utils/xlsxUtil';
 import { ExportDto } from 'src/common/dto/export.dto';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('products')
 @Controller('products')
 export class ProductController {
@@ -63,7 +62,7 @@ export class ProductController {
   async getAll(
     @Query() params: ProductGetListDto,
     @Res() res: Response,
-    @CurrentUser() client: ClientDto,
+    @NullableCurrentUser() client?: ClientDto,
   ) {
     const [products, count] = await firstValueFrom(
       this.client.send('get-products', { params, client }),
@@ -81,7 +80,7 @@ export class ProductController {
   @Get('/novelties')
   getNovelties(
     @Query() params: ProductGetListDto,
-    @CurrentUser() client: ClientDto,
+    @NullableCurrentUser() client?: ClientDto,
   ) {
     return this.client.send('get-novelties', { params, client });
   }
@@ -92,13 +91,14 @@ export class ProductController {
   @Get('/similar')
   getSimilarProducts(
     @Query() params: ProductGetSimilarDto,
-    @CurrentUser() client: ClientDto,
+    @NullableCurrentUser() client?: ClientDto,
   ) {
     return this.client.send('get-product-similar', { params, client });
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('/export')
+  @UseGuards(AuthGuard)
   async export(
     @Query() params: ProductGetListDto,
     @Body() dto: ExportDto,
@@ -162,6 +162,7 @@ export class ProductController {
     type: ProductDto,
   })
   @Post('/')
+  @UseGuards(AuthGuard)
   post(@Body() dto: ProductCreateDto) {
     return this.client.send('create-product', dto);
   }
@@ -170,11 +171,13 @@ export class ProductController {
     type: ProductDto,
   })
   @Put('/:id')
+  @UseGuards(AuthGuard)
   put(@Param('id') id: string, @Body() dto: ProductUpdateDto) {
     return this.client.send('edit-product', { id: +id, dto });
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string, @Query('hard') hard: boolean) {
     return this.client.send('delete-product', { id: +id, hard: !!hard });
   }
@@ -194,6 +197,7 @@ export class ProductController {
     type: [ProductGradeDto],
   })
   @Post('/:id/grades')
+  @UseGuards(AuthGuard)
   createProductGrades(
     @Param('id') id: string,
     @Body() dto: ProductGradeCreateDto,
@@ -210,6 +214,7 @@ export class ProductController {
     type: ProductGradeDto,
   })
   @Put('/grades/:id')
+  @UseGuards(AuthGuard)
   updateGrade(@Param('id') id: string, @Body() dto: ProductGradeUpdateDto) {
     return this.client.send('edit-grade', { id: +id, dto });
   }
