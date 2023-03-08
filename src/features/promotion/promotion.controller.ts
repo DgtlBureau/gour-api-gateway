@@ -26,7 +26,6 @@ import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('promotions')
 @Controller('promotions')
 export class PromotionController {
@@ -71,6 +70,7 @@ export class PromotionController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/')
+  @UseGuards(AuthGuard)
   post(@Body() dto: any | PromotionCreateDto) {
     return this.client.send('create-promotion', dto);
   }
@@ -80,12 +80,14 @@ export class PromotionController {
   })
   @HttpCode(HttpStatus.OK)
   @Put('/:id')
+  @UseGuards(AuthGuard)
   put(@Param('id') id: string, @Body() dto: PromotionUpdateDto) {
     return this.client.send('edit-promotion', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.client.send('delete-promotion', +id);
   }

@@ -23,3 +23,18 @@ export const CurrentUser = createParamDecorator(
     return data ? decodedUser[data] : decodedUser;
   },
 );
+
+export const NullableCurrentUser = createParamDecorator(
+  async (data: keyof ClientDto, ctx: ExecutionContext) => {
+    const request: AppRequest = ctx.switchToHttp().getRequest();
+
+    const token = getToken(request);
+
+    const decodedUser = decodeToken(token) as ClientDto;
+
+    if (!decodedUser)
+        return undefined;
+
+    return data ? decodedUser[data] : decodedUser;
+  },
+);

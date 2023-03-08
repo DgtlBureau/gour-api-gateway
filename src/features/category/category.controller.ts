@@ -31,7 +31,6 @@ import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { ClientDto } from 'src/common/dto/client.dto';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('categories')
 @Controller('categories')
 export class CategoryController {
@@ -62,6 +61,7 @@ export class CategoryController {
   })
   @HttpCode(HttpStatus.OK)
   @Get('/discounts')
+  @UseGuards(AuthGuard)
   async getAllByClient(@CurrentUser() client: ClientDto) {
     return await this.client.send('get-categories-with-discount', {
       client,
@@ -87,6 +87,7 @@ export class CategoryController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/')
+  @UseGuards(AuthGuard)
   post(@Body() dto: CategoryCreateDto) {
     return this.client.send('create-category', dto);
   }
@@ -96,12 +97,14 @@ export class CategoryController {
   })
   @HttpCode(HttpStatus.OK)
   @Put('/:id')
+  @UseGuards(AuthGuard)
   put(@Param('id') id: string, @Body() dto: CategoryUpdateDto) {
     return this.client.send('edit-category', { id: +id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.client.send('delete-category', +id);
   }
