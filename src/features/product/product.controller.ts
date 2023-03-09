@@ -143,7 +143,7 @@ export class ProductController {
   async getOne(
     @Param('id') id: string,
     @Res() res: Response,
-    @NullableCurrentUser client?: ClientDto,
+    @NullableCurrentUser() client?: ClientDto,
     @Query() params: ProductGetOneDto = {},
   ) {
     const product = await firstValueFrom(
