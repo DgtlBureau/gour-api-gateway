@@ -36,6 +36,7 @@ import {CurrentUser, NullableCurrentUser} from '../../common/decorators/current-
 import { ClientDto } from '../../common/dto/client.dto';
 import { makeBook } from 'src/common/utils/xlsxUtil';
 import { ExportDto } from 'src/common/dto/export.dto';
+import {UpdateEntityStatusDto} from "../order/dto/update-entity-status.dto";
 
 @ApiBearerAuth()
 @ApiTags('products')
@@ -208,6 +209,12 @@ export class ProductController {
       dto,
       clientId: client.id,
     });
+  }
+
+
+  @Post('/webhook-update')
+  receiveWebhookUpdate(@Body() dto: UpdateEntityStatusDto) {
+    return this.client.send('webhook-update', dto);
   }
 
   @ApiResponse({

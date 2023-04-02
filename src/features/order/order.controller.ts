@@ -32,7 +32,7 @@ import { ClientDto } from '../../common/dto/client.dto';
 import { OrderDto } from '../../common/dto/order.dto';
 import { TOTAL_COUNT_HEADER } from '../../constants/httpConstants';
 import { AuthGuard } from '../../common/guards/auth.guard';
-import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
+import { UpdateEntityStatusDto } from './dto/update-entity-status.dto';
 import { PayDto } from '../payment/dto/pay.dto';
 import { InvoiceDto } from 'src/common/dto/invoice.dto';
 
@@ -97,7 +97,7 @@ export class OrderController {
   }
 
   @Post('/refresh-status')
-  async refreshOrderStatus(@Body() dto: UpdateOrderStatusDto) {
+  async refreshOrderStatus(@Body() dto: UpdateEntityStatusDto) {
     const data = await firstValueFrom(
       this.client.send('refresh-order-status', dto),
     );
