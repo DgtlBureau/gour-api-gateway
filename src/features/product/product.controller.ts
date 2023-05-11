@@ -97,7 +97,7 @@ export class ProductController {
     return this.client.send('get-product-similar', { params, client });
   }
 
-  @Get('/market-report.xlsx')
+  @Get('/market-report.yml')
   @HttpCode(HttpStatus.OK)
   async getMarketReport(@Res() res: Response) {
     const [products, _count] = await firstValueFrom(
@@ -107,33 +107,13 @@ export class ProductController {
 
     const wb = this.makeMarketReportBook(products);
 
-    const listDate = new Date().toLocaleDateString();
-
-    const fileName = `market_products_export_${listDate}`;
-
-    res.set({
-      'Content-Type':
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Content-Disposition': `inline; filename="${fileName}.xlsx"`,
-    });
-
-    const productsReport = XLSX.write(wb, {
-      type: 'buffer',
-      bookType: 'xlsx',
-    });
-
-    return res.send(productsReport);
+    return res.send(wb);
   }
 
   makeMarketReportBook(products: ProductDto[]) {
-    const titles = [
-      'id', 'Название', 'Категория', 'Ссылка на картинку', 'Цена', 'Описание',
-      'Характеристики товара', 'Ссылка на товар на сайте магазина',
-      'Валюта', 'Самовывоз', 'Доставка',
-    ];
-
     let rows = [];
     const jsdom = require("jsdom");
+
     for (const product of products) {
       const isMeat = product.categories?.find(productSubCategory => productSubCategory.id === 131);
 
@@ -143,25 +123,52 @@ export class ProductController {
           firstBreak > 0 ? firstBreak : product.description.ru.length
       ));
 
+      const sanitize = (text: string): string => text
+          .replace('&','&amp;')
+          .replace('\'','&apos;')
+          .replace('>','&gt;')
+          .replace('<','&lt;')
+          .replace('"','&quot;');
+
       let startWeight = isMeat ? 100 : 150;
+      const categoryId = isMeat ? 1 : 2;
       rows.push([
-        `${product.id}`, // id
-        `${isMeat ? 'Колбаса' : 'Сыр'} ${product.title.ru} ${startWeight}гр`, // название
-        isMeat ? 'Колбаса' : 'Сыр', // категория
-        product.images[0]?.full, // ссылка на картинку
-        Math.floor((product.price.individual / 1000) * startWeight), // цена
-        dom.window.document.body.textContent, // описание
-        `Вес|${startWeight}|г`, // характериситики
-        `https://tastyoleg.com/products/${product.id}`, // Ссылка на товар
-        'RUR', // валюта
-        'Нет', // самовывоз
-        'Есть', // доставка
+        `
+<offer id="${product.id}">
+  <name>${sanitize(`${isMeat ? 'Колбаса' : 'Сыр'} ${product.title.ru} ${startWeight}гр`)}</name>
+  <url>https://tastyoleg.com/products/${product.id}</url>
+  <price>${Math.floor((product.price.individual / 1000) * startWeight)}</price>
+  <currencyId>RUR</currencyId>
+  <categoryId>${categoryId}</categoryId>
+  <picture>${product.images[0]?.full}</picture>
+  <pickup>false</pickup>
+  <delivery>true</delivery>
+  <description>${sanitize(dom.window.document.body.textContent)}</description>
+  <sales_notes>Бесплатная доставка от 3000</sales_notes>
+  <local_delivery_cost>500</local_delivery_cost>
+  <param name="Вес" unit="г">${startWeight}</param>
+</offer>`,
       ]);
     }
 
-    const wb = makeBook(titles, rows);
 
-    return wb;
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE yml_catalog SYSTEM "shops.dtd">
+<yml_catalog date="${new Date().toISOString().substring(0,19)}">
+    <shop>
+        <name>Tasty Oleg</name>
+        <company>Tasty Oleg</company>
+        <url>https://tastyoleg.com</url>
+        <currencies>
+            <currency id="RUR" rate="1"/>
+        </currencies>
+        <categories>
+            <category id="1">Колбаса</category>
+            <category id="2">Сыр</category>
+        </categories>
+        <offers>${rows.join('\n')}</offers>
+    </shop>    
+</yml_catalog>`;
   }
 
   @HttpCode(HttpStatus.OK)
