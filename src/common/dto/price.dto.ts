@@ -1,10 +1,24 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-import { BaseDto } from './base.dto';
-
-export class PriceDto extends BaseDto {
-  @ApiProperty()
+export class PriceDto {
   @IsNumber()
-  cheeseCoin: number;
+  @IsOptional()
+  @ApiPropertyOptional()
+  cheeseCoin?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional()
+  individual?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional()
+  company?: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional()
+  companyByCash?: number;
 }

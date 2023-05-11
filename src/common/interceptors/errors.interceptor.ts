@@ -13,6 +13,7 @@ export class ErrorsInterceptor implements NestInterceptor {
   intercept(_: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       catchError((err) => {
+      console.log(err);
         if (err instanceof HttpException) {
           const arrMsg = (err.getResponse() as { message: [] })?.message;
           const isArrMessage = Array.isArray(arrMsg);

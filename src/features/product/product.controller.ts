@@ -91,10 +91,73 @@ export class ProductController {
   })
   @Get('/similar')
   getSimilarProducts(
-    @Query() params: ProductGetSimilarDto,
-    @NullableCurrentUser() client?: ClientDto,
+      @Query() params: ProductGetSimilarDto,
+      @NullableCurrentUser() client?: ClientDto,
   ) {
     return this.client.send('get-product-similar', { params, client });
+  }
+
+  @Get('/market-report.xlsx')
+  @HttpCode(HttpStatus.OK)
+  async getMarketReport(@Res() res: Response) {
+    const [products, _count] = await firstValueFrom(
+        this.client.send('get-products', { params: {withCategories: 'true'} }),
+        { defaultValue: null },
+    );
+
+    const wb = this.makeMarketReportBook(products);
+
+    const listDate = new Date().toLocaleDateString();
+
+    const fileName = `market_products_export_${listDate}`;
+
+    res.set({
+      'Content-Type':
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Disposition': `inline; filename="${fileName}.xlsx"`,
+    });
+
+    const productsReport = XLSX.write(wb, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+
+    return res.send(productsReport);
+  }
+
+  makeMarketReportBook(products: ProductDto[]) {
+    const titles = [
+      'id', 'Название', 'Категория', 'Ссылка на картинку', 'Цена', 'Описание',
+      'Характеристики товара', 'Ссылка на товар на сайте магазина',
+      'Валюта', 'Самовывоз', 'Доставка',
+    ];
+
+    let rows = [];
+    const jsdom = require("jsdom");
+    for (const product of products) {
+      const isMeat = product.categories?.find(productSubCategory => productSubCategory.id === 131);
+
+      const dom = new jsdom.JSDOM(product.description.ru);
+
+      let startWeight = isMeat ? 100 : 150;
+      rows.push([
+        `${product.id}`, // id
+        `${isMeat ? 'Колбаса' : 'Сыр'} ${product.title.ru} ${startWeight}гр`, // название
+        isMeat ? 'Колбаса' : 'Сыр', // категория
+        product.images[0]?.full, // ссылка на картинку
+        Math.floor((product.price.individual / 1000) * startWeight), // цена
+        dom.window.document.textContent, // описание
+        `Вес|${startWeight}|г`, // характериситики
+        `https://tastyoleg.com/products/${product.id}`, // Ссылка на товар
+        'RUR', // валюта
+        'Нет', // самовывоз
+        'Есть', // доставка
+      ]);
+    }
+
+    const wb = makeBook(titles, rows);
+
+    return wb;
   }
 
   @HttpCode(HttpStatus.OK)
