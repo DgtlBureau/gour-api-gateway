@@ -137,7 +137,11 @@ export class ProductController {
     for (const product of products) {
       const isMeat = product.categories?.find(productSubCategory => productSubCategory.id === 131);
 
-      const dom = new jsdom.JSDOM(product.description.ru);
+      const firstBreak = product.description.ru.indexOf('<br>');
+      const dom = new jsdom.JSDOM(product.description.ru.substring(
+          0,
+          firstBreak > 0 ? firstBreak : product.description.ru.length
+      ));
 
       let startWeight = isMeat ? 100 : 150;
       rows.push([
