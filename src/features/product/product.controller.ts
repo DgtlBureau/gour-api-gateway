@@ -146,7 +146,7 @@ export class ProductController {
         isMeat ? 'Колбаса' : 'Сыр', // категория
         product.images[0]?.full, // ссылка на картинку
         Math.floor((product.price.individual / 1000) * startWeight), // цена
-        dom.window.document.textContent, // описание
+        dom.window.document.body.textContent, // описание
         `Вес|${startWeight}|г`, // характериситики
         `https://tastyoleg.com/products/${product.id}`, // Ссылка на товар
         'RUR', // валюта
