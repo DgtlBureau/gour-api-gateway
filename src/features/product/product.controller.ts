@@ -137,7 +137,7 @@ export class ProductController {
 <offer id="${product.id}">
   <name>${sanitize(`${isMeat ? 'Колбаса' : 'Сыр'} ${product.title.ru} ${startWeight}гр`)}</name>
   <url>https://tastyoleg.com/products/${product.id}</url>
-  <price>${Math.floor((product.price.individual / 1000) * startWeight)}</price>
+  <price>${Math.round((product.price.individual / 1000) * startWeight)}</price>
   <currencyId>RUR</currencyId>
   <categoryId>${categoryId}</categoryId>
   <picture>${product.images[0]?.full}</picture>
