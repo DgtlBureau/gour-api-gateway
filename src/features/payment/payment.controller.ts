@@ -38,7 +38,6 @@ export class PaymentController {
   @ApiOkResponse({
     type: InvoiceResponse,
   })
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.CREATED)
   @Post('/pay')
   pay(@Body() dto: PayDto) {
@@ -73,7 +72,6 @@ export class PaymentController {
     type: CreateInvoiceDto,
   })
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(AuthGuard)
   @Post('/invoice')
   createInvoice(@Body() dto: CreateInvoiceDto) {
     return this.client.send('create-invoice', dto);
@@ -83,7 +81,6 @@ export class PaymentController {
     type: CreateInvoiceDto,
   })
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Get('/invoice/:uuid')
   getInvoice(@Param('uuid') uuid: string) {
     return this.client.send('get-invoice', { uuid });
@@ -103,14 +100,12 @@ export class PaymentController {
     type: SBPResponseDto,
   })
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Post('/sbp-link')
   getSBPImage(@Body() dto: SBPDto) {
     return this.client.send('sbp-link', dto);
   }
 
   @HttpCode(HttpStatus.OK)
-  @UseGuards(AuthGuard)
   @Post('/sbp-check')
   checkSBPStatus(@Body() dto: { transactionId: number; email?: string }) {
     return this.client.send('sbp-check', dto);

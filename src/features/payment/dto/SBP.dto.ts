@@ -6,6 +6,7 @@ import {
   IsString,
   IsUUID,
   IsNumber,
+  ValidateIf,
 } from 'class-validator';
 
 enum Currency {
@@ -39,10 +40,13 @@ export class SBPDto {
   invoiceUuid: string;
 
   @IsUUID()
-  payerUuid: string;
+  @IsOptional()
+  @ValidateIf(o => o.payerUuid !== '')
+  payerUuid?: string;
 
   @IsEmail()
   @IsOptional()
+  @ValidateIf(o => o.email !== '')
   email: string;
 
   @IsString()

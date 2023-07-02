@@ -17,14 +17,13 @@ import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 import { BaseGetListDto } from '../../common/dto/base-get-list.dto';
 import { ClientDto } from '../../common/dto/client.dto';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import {CurrentUser, NullableCurrentUser} from '../../common/decorators/current-user.decorator';
 import { OrderProfileDto } from '../../common/dto/order-profile.dto';
 import { OrderProfileCreateDto } from './dto/order-profile.create.dto';
 import { OrderProfileUpdateDto } from './dto/order-profile.update.dto';
 import { AuthGuard } from '../../common/guards/auth.guard';
 
 @ApiBearerAuth()
-@UseGuards(AuthGuard)
 @ApiTags('order-profiles')
 @Controller('order-profiles')
 export class OrderProfileController {
@@ -38,6 +37,7 @@ export class OrderProfileController {
     type: [OrderProfileDto],
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('/')
   getAll(@Query() params: BaseGetListDto, @CurrentUser() client: ClientDto) {
     return this.client.send('get-order-profiles', { params, client });
@@ -47,6 +47,7 @@ export class OrderProfileController {
     type: OrderProfileDto,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Get('/:id')
   getOne(@Param('id') id: string) {
     return this.client.send('get-order-profile', +id);
@@ -57,7 +58,7 @@ export class OrderProfileController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post('/')
-  post(@Body() dto: OrderProfileCreateDto, @CurrentUser() client: ClientDto) {
+  post(@Body() dto: OrderProfileCreateDto, @NullableCurrentUser() client?: ClientDto) {
     return this.client.send('create-order-profile', { dto, client });
   }
 
@@ -65,12 +66,14 @@ export class OrderProfileController {
     type: OrderProfileDto,
   })
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Put('/:id')
   put(@Param('id') id: string, @Body() dto: OrderProfileUpdateDto) {
     return this.client.send('edit-order-profile', { id, dto });
   }
 
   @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
   @Delete('/:id')
   remove(@Param('id') id: string) {
     return this.client.send('delete-order-profile', id);

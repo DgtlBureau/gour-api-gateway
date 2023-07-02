@@ -25,7 +25,7 @@ import { Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 import { BaseGetListDto } from '../../common/dto/base-get-list.dto';
-import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import {CurrentUser, NullableCurrentUser} from '../../common/decorators/current-user.decorator';
 import { OrderCreateDto } from './dto/order-create.dto';
 import { OrderResponseDto } from './dto/order-response.dto';
 import { ClientDto } from '../../common/dto/client.dto';
@@ -124,16 +124,14 @@ export class OrderController {
   @ApiResponse({
     type: OrderDto,
   })
-  @UseGuards(AuthGuard)
   @Post('/')
-  post(@CurrentUser() client: ClientDto, @Body() dto: OrderCreateDto) {
+  post(@Body() dto: OrderCreateDto, @NullableCurrentUser() client?: ClientDto) {
     return this.client.send('create-order', { dto, client });
   }
 
   @ApiResponse({
     type: InvoiceDto,
   })
-  @UseGuards(AuthGuard)
   @Post('/pay-order')
   payOrder(@Body() dto: PayDto) {
     return this.client.send('pay-order', dto);

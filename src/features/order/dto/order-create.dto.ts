@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsPhoneNumber,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import { OrderProductCreateDto } from './order-product-create.dto';
@@ -49,6 +50,8 @@ export class OrderCreateDto {
   phone: string;
 
   @IsEmail()
+  @IsOptional()
+  @ValidateIf(o => o.email !== '')
   @ApiProperty()
   email: string;
 }

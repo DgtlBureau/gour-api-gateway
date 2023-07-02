@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsUUID } from 'class-validator';
+import { IsEnum, IsNumber, IsUUID, IsOptional } from 'class-validator';
 import { Currency } from 'src/common/types/App';
 
 export class CreateInvoiceDto {
@@ -12,5 +12,6 @@ export class CreateInvoiceDto {
   value: number;
 
   @IsUUID()
-  payerUuid: string;
+  @IsOptional()
+  payerUuid?: string;
 }
