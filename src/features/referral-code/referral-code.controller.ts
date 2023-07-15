@@ -116,7 +116,7 @@ export class ReferralCodeController {
       { defaultValue: null },
     );
 
-    const titles = ['Клиент', 'Реферальный код', 'Сумма', 'id Клиента'];
+    const titles = ['Имя клиента','id Клиента','Дата заказа','Телефон','Email', 'Реферальный код', 'Сумма'];
 
     const arrayOfRefs = referrals.map((referral) => Object.values(referral));
     const wb = makeBook(titles, arrayOfRefs);
@@ -158,16 +158,16 @@ export class ReferralCodeController {
   }
 
   makeReferralsBook(clients: ClientDto[]) {
-    const titles = ['Клиент', 'Реферальный код', 'Дата регистрации'];
+    const titles = ['Клиент', 'Роль', 'Реферальный код', 'Дата регистрации'];
 
     const rows = clients
       .filter((client) => !!client.referralCode)
-      .map(({ firstName, lastName, referralCode, createdAt }) => {
+      .map(({ firstName, lastName, referralCode, createdAt, role }) => {
         const fullName = `${firstName || ''} ${lastName || ''}`;
         const referral = referralCode.code;
         const date = new Date(createdAt).toLocaleDateString();
 
-        const row = [fullName, referral, date];
+        const row = [fullName, role.title, referral, date];
 
         return row;
       });
