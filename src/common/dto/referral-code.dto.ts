@@ -8,4 +8,7 @@ export class ReferralCodeDto extends BaseDto {
 
   @ApiProperty()
   discount: number;
+
+  @ApiProperty()
+  fullName?: string;
 }
