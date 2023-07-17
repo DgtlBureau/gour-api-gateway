@@ -111,10 +111,25 @@ export class ReferralCodeController {
     @Body() dto: ExportDto,
     @Res() res: Response,
   ) {
-    const [referrals, _count] = await firstValueFrom(
+    let [referrals, _count] = await firstValueFrom(
       this.client.send('get-volume', { dto }),
       { defaultValue: null },
     );
+
+    const paidByCashOrders = await firstValueFrom(
+      this.client.send('get-referral-orders-paid-by-cash', {}),
+      { defaultValue: null },
+    );
+
+    paidByCashOrders.map((order) => referrals.push({
+      clientName: order.firstName + ' ' + order.lastName,
+      clientId: order.client.id,
+      createdAt: new Date(order.createdAt).toLocaleString(),
+      phone: order.phone,
+      email: order.email,
+      code: order.client.referralCode.code,
+      amount: order.totalSum,
+    }));
 
     const titles = ['Имя клиента','id Клиента','Дата заказа','Телефон','Email', 'Реферальный код', 'Сумма'];
 
