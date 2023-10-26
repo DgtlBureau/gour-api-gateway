@@ -124,11 +124,11 @@ export class ProductController {
       ));
 
       const sanitize = (text: string): string => text
-          .replace('&','&amp;')
-          .replace('\'','&apos;')
-          .replace('>','&gt;')
-          .replace('<','&lt;')
-          .replace('"','&quot;');
+          .replace(/&/gi,'&amp;')
+          .replace(/'/gi,'&apos;')
+          .replace(/>/gi,'&gt;')
+          .replace(/</gi,'&lt;')
+          .replace(/"/gi,'&quot;');
 
       let startWeight = isMeat ? 100 : 150;
       const categoryId = isMeat ? 1 : 2;
